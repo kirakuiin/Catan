@@ -1,0 +1,227 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://ui/player/player_icon.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/images/hex_ocean.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/wooden.png" type="Texture" id=3]
+[ext_resource path="res://ui/lobby/player_seat.gd" type="Script" id=4]
+[ext_resource path="res://assets/images/left_arrow.png" type="Texture" id=5]
+
+[node name="PlayerSeat" type="Control"]
+anchor_right = 0.420833
+anchor_bottom = 0.755556
+rect_clip_content = true
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="TableRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
+expand = true
+
+[node name="OceanRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="Seat1" parent="." instance=ExtResource( 1 )]
+anchor_left = 0.51
+anchor_right = 0.51
+anchor_bottom = 0.0
+margin_left = -67.3334
+margin_right = 67.3333
+margin_bottom = 136.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+player_color = Color( 1, 0, 0, 1 )
+order_num = 1
+
+[node name="ToolButton" type="ToolButton" parent="Seat1"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Seat2" parent="." instance=ExtResource( 1 )]
+anchor_left = 0.96
+anchor_top = 0.206
+anchor_right = 0.96
+anchor_bottom = 0.206
+margin_left = -129.28
+margin_top = -4.89601
+margin_right = 5.3866
+margin_bottom = 131.104
+__meta__ = {
+"_edit_use_anchors_": true
+}
+player_color = Color( 1, 0.498039, 0, 1 )
+order_num = 2
+
+[node name="ToolButton" type="ToolButton" parent="Seat2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Seat3" parent="." instance=ExtResource( 1 )]
+anchor_left = 0.967
+anchor_top = 0.82
+anchor_right = 0.967
+anchor_bottom = 0.82
+margin_left = -134.936
+margin_top = -136.0
+margin_right = -0.269409
+margin_bottom = 0.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+player_color = Color( 1, 1, 0, 1 )
+order_num = 3
+
+[node name="ToolButton" type="ToolButton" parent="Seat3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Seat4" parent="." instance=ExtResource( 1 )]
+anchor_left = 0.515314
+anchor_top = 1.0
+anchor_right = 0.515314
+margin_left = -71.3734
+margin_top = -136.0
+margin_right = 63.2933
+margin_bottom = -6.10352e-05
+rect_pivot_offset = Vector2( -225, -24.0005 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+player_color = Color( 0, 1, 0, 1 )
+order_num = 4
+
+[node name="ToolButton" type="ToolButton" parent="Seat4"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Seat5" parent="." instance=ExtResource( 1 )]
+anchor_left = 0.04
+anchor_top = 0.82
+anchor_right = 0.04
+anchor_bottom = 0.82
+margin_top = -136.0
+margin_right = 134.667
+margin_bottom = -6.10352e-05
+rect_pivot_offset = Vector2( -400.32, 58.8796 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+player_color = Color( 0, 0, 1, 1 )
+order_num = 5
+
+[node name="ToolButton" type="ToolButton" parent="Seat5"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Seat6" parent="." instance=ExtResource( 1 )]
+anchor_left = 0.04
+anchor_top = 0.2
+anchor_right = 0.04
+anchor_bottom = 0.2
+margin_right = 134.667
+margin_bottom = 136.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+player_color = Color( 0.501961, 0, 1, 1 )
+order_num = 6
+
+[node name="ToolButton" type="ToolButton" parent="Seat6"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Arrow1" type="TextureRect" parent="."]
+anchor_left = 0.662574
+anchor_top = 0.11848
+anchor_right = 0.662574
+anchor_bottom = 0.11848
+margin_left = -15.3591
+margin_top = 7.3206
+margin_right = 64.6409
+margin_bottom = 57.3206
+rect_rotation = -150.0
+rect_pivot_offset = Vector2( 40, 30 )
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Arrow2" type="TextureRect" parent="."]
+anchor_left = 0.903297
+anchor_top = 0.441176
+anchor_right = 0.903297
+anchor_bottom = 0.441392
+margin_left = -49.8634
+margin_top = 79.9999
+margin_right = 30.1366
+margin_bottom = 129.824
+rect_rotation = -89.9999
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Arrow3" type="TextureRect" parent="."]
+anchor_left = 0.77
+anchor_top = 0.827392
+anchor_right = 0.77
+anchor_bottom = 0.827392
+margin_left = -94.1595
+margin_top = -3.1524
+margin_right = -14.1595
+margin_bottom = 46.8476
+rect_rotation = -30.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Arrow4" type="TextureRect" parent="."]
+anchor_left = 0.361802
+anchor_top = 0.906
+anchor_right = 0.361802
+anchor_bottom = 0.906006
+margin_left = -44.3357
+margin_top = -83.2964
+margin_right = 35.6643
+margin_bottom = -33.3013
+rect_rotation = 30.0
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Arrow5" type="TextureRect" parent="."]
+anchor_left = 0.096535
+anchor_top = 0.568804
+anchor_right = 0.096535
+anchor_bottom = 0.568804
+margin_left = 49.9998
+margin_top = -80.1443
+margin_right = 130.0
+margin_bottom = -30.1443
+rect_rotation = 89.9999
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="button_down" from="Seat1/ToolButton" to="." method="_on_seat1" binds= [ 1 ]]
+[connection signal="button_down" from="Seat2/ToolButton" to="." method="_on_seat2" binds= [ 2 ]]
+[connection signal="button_down" from="Seat3/ToolButton" to="." method="_on_seat3" binds= [ 3 ]]
+[connection signal="button_down" from="Seat4/ToolButton" to="." method="_on_seat4" binds= [ 4 ]]
+[connection signal="button_down" from="Seat5/ToolButton" to="." method="_on_seat5" binds= [ 5 ]]
+[connection signal="button_down" from="Seat6/ToolButton" to="." method="_on_seat6" binds= [ 6 ]]

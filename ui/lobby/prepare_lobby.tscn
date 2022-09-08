@@ -1,0 +1,229 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/fonts/OPPOSans-B.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://ui/lobby/prepare_lobby.gd" type="Script" id=2]
+[ext_resource path="res://ui/lobby/player_seat.tscn" type="PackedScene" id=10]
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+font_data = ExtResource( 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="BgPanel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="OptionContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.65
+anchor_top = 0.155556
+anchor_right = 0.945833
+anchor_bottom = 0.711111
+custom_constants/separation = 50
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="OptionLabel" type="Label" parent="OptionContainer"]
+margin_right = 567.0
+margin_bottom = 40.0
+text = "参数设置"
+align = 1
+
+[node name="PlayerNumContainer" type="HBoxContainer" parent="OptionContainer"]
+margin_top = 90.0
+margin_right = 567.0
+margin_bottom = 136.0
+
+[node name="Label" type="Label" parent="OptionContainer/PlayerNumContainer"]
+margin_top = 3.0
+margin_right = 187.0
+margin_bottom = 43.0
+hint_tooltip = "参加游戏的人数范围"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "玩家人数: "
+align = 1
+
+[node name="Btn" type="OptionButton" parent="OptionContainer/PlayerNumContainer"]
+margin_left = 191.0
+margin_right = 567.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "选择人数"
+align = 1
+
+[node name="FogContainer" type="HBoxContainer" parent="OptionContainer"]
+margin_top = 186.0
+margin_right = 567.0
+margin_bottom = 232.0
+
+[node name="Label" type="Label" parent="OptionContainer/FogContainer"]
+margin_top = 3.0
+margin_right = 187.0
+margin_bottom = 43.0
+hint_tooltip = "开启迷雾后在初始阶段无法看到每个地块上的点数"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "地图迷雾: "
+align = 1
+
+[node name="Btn" type="OptionButton" parent="OptionContainer/FogContainer"]
+margin_left = 191.0
+margin_right = 567.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "关闭"
+align = 1
+
+[node name="RandResourceContainer" type="HBoxContainer" parent="OptionContainer"]
+margin_top = 282.0
+margin_right = 567.0
+margin_bottom = 328.0
+
+[node name="Label" type="Label" parent="OptionContainer/RandResourceContainer"]
+margin_top = 3.0
+margin_right = 187.0
+margin_bottom = 43.0
+hint_tooltip = "随机两种资源地块的数量会更少"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "随机资源:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="OptionContainer/RandResourceContainer"]
+margin_left = 191.0
+margin_right = 567.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "关闭"
+align = 1
+
+[node name="RandSeatContainer" type="HBoxContainer" parent="OptionContainer"]
+margin_top = 378.0
+margin_right = 567.0
+margin_bottom = 424.0
+
+[node name="Label" type="Label" parent="OptionContainer/RandSeatContainer"]
+margin_top = 3.0
+margin_right = 187.0
+margin_bottom = 43.0
+hint_tooltip = "所有玩家将以随机的顺序开始游戏"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "随机顺序:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="OptionContainer/RandSeatContainer"]
+margin_left = 191.0
+margin_right = 567.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "关闭"
+align = 1
+
+[node name="RandLandContainer" type="HBoxContainer" parent="OptionContainer"]
+margin_top = 474.0
+margin_right = 567.0
+margin_bottom = 520.0
+
+[node name="Label" type="Label" parent="OptionContainer/RandLandContainer"]
+margin_top = 3.0
+margin_right = 187.0
+margin_bottom = 43.0
+hint_tooltip = "地形不在以紧密排列的形式分布"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "随机地形:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="OptionContainer/RandLandContainer"]
+margin_left = 191.0
+margin_right = 567.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "关闭"
+align = 1
+
+[node name="TitleLabel" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 0.0740741
+margin_bottom = -49.0
+custom_fonts/font = SubResource( 2 )
+text = "准备大厅"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ExitButton" type="Button" parent="."]
+anchor_top = 0.911111
+anchor_right = 0.208333
+anchor_bottom = 1.0
+text = "退出"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="StartBtn" type="Button" parent="."]
+anchor_left = 0.791667
+anchor_top = 0.911111
+anchor_right = 1.0
+anchor_bottom = 1.0
+disabled = true
+text = "开始"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="BroadcastTimer" type="Timer" parent="."]
+__meta__ = {
+"_editor_description_": "定时广播大厅信息"
+}
+
+[node name="PlayerBg" type="ColorRect" parent="."]
+anchor_left = 0.075
+anchor_top = 0.22963
+anchor_right = 0.25
+anchor_bottom = 0.785185
+color = Color( 0.196078, 0.196078, 0.196078, 1 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="PlayerListLabel" type="Label" parent="PlayerBg"]
+anchor_right = 1.0
+margin_bottom = 40.0
+text = "玩家列表"
+align = 1
+
+[node name="PlayerContainer" type="VBoxContainer" parent="PlayerBg"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 56.0
+custom_constants/separation = 10
+
+[node name="PlayerSeat" parent="." instance=ExtResource( 10 )]
+margin_left = 584.0
+margin_top = 248.0
+margin_right = 376.0
+margin_bottom = 32.0
+
+[connection signal="item_selected" from="OptionContainer/PlayerNumContainer/Btn" to="." method="_on_change_num"]
+[connection signal="item_selected" from="OptionContainer/FogContainer/Btn" to="." method="_on_change_fog"]
+[connection signal="item_selected" from="OptionContainer/RandResourceContainer/Btn" to="." method="_on_change_resource"]
+[connection signal="item_selected" from="OptionContainer/RandSeatContainer/Btn" to="." method="_on_change_order"]
+[connection signal="item_selected" from="OptionContainer/RandLandContainer/Btn" to="." method="_on_change_land"]
+[connection signal="button_down" from="ExitButton" to="." method="_on_exit_prepare"]
+[connection signal="button_down" from="StartBtn" to="." method="_on_start_game"]
+[connection signal="timeout" from="BroadcastTimer" to="." method="_on_broadcast"]

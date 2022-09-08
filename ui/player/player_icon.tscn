@@ -1,0 +1,97 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/fonts/twenty_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://assets/images/head_border.png" type="Texture" id=2]
+[ext_resource path="res://ui/player/player_icon.gd" type="Script" id=3]
+
+[sub_resource type="Animation" id=2]
+resource_name = "RESET"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Info/BorderTexture:rect_rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=1]
+resource_name = "rotate"
+length = 6.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Info/BorderTexture:rect_rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3, 6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 180.0, 360.0 ]
+}
+
+[node name="PlayerIcon" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1820.0
+margin_bottom = -980.0
+rect_min_size = Vector2( 100, 100 )
+script = ExtResource( 3 )
+
+[node name="BgPanel" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.392157, 0.392157, 0.392157, 0.392157 )
+
+[node name="NumLabel" type="Label" parent="BgPanel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -20.0
+margin_right = 20.0
+margin_bottom = 20.0
+text = "1"
+align = 1
+valign = 1
+
+[node name="Info" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="AvatarTexture" type="TextureRect" parent="Info"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 50, 50 )
+expand = true
+stretch_mode = 6
+
+[node name="BorderTexture" type="TextureRect" parent="Info"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 50, 50 )
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="NameLabel" type="Label" parent="Info"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -27.0
+custom_fonts/font = ExtResource( 1 )
+text = "kirakuiin"
+align = 1
+valign = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 2 )
+anims/rotate = SubResource( 1 )

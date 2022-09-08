@@ -1,0 +1,130 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/game_theme.tres" type="Theme" id=1]
+[ext_resource path="res://assets/images/catan_background.jpeg" type="Texture" id=2]
+[ext_resource path="res://ui/lobby/game_lobby.gd" type="Script" id=3]
+
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( -768, -104 )
+script = ExtResource( 3 )
+
+[node name="BackgroundRect" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 1
+
+[node name="CreateBtn" type="Button" parent="."]
+anchor_left = 0.025
+anchor_top = 0.0962963
+anchor_right = 0.09375
+anchor_bottom = 0.138889
+margin_bottom = -9.0
+theme = ExtResource( 1 )
+text = "创建游戏"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="JoinBtn" type="Button" parent="."]
+anchor_left = 0.025
+anchor_top = 0.185185
+anchor_right = 0.09375
+anchor_bottom = 0.227778
+margin_bottom = -9.0
+theme = ExtResource( 1 )
+text = "加入游戏"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="BackBtn" type="Button" parent="."]
+anchor_left = 0.025
+anchor_top = 0.866667
+anchor_right = 0.09375
+anchor_bottom = 0.909259
+theme = ExtResource( 1 )
+text = "返回"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Panel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 256.0
+margin_top = 104.0
+margin_right = -128.0
+margin_bottom = -92.0
+
+[node name="HostScroll" type="ScrollContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HostList" type="VBoxContainer" parent="Panel/HostScroll"]
+margin_right = 1536.0
+margin_bottom = 884.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ListenTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="TitleContainer" type="HBoxContainer" parent="."]
+anchor_left = 0.133333
+anchor_top = 0.0592593
+anchor_right = 0.933333
+anchor_bottom = 0.0962963
+
+[node name="HostNameLabel" type="Label" parent="TitleContainer"]
+margin_right = 508.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "主机名"
+
+[node name="PlayerNum" type="Label" parent="TitleContainer"]
+margin_left = 512.0
+margin_right = 766.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "玩家数量"
+
+[node name="StateLabel" type="Label" parent="TitleContainer"]
+margin_left = 770.0
+margin_right = 1024.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+text = "主机状态"
+
+[node name="IPLabel" type="Label" parent="TitleContainer"]
+margin_left = 1028.0
+margin_right = 1536.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "IP地址"
+
+[node name="RefreshBtn" type="Button" parent="."]
+anchor_left = 0.895833
+anchor_top = 0.0518519
+anchor_right = 0.933333
+anchor_bottom = 0.0944444
+text = "刷新"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="button_down" from="CreateBtn" to="." method="_on_create_lobby"]
+[connection signal="button_down" from="JoinBtn" to="." method="_on_join_game"]
+[connection signal="button_down" from="BackBtn" to="." method="_on_back"]
+[connection signal="timeout" from="ListenTimer" to="." method="_on_refresh_host"]
+[connection signal="button_down" from="RefreshBtn" to="." method="_on_refresh"]

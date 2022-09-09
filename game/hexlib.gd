@@ -21,6 +21,16 @@ class Hex:
     func _to_string():
         return '{0}({1}, {2}, {3})'.format(["Hex", q, r, s])
 
+    func to_vector3() -> Vector3:
+        return Vector3(q, r, s)
+
+    func from_vector3(vec: Vector3):
+        q = vec.x as int
+        r = vec.y as int
+        s = vec.z as int
+        assert(q+r+s == 0, "六边形坐标总和必须为0")
+
+
 
 # 代表六边形网格中的一个六边形的顶点
 class Corner:

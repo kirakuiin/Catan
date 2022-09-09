@@ -43,6 +43,8 @@ static func get_cls(cls_name) -> ProtocolData:
         "PlayerInfo": PlayerInfo,
         "CatanSetupInfo": CatanSetupInfo,
         "PlayerOrderInfo": PlayerOrderInfo,
+        "TileInfo": TileInfo,
+        "MapInfo": MapInfo,
     }
     return map[cls_name]
 
@@ -160,3 +162,32 @@ class PlayerOrderInfo:
 
     func get_name(order: int) -> String:
         return order_to_name.get(order, "")
+
+
+# 地块信息
+class TileInfo:
+    extends ProtocolData
+
+    var cube_pos: Vector3
+    var tile_type: int
+    var point_type: int
+
+    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.DESERT, point=Data.PointType.TWO):
+        cls_name = "TileInfo"
+        cube_pos = pos
+        tile_type = tile
+        point_type = point
+
+
+# 地图信息
+class MapInfo:
+    extends ProtocolData
+
+    var grid_map: Dictionary
+
+    func _init(map: Dictionary = {}):
+        cls_name = "MapInfo"
+        grid_map = map
+
+    func add_tile(tile: TileInfo):
+        grid_map[tile.cube_pos] = tile

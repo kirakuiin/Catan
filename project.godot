@@ -10,12 +10,30 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
+"class": "Data",
+"language": "GDScript",
+"path": "res://common/data.gd"
+}, {
+"base": "Node",
 "class": "Hexlib",
 "language": "GDScript",
 "path": "res://game/hexlib.gd"
+}, {
+"base": "Node",
+"class": "NetDefines",
+"language": "GDScript",
+"path": "res://network/net_defines.gd"
+}, {
+"base": "Node",
+"class": "Protocol",
+"language": "GDScript",
+"path": "res://network/protocol.gd"
 } ]
 _global_script_class_icons={
-"Hexlib": ""
+"Data": "",
+"Hexlib": "",
+"NetDefines": "",
+"Protocol": ""
 }
 
 [application]
@@ -28,11 +46,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-NetDefines="*res://network/net_defines.gd"
-Protocol="*res://network/protocol.gd"
 GameServer="*res://network/game_server.gd"
 SceneMgr="*res://common/scene_mgr.gd"
-Data="*res://common/data.gd"
 PlayerConfig="*res://common/player_config.gd"
 PlayerInfoMgr="*res://common/player_info_mgr.gd"
 GameState="*res://game/game_state.gd"

@@ -2,6 +2,8 @@ extends Node
 
 # 网络协议
 
+class_name Protocol
+
 
 class ProtocolData:
     extends Reference

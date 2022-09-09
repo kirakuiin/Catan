@@ -1,5 +1,7 @@
 extends Node
 
+class_name Data
+
 # 图标映射数据
 const ICON_DATA: Dictionary = {
     1: "res://assets/icons/aphrodite.png",
@@ -45,7 +47,7 @@ const SWITCH_DATA = {
 
 
 # 地块映射
-enum TileType{DESERT, OCEAN, FIELD, HILL, MOUNTAIN, PASTURE, FOREST}
+enum TileType{DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN}
 
 const TILE_DATA = {
     TileType.DESERT: "res://assets/tiles/desert.png",

@@ -176,7 +176,7 @@ static func get_ring(center: Hex, radius: int) -> Array:
     var result = []
     var hex = hex_add(center, hex_mul(hex_direction(PointyDirection.SOUTHWEST), radius))
     for dir in Directions:
-        for j in range(radius):
+        for _j in range(radius):
             hex = hex_neighbor(hex, dir)
             result.append(hex)
     return result

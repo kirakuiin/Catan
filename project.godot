@@ -14,6 +14,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://common/data.gd"
 }, {
+"base": "Control",
+"class": "DragArea",
+"language": "GDScript",
+"path": "res://ui/util/drag_area.gd"
+}, {
 "base": "Node",
 "class": "Hexlib",
 "language": "GDScript",
@@ -28,12 +33,19 @@ _global_script_classes=[ {
 "class": "Protocol",
 "language": "GDScript",
 "path": "res://network/protocol.gd"
+}, {
+"base": "Node",
+"class": "Util",
+"language": "GDScript",
+"path": "res://common/util.gd"
 } ]
 _global_script_class_icons={
 "Data": "",
+"DragArea": "",
 "Hexlib": "",
 "NetDefines": "",
-"Protocol": ""
+"Protocol": "",
+"Util": ""
 }
 
 [application]

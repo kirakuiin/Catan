@@ -156,8 +156,16 @@ static func corner_equal(corner_a: Corner, corner_b: Corner):
     return corner_a.q == corner_b.q and corner_a.r == corner_b.r and corner_a.s == corner_b.s
 
 
+# 获得邻接的六个六边形
+static func get_hex_adjacency_hex(hex: Hex) -> Array:
+    var result = []
+    for direction in Directions:
+        result.append(hex_neighbor(hex, direction))
+    return result
+
+
 # 获得邻接的三个六边形
-static func get_adjacency_hex(corner: Corner) -> Array:
+static func get_corner_adjacency_hex(corner: Corner) -> Array:
     if corner.get_type() == Corner.TYPE_POSITIVE:
         return [Hex.new(corner.q, corner.r, corner.s-1), Hex.new(corner.q-1, corner.r, corner.s), Hex.new(corner.q, corner.r-1, corner.s)]
     else:
@@ -227,7 +235,7 @@ static func hex_to_pixel(layout: HexLayout, coord: Hex) -> Vector2:
 
 # 将顶点坐标转化为屏幕坐标
 static func corner_to_pixel(layout: HexLayout, coord: Corner):
-    var base_hex = get_adjacency_hex(coord)[0]
+    var base_hex = get_corner_adjacency_hex(coord)[0]
     var index = get_corner_index(base_hex, coord)
     var angle = deg2rad(layout.orientation.start_angle - index*60)
     var offset = Vector2(layout.size.x*cos(angle), layout.size.y*sin(angle))

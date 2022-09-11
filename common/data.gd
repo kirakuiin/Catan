@@ -73,7 +73,21 @@ enum AchievementType{ARMY, ROAD}
 
 
 # 点数映射
-enum PointType{TWO, THREE, FOUR, FIVE, SIX, EIGHT, NINE, TEN, ELEVEN, TWELVE}
+enum PointType{ZERO, TWO, THREE, FOUR, FIVE, SIX, EIGHT, NINE, TEN, ELEVEN, TWELVE}
+
+
+const POINT_DATA = {
+    PointType.TWO: "res://assets/tiles/number2.png",
+    PointType.THREE: "res://assets/tiles/number3.png",
+    PointType.FOUR: "res://assets/tiles/number4.png",
+    PointType.FIVE: "res://assets/tiles/number5.png",
+    PointType.SIX: "res://assets/tiles/number6.png",
+    PointType.EIGHT: "res://assets/tiles/number8.png",
+    PointType.NINE: "res://assets/tiles/number9.png",
+    PointType.TEN: "res://assets/tiles/number10.png",
+    PointType.ELEVEN: "res://assets/tiles/number11.png",
+    PointType.TWELVE: "res://assets/tiles/number12.png",
+}
 
 
 # 建筑映射
@@ -81,7 +95,7 @@ enum BuildingType{SETTLEMENT, CITY, ROAD}
 
 
 # 资源映射
-enum ResourceType{WOOD, BRICK, ROCK, SHEEP, WHEAT}
+enum ResourceType{LUMBER, BRICK, ORE, WOOL, GRAIN}
 
 
 # 强盗映射
@@ -89,7 +103,7 @@ enum EnemyType{ROBBER, PIRATE}
 
 
 # 港口映射
-enum HarborType{WOOD, BRICK, ROCK, SHEEP, WHEAT, GENERIC}
+enum HarborType{LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC}
 
 
 # 数量映射
@@ -98,63 +112,146 @@ const NUM_DATA = {
         "resource": {
             "total_num": 95,
             "type_num": 5,
-            ResourceType.BRICK: 19,
-            ResourceType.WOOD: 19,
-            ResourceType.ROCK: 19,
-            ResourceType.SHEEP: 19,
-            ResourceType.WHEAT: 19,
+            "each_num": {
+                ResourceType.BRICK: 19,
+                ResourceType.LUMBER: 19,
+                ResourceType.ORE: 19,
+                ResourceType.WOOL: 19,
+                ResourceType.GRAIN: 19,
+            },
         },
         "point": {
             "total_num": 18,
             "type_num": 10,
-            PointType.TWO: 1,
-            PointType.THREE: 2,
-            PointType.FOUR: 2,
-            PointType.FIVE: 2,
-            PointType.SIX: 2,
-            PointType.EIGHT: 2,
-            PointType.NINE: 2,
-            PointType.TEN: 2,
-            PointType.ELEVEN: 2,
-            PointType.TWELVE: 1,
+            "each_num": {
+                PointType.TWO: 1,
+                PointType.THREE: 2,
+                PointType.FOUR: 2,
+                PointType.FIVE: 2,
+                PointType.SIX: 2,
+                PointType.EIGHT: 2,
+                PointType.NINE: 2,
+                PointType.TEN: 2,
+                PointType.ELEVEN: 2,
+                PointType.TWELVE: 1,
+            },
         },
         "card": {
             "total_num": 25,
             "type_num": 5,
-            CardType.MONOPOLY: 2,
-            CardType.ROAD: 2,
-            CardType.PLENTY: 2,
-            CardType.VP: 5,
-            CardType.KNIGHT: 14,
+            "each_num": {
+                CardType.MONOPOLY: 2,
+                CardType.ROAD: 2,
+                CardType.PLENTY: 2,
+                CardType.VP: 5,
+                CardType.KNIGHT: 14,
+            },
         },
         "building": {
             "total_num": 24,
             "type_num": 3,
-            BuildingType.SETTLEMENT: 5,
-            BuildingType.CITY: 4,
-            BuildingType.ROAD: 15,
+            "each_num": {
+                BuildingType.SETTLEMENT: 5,
+                BuildingType.CITY: 4,
+                BuildingType.ROAD: 15,
+            },
         },
         "tile": {
-            "total_num": 37,
-            "type_num": 7,
-            "min_num": 3,
-            TileType.DESERT: 1,
-            TileType.OCEAN: 18,
-            TileType.HILL: 3,
-            TileType.MOUNTAIN: 3,
-            TileType.PASTURE: 4,
-            TileType.FIELD: 4,
-            TileType.FOREST: 4,
+            "total_num": 19,
+            "type_num": 6,
+            "each_num": {
+                TileType.DESERT: 1,
+                TileType.HILL: 3,
+                TileType.MOUNTAIN: 3,
+                TileType.PASTURE: 4,
+                TileType.FIELD: 4,
+                TileType.FOREST: 4,
+            },
         },
         "harbor": {
             "total_num": 9,
             "type_num": 6,
-            HarborType.WOOD: 1,
-            HarborType.BRICK: 1,
-            HarborType.ROCK: 1,
-            HarborType.SHEEP: 1,
-            HarborType.WHEAT: 1,
-            HarborType.GENERIC: 1,
+            "each_num": {
+                HarborType.LUMBER: 1,
+                HarborType.BRICK: 1,
+                HarborType.ORE: 1,
+                HarborType.WOOL: 1,
+                HarborType.GRAIN: 1,
+                HarborType.GENERIC: 4,
+            },
+        },
+    },
+    CatanSize.BIG: {
+        "resource": {
+            "total_num": 120,
+            "type_num": 5,
+            "each_num": {
+                ResourceType.BRICK: 24,
+                ResourceType.LUMBER: 24,
+                ResourceType.ORE: 24,
+                ResourceType.WOOL: 24,
+                ResourceType.GRAIN: 24,
+            },
+        },
+        "point": {
+            "total_num": 28,
+            "type_num": 10,
+            "each_num": {
+                PointType.TWO: 2,
+                PointType.THREE: 3,
+                PointType.FOUR: 3,
+                PointType.FIVE: 3,
+                PointType.SIX: 3,
+                PointType.EIGHT: 3,
+                PointType.NINE: 3,
+                PointType.TEN: 3,
+                PointType.ELEVEN: 3,
+                PointType.TWELVE: 2,
+            },
+        },
+        "card": {
+            "total_num": 34,
+            "type_num": 5,
+            "each_num": {
+                CardType.MONOPOLY: 3,
+                CardType.ROAD: 3,
+                CardType.PLENTY: 3,
+                CardType.VP: 5,
+                CardType.KNIGHT: 20,
+            },
+        },
+        "building": {
+            "total_num": 24,
+            "type_num": 3,
+            "each_num": {
+                BuildingType.SETTLEMENT: 5,
+                BuildingType.CITY: 4,
+                BuildingType.ROAD: 15,
+            },
+        },
+        "tile": {
+            "total_num": 30,
+            "type_num": 6,
+            "each_num": {
+                TileType.DESERT: 2,
+                TileType.HILL: 5,
+                TileType.MOUNTAIN: 5,
+                TileType.PASTURE: 6,
+                TileType.FIELD: 6,
+                TileType.FOREST: 6,
+            },
+        },
+        "harbor": {
+            "total_num": 11,
+            "type_num": 6,
+            "each_num": {
+                HarborType.LUMBER: 1,
+                HarborType.BRICK: 1,
+                HarborType.ORE: 1,
+                HarborType.WOOL: 2,
+                HarborType.GRAIN: 1,
+                HarborType.GENERIC: 5,
+            },
         },
     },
 }

@@ -4,7 +4,6 @@
 [ext_resource path="res://assets/images/catan_background.jpeg" type="Texture" id=2]
 [ext_resource path="res://ui/lobby/game_lobby.gd" type="Script" id=3]
 
-
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -85,29 +84,29 @@ anchor_right = 0.933333
 anchor_bottom = 0.0962963
 
 [node name="HostNameLabel" type="Label" parent="TitleContainer"]
-margin_right = 508.0
+margin_right = 507.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "主机名"
 
 [node name="PlayerNum" type="Label" parent="TitleContainer"]
-margin_left = 512.0
-margin_right = 766.0
+margin_left = 511.0
+margin_right = 765.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "玩家数量"
 
 [node name="StateLabel" type="Label" parent="TitleContainer"]
-margin_left = 770.0
-margin_right = 1024.0
+margin_left = 769.0
+margin_right = 1023.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 text = "主机状态"
 
 [node name="IPLabel" type="Label" parent="TitleContainer"]
-margin_left = 1028.0
-margin_right = 1536.0
+margin_left = 1027.0
+margin_right = 1535.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0

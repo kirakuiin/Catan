@@ -5,7 +5,7 @@ extends Control
 signal all_player_ready(is_ready)
 
 
-const PlayerIcon = preload("res://ui/player/player_icon.gd")
+const PlayerIcon: Script = preload("res://ui/player/player_icon.gd")
 
 
 var _order_info: Protocol.PlayerOrderInfo

@@ -4,10 +4,12 @@ extends Control
 
 
 const PlayerItem: PackedScene = preload("res://ui/lobby/player_item.tscn")
+const MapGenerator: Script = preload("res://game/map_generator.gd")
 
 
 var _host_info: Protocol.HostInfo
 var _catan_setup_info: Protocol.CatanSetupInfo
+var _map_info: Protocol.MapInfo
 
 
 func _init():
@@ -22,7 +24,14 @@ func _ready():
     _init_signal()
     _init_broadcast()
     _init_catan_setup()
-    _init_start_btn()
+    _init_btn()
+    _on_generate_map()
+
+
+func _input(event):
+    if event is InputEventMouseButton:
+        if event.pressed == true:
+            $CatanMap.hide()
 
 
 func _init_option():
@@ -72,19 +81,20 @@ func _init_broadcast():
         $BroadcastTimer.start()
 
 
-func _init_start_btn():
+func _init_btn():
     if not GameServer.is_server():
         $StartBtn.hide()
+        $PlayerSeat/GeneBtn.hide()
 
 
 func _init_catan_setup():
     if not GameServer.is_server():
-        rpc("send_catan_setup_info", GameServer.get_peer_id())
+        rpc("send_catan_init_info", GameServer.get_peer_id())
 
 
-master func send_catan_setup_info(peer_id: int):
-    var net_data = Protocol.serialize(_catan_setup_info)
-    rpc_id(peer_id, "recv_catan_setup_info", net_data)
+master func send_catan_init_info(peer_id: int):
+    rpc_id(peer_id, "recv_catan_setup_info", Protocol.serialize(_catan_setup_info))
+    rpc_id(peer_id, "recv_map_info", Protocol.serialize(_map_info))
 
 
 puppet func recv_catan_setup_info(net_data):
@@ -178,6 +188,22 @@ func _on_all_player_ready(is_ready: bool):
 
 
 func _on_start_game():
-    var seat_info = $PlayerSeat.get_order_info()
-    print(seat_info)
-    print(_catan_setup_info)
+    pass
+    #var seat_info = $PlayerSeat.get_order_info()
+
+
+func _on_generate_map():
+    var generator := MapGenerator.new()
+    _map_info = generator.generate(_catan_setup_info)
+    rpc("recv_map_info", Protocol.serialize(_map_info))
+
+
+remote func recv_map_info(data):
+    _map_info = Protocol.deserialize(data) as Protocol.MapInfo
+    if $CatanMap.visible:
+        _on_preview_map()
+
+
+func _on_preview_map():
+    $CatanMap.init_with_mapinfo(_map_info)
+    $CatanMap.show()

@@ -13,7 +13,7 @@ class ProtocolData:
     func _to_string() -> String:
         var string = "%s{" % cls_name
         for property in get_property_list():
-            if is_export(property.name):
+            if is_export(property.name) and property.name != "cls_name":
                 string += "%s=%s, " % [property.name, get(property.name)]
         string += "}"
         return string
@@ -53,7 +53,7 @@ static func get_cls(cls_name) -> ProtocolData:
 static func serialize(datas):
     var result = datas
     if datas is ProtocolData:
-        result = datas.to_var()
+        result = serialize(datas.to_var())
     elif datas is Array:
         result = []
         for data in datas:
@@ -69,13 +69,13 @@ static func serialize(datas):
 static func deserialize(net_data):
     var result = net_data
     if net_data is Dictionary:
+        result = {}
+        for key in net_data:
+            result[key] = deserialize(net_data[key])
         if "cls_name" in net_data:
+            var datas = result
             result = get_cls(net_data["cls_name"]).new()
-            result.load_var(net_data)
-        else:
-            result = {}
-            for key in net_data:
-                result[key] = deserialize(net_data[key])
+            result.load_var(datas)
     elif net_data is Array:
         result = []
         for data in net_data:
@@ -172,7 +172,7 @@ class TileInfo:
     var tile_type: int
     var point_type: int
 
-    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.DESERT, point=Data.PointType.TWO):
+    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.DESERT, point=Data.PointType.ZERO):
         cls_name = "TileInfo"
         cube_pos = pos
         tile_type = tile

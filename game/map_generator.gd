@@ -2,17 +2,21 @@ extends Node
 
 # Catan地图生成器
 
+const RETRY_TIME: int = 10
+
 var _setup_info: Protocol.CatanSetupInfo
 
 
 # 生成地图
 func generate(setup: Protocol.CatanSetupInfo) -> Protocol.MapInfo:
     _setup_info = setup
-    var map = _generate_hex_grid()
+    var map: Protocol.MapInfo
     if setup.is_random_land:
-        map = _randomize_grid(map)
-    map = _add_resource(map)
-    map = _add_point(map)
+        map = _generate_random_grid()
+    else:
+        map = _generate_hex_grid()
+    map = _add_resource_with_check(map)
+    map = _add_point_with_check(map)
     return map
 
 
@@ -43,9 +47,62 @@ static func _generate_small_grid(center: Hexlib.Hex = Hexlib.Hex.new(0, 0, 0)):
     return map
 
 
-func _randomize_grid(map: Protocol.MapInfo) -> Protocol.MapInfo:
+func _generate_random_grid() -> Protocol.MapInfo:
+    var map := Protocol.MapInfo.new()
+    map.add_tile(Protocol.TileInfo.new(Vector3(0, 0, 0)))
+    for _i in range(Data.NUM_DATA[_setup_info.catan_size]["tile"].total_num-1):
+        var hex = _generate_new_hex(map)
+        map.add_tile(Protocol.TileInfo.new(hex.to_vector3()))
     return map
 
+
+func _generate_new_hex(map: Protocol.MapInfo) -> Hexlib.Hex:
+    var pos_list = map.grid_map.keys()
+    pos_list.shuffle()
+    var hex: Hexlib.Hex
+    for i in range(len(pos_list)):
+        hex = map.grid_map[pos_list[i]].to_hex()
+        var neighbor_num = len(_get_all_neighbor(map, hex))
+        if neighbor_num < 6:
+            hex = _get_unused_hex(map, hex)
+            break
+    return hex
+
+
+func _get_all_neighbor(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Array:
+    var neighbors = []
+    for neighbor in Hexlib.get_hex_adjacency_hex(hex):
+        if neighbor.to_vector3() in map.grid_map:
+            neighbors.append(neighbor)
+    return neighbors
+
+
+func _get_unused_hex(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Hexlib.Hex:
+    var list = []
+    for neighbor in Hexlib.get_hex_adjacency_hex(hex):
+        if not neighbor.to_vector3() in map.grid_map:
+            list.append(neighbor)
+    return list[Util.randi_range(0, len(list))]
+
+
+func _add_resource_with_check(map: Protocol.MapInfo) -> Protocol.MapInfo:
+    var times = 0
+    while times < RETRY_TIME:
+        map = _add_resource(map)
+        if not _is_map_cluster(map, funcref(self, "_check_tile")):
+            break
+        times += 1
+    return map
+
+
+func _check_tile(tiles: Array) -> bool:
+    var first_type = tiles.pop_at(0).tile_type
+    for tile in tiles:
+        if tile.tile_type != first_type:
+            return false
+    return true
+
+    
 
 func _add_resource(map: Protocol.MapInfo) -> Protocol.MapInfo:
     var tile_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size]["tile"].duplicate(true)
@@ -68,7 +125,6 @@ func _randomize_resource(count_dict: Dictionary):
 
 
 func _get_random_type(count_dict: Dictionary):
-    randomize()
     var length = len(count_dict)
     var idx = Util.randi_range(0, length)
     var type = count_dict.keys()[idx]
@@ -78,6 +134,27 @@ func _get_random_type(count_dict: Dictionary):
     return type
 
 
+func _add_point_with_check(map: Protocol.MapInfo) -> Protocol.MapInfo:
+    var times = 0
+    while times < RETRY_TIME:
+        map = _add_point(map)
+        if not _is_map_cluster(map, funcref(self, "_check_point")):
+            break
+        times += 1
+    return map
+
+
+func _check_point(tiles: Array) -> bool:
+    var low_count = 0
+    var high_count = 0
+    for tile in tiles:
+        if tile.point_type in [Data.PointType.TWO, Data.PointType.TWELVE]:
+            low_count += 1
+        if tile.point_type in [Data.PointType.SIX, Data.PointType.EIGHT]:
+            high_count += 1
+    return low_count == 3 or high_count == 3
+    
+
 func _add_point(map: Protocol.MapInfo) -> Protocol.MapInfo:
     var point_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size]["point"].duplicate(true)
     var grids = map.grid_map.values()
@@ -86,3 +163,28 @@ func _add_point(map: Protocol.MapInfo) -> Protocol.MapInfo:
         if tile.tile_type != Data.TileType.DESERT:
             tile.point_type = _get_random_type(point_data.each_num)
     return map
+
+
+func _is_map_cluster(map: Protocol.MapInfo, value_func: FuncRef) -> bool:
+    for tile in map.grid_map.values():
+        if _is_cluster_by_hex(map, tile.to_hex(), value_func):
+            return true
+    return false
+
+
+func _is_cluster_by_hex(map: Protocol.MapInfo, hex: Hexlib.Hex, value_func: FuncRef) -> bool:
+    for direction in Hexlib.Directions:
+        var cluster := _cluster_to_tile(map, [hex, Hexlib.hex_neighbor(hex, direction), Hexlib.hex_neighbor(hex, (direction+1)%len(Hexlib.Directions))])
+        if len(cluster) < 3:
+            continue
+        if value_func.call_func(cluster):
+            return true
+    return false
+
+
+func _cluster_to_tile(map: Protocol.MapInfo, cluster: Array) -> Array:
+    var result := []
+    for hex in cluster:
+        if hex.to_vector3() in map.grid_map:
+            result.append(map.grid_map[hex.to_vector3()])
+    return result

@@ -29,3 +29,8 @@ func draw_map():
 func clear_all():
     for child in $Center.get_children():
         $Center.remove_child(child)
+
+
+func set_all_point_visible(is_visible: bool):
+    for child in $Center.get_children():
+        child.set_point_visible(is_visible)

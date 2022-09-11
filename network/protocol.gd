@@ -178,6 +178,11 @@ class TileInfo:
         tile_type = tile
         point_type = point
 
+    func to_hex() -> Hexlib.Hex:
+        var hex = Hexlib.Hex.new()
+        hex.from_vector3(cube_pos)
+        return hex
+
 
 # 地图信息
 class MapInfo:

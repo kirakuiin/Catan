@@ -21,7 +21,7 @@ func set_point_visible(is_visible: bool):
 
 func _init_texture():
 	$TileTexture.texture = ResourceLoader.load(Data.TILE_DATA[_tile_info.tile_type])
-	if _tile_info.tile_type != Data.TileType.DESERT:
+	if not _tile_info.tile_type in [Data.TileType.DESERT, Data.TileType.OCEAN]:
 		$NumberTexture.texture = ResourceLoader.load(Data.POINT_DATA[_tile_info.point_type])
 
 

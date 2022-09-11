@@ -17,6 +17,7 @@ func generate(setup: Protocol.CatanSetupInfo) -> Protocol.MapInfo:
         map = _generate_hex_grid()
     map = _add_resource_with_check(map)
     map = _add_point_with_check(map)
+    map = _add_ocean(map)
     return map
 
 
@@ -64,7 +65,7 @@ func _generate_new_hex(map: Protocol.MapInfo) -> Hexlib.Hex:
         hex = map.grid_map[pos_list[i]].to_hex()
         var neighbor_num = len(_get_all_neighbor(map, hex))
         if neighbor_num < 6:
-            hex = _get_unused_hex(map, hex)
+            hex = _get_rand_unused_hex(map, hex)
             break
     return hex
 
@@ -77,12 +78,17 @@ func _get_all_neighbor(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Array:
     return neighbors
 
 
-func _get_unused_hex(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Hexlib.Hex:
+func _get_rand_unused_hex(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Hexlib.Hex:
+    var list = _get_unused_hex_list(map, hex)
+    return list[Util.randi_range(0, len(list))]
+
+
+func _get_unused_hex_list(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Array:
     var list = []
     for neighbor in Hexlib.get_hex_adjacency_hex(hex):
         if not neighbor.to_vector3() in map.grid_map:
             list.append(neighbor)
-    return list[Util.randi_range(0, len(list))]
+    return list
 
 
 func _add_resource_with_check(map: Protocol.MapInfo) -> Protocol.MapInfo:
@@ -188,3 +194,13 @@ func _cluster_to_tile(map: Protocol.MapInfo, cluster: Array) -> Array:
         if hex.to_vector3() in map.grid_map:
             result.append(map.grid_map[hex.to_vector3()])
     return result
+
+
+func _add_ocean(map: Protocol.MapInfo) -> Protocol.MapInfo:
+    var ocean_pos := {}
+    for tile in map.grid_map.values():
+        for hex in _get_unused_hex_list(map, tile.to_hex()):
+            ocean_pos[hex.to_vector3()] = true
+    for pos in ocean_pos:
+        map.add_tile(Protocol.TileInfo.new(pos, Data.TileType.OCEAN))
+    return map

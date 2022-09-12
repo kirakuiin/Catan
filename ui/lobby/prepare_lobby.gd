@@ -25,7 +25,7 @@ func _ready():
     _init_broadcast()
     _init_catan_setup()
     _init_btn()
-    _on_generate_map()
+    _generate_map()
 
 
 func _input(event):
@@ -85,6 +85,8 @@ func _init_btn():
     if not GameServer.is_server():
         $StartBtn.hide()
         $PlayerSeat/GeneBtn.hide()
+    else:
+        $PlayerSeat/PreviewBtn.text = "生成"
 
 
 func _init_catan_setup():
@@ -192,7 +194,7 @@ func _on_start_game():
     #var seat_info = $PlayerSeat.get_order_info()
 
 
-func _on_generate_map():
+func _generate_map():
     var generator := MapGenerator.new()
     _map_info = generator.generate(_catan_setup_info)
     rpc("recv_map_info", Protocol.serialize(_map_info))
@@ -205,6 +207,8 @@ remote func recv_map_info(data):
 
 
 func _on_preview_map():
+    if GameServer.is_server():
+        _generate_map()
     $CatanMap.init_with_mapinfo(_map_info)
     $CatanMap.show()
     if _catan_setup_info.is_enable_fog:

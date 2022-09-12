@@ -106,6 +106,16 @@ enum EnemyType{ROBBER, PIRATE}
 enum HarborType{LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC}
 
 
+const HARBOR_DATA = {
+    HarborType.LUMBER: "res://assets/tiles/lumber_harbor.png",
+    HarborType.BRICK: "res://assets/tiles/brick_harbor.png",
+    HarborType.ORE: "res://assets/tiles/ore_harbor.png",
+    HarborType.WOOL: "res://assets/tiles/wool_harbor.png",
+    HarborType.GRAIN: "res://assets/tiles/grain_harbor.png",
+    HarborType.GENERIC: "res://assets/tiles/generic_harbor.png",
+}
+
+
 # 数量映射
 const NUM_DATA = {
     CatanSize.SMALL: {

@@ -120,6 +120,11 @@ static func Flat() -> Orientation:
     return Orientation.new(1.5, 0.0, sqrt(3.0)/2, sqrt(3), 2.0/3, 0.0, -1.0/3, sqrt(3)/3, 0)
 
 
+# 默认layout
+static func Layout() -> HexLayout:
+    return HexLayout.new(Flat())
+
+
 static func hex_equal(hex_a: Hex, hex_b: Hex) -> bool:
     return hex_a.q == hex_b.q and hex_a.r == hex_b.r and hex_a.s == hex_b.s
 
@@ -148,11 +153,11 @@ static func hex_direction(direction: int) -> Hex:
     return dir_list[direction]
 
 
-static func hex_neighbor(hex: Hex, direction: int):
+static func hex_neighbor(hex: Hex, direction: int) -> Hex:
     return hex_add(hex, hex_direction(direction))
 
 
-static func corner_equal(corner_a: Corner, corner_b: Corner):
+static func corner_equal(corner_a: Corner, corner_b: Corner) -> bool:
     return corner_a.q == corner_b.q and corner_a.r == corner_b.r and corner_a.s == corner_b.s
 
 
@@ -223,6 +228,14 @@ static func is_hex_corner(hex: Hex, corner: Corner) -> bool:
         if corner_equal(hex_cor, corner):
             return true
     return false
+
+
+# 两个六边形之间的相对角度
+static func hex_relative_angle(hex_a: Hex, hex_b: Hex, layout: HexLayout = Layout()) -> float:
+    var center_a = hex_to_pixel(layout, hex_a)
+    var center_b = hex_to_pixel(layout, hex_b)
+    var diff = center_b-center_a
+    return rad2deg(atan2(diff.y, diff.x))
 
 
 # 将网格坐标转换为屏幕坐标

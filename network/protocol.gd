@@ -45,6 +45,7 @@ static func get_cls(cls_name) -> ProtocolData:
         "PlayerOrderInfo": PlayerOrderInfo,
         "TileInfo": TileInfo,
         "MapInfo": MapInfo,
+        "HarborInfo": HarborInfo,
     }
     return map[cls_name]
 
@@ -184,15 +185,37 @@ class TileInfo:
         return hex
 
 
+# 港口信息
+class HarborInfo:
+    extends ProtocolData
+
+    var cube_pos: Vector3
+    var harbor_type: int
+    var harbor_angle: float
+
+    func _init(pos: Vector3=Vector3(0, 0, 0), type=Data.HarborType.GENERIC, angle=0.0):
+        cls_name = "HarborInfo"
+        cube_pos = pos
+        harbor_type = type
+        harbor_angle = angle
+
+
 # 地图信息
 class MapInfo:
     extends ProtocolData
 
     var grid_map: Dictionary
+    var harbor_list: Array
 
-    func _init(map: Dictionary = {}):
+    func _init(map: Dictionary = {}, harbor: Array = []):
         cls_name = "MapInfo"
         grid_map = map
+        harbor_list = harbor
+
 
     func add_tile(tile: TileInfo):
         grid_map[tile.cube_pos] = tile
+
+
+    func add_harbor(pos: Vector3, harbor_type: int):
+        harbor_list.append(harbor_type)

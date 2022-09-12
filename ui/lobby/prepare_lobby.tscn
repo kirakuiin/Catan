@@ -221,15 +221,6 @@ margin_right = 376.0
 margin_bottom = 32.0
 mouse_filter = 1
 
-[node name="GeneBtn" type="Button" parent="PlayerSeat"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -132.0
-margin_top = -46.0
-text = "生成地图"
-
 [node name="PreviewBtn" type="Button" parent="PlayerSeat"]
 anchor_left = 0.44
 anchor_top = 0.461667
@@ -255,5 +246,4 @@ margin_bottom = 0.0
 [connection signal="button_down" from="ExitButton" to="." method="_on_exit_prepare"]
 [connection signal="button_down" from="StartBtn" to="." method="_on_start_game"]
 [connection signal="timeout" from="BroadcastTimer" to="." method="_on_broadcast"]
-[connection signal="button_down" from="PlayerSeat/GeneBtn" to="." method="_on_generate_map"]
 [connection signal="button_down" from="PlayerSeat/PreviewBtn" to="." method="_on_preview_map"]

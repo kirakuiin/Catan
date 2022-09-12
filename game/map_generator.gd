@@ -18,6 +18,7 @@ func generate(setup: Protocol.CatanSetupInfo) -> Protocol.MapInfo:
     map = _add_resource_with_check(map)
     map = _add_point_with_check(map)
     map = _add_ocean(map)
+    map = _add_harbor(map)
     return map
 
 
@@ -70,10 +71,11 @@ func _generate_new_hex(map: Protocol.MapInfo) -> Hexlib.Hex:
     return hex
 
 
-func _get_all_neighbor(map: Protocol.MapInfo, hex: Hexlib.Hex) -> Array:
+func _get_all_neighbor(map: Protocol.MapInfo, hex: Hexlib.Hex, have_ocean=true) -> Array:
     var neighbors = []
     for neighbor in Hexlib.get_hex_adjacency_hex(hex):
-        if neighbor.to_vector3() in map.grid_map:
+        var pos = neighbor.to_vector3()
+        if pos in map.grid_map and (have_ocean or map.grid_map[pos].tile_type != Data.TileType.OCEAN):
             neighbors.append(neighbor)
     return neighbors
 
@@ -110,6 +112,7 @@ func _check_tile(tiles: Array) -> bool:
 
     
 
+# TODO: 分散的资源生成
 func _add_resource(map: Protocol.MapInfo) -> Protocol.MapInfo:
     var tile_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size]["tile"].duplicate(true)
     var count_dict: Dictionary = tile_data.each_num
@@ -161,6 +164,7 @@ func _check_point(tiles: Array) -> bool:
     return low_count == 3 or high_count == 3
     
 
+# TODO: 平衡的点数分布
 func _add_point(map: Protocol.MapInfo) -> Protocol.MapInfo:
     var point_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size]["point"].duplicate(true)
     var grids = map.grid_map.values()
@@ -204,3 +208,52 @@ func _add_ocean(map: Protocol.MapInfo) -> Protocol.MapInfo:
     for pos in ocean_pos:
         map.add_tile(Protocol.TileInfo.new(pos, Data.TileType.OCEAN))
     return map
+
+
+func _add_harbor(map: Protocol.MapInfo) -> Protocol.MapInfo:
+    var ocean_list = _get_ocean_list(map)
+    var split = len(ocean_list) / Data.NUM_DATA[_setup_info.catan_size].harbor.total_num
+    var data = Data.NUM_DATA[_setup_info.catan_size]["harbor"].duplicate(true)
+    for idx in range(data.total_num):
+        map.harbor_list.append(Protocol.HarborInfo.new(ocean_list[idx*split], _get_random_harbor(data.each_num),
+                                                        _get_harbor_angle(map, ocean_list[idx*split])))
+    return map
+
+
+func _get_random_harbor(data: Dictionary):
+    var length = len(data)
+    var idx = Util.randi_range(0, length)
+    var type = data.keys()[idx]
+    data[type] -= 1
+    if data[type] == 0:
+        data.erase(type)
+    return type
+
+
+func _get_ocean_list(map: Protocol.MapInfo) -> Array:
+    var pos_list = []
+    var queue = [_find_first_ocean_tile(map)]
+    while queue:
+        var tile = queue.pop_front()
+        pos_list.append(tile.cube_pos)
+        for neighbor in _get_all_neighbor(map, tile.to_hex()):
+            var pos = neighbor.to_vector3()
+            if not pos in pos_list and map.grid_map[pos].tile_type == Data.TileType.OCEAN:
+                queue.append(map.grid_map[pos])
+                break
+    return pos_list
+
+
+func _find_first_ocean_tile(map: Protocol.MapInfo):
+    var tile_list = map.grid_map.values()
+    tile_list.shuffle()
+    for tile in tile_list:
+        if tile.tile_type == Data.TileType.OCEAN:
+            return tile
+
+
+func _get_harbor_angle(map: Protocol.MapInfo, ocean_pos: Vector3):
+    var ocean_hex = map.grid_map[ocean_pos].to_hex()
+    var neighbor_list := _get_all_neighbor(map, ocean_hex, false)
+    var rand_hex = neighbor_list[Util.randi_range(0, len(neighbor_list))]
+    return Hexlib.hex_relative_angle(ocean_hex, rand_hex)

@@ -1,15 +1,19 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui/map/tile.gd" type="Script" id=1]
 [ext_resource path="res://assets/tiles/ocean.png" type="Texture" id=2]
+[ext_resource path="res://assets/fonts/OPPOSans-B.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://assets/tiles/bridge.png" type="Texture" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 35
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
 
 [node name="Tile" type="Control"]
-anchor_left = 0.225
-anchor_top = 0.274074
-anchor_right = 0.329167
-anchor_bottom = 0.459259
-margin_right = -0.000671387
-margin_bottom = 0.000183105
+anchor_right = 0.104167
+anchor_bottom = 0.185185
 rect_min_size = Vector2( 150, 150 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -19,11 +23,16 @@ __meta__ = {
 [node name="TileTexture" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 100, 100 )
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
 
-[node name="NumberTexture" type="TextureRect" parent="."]
+[node name="Point" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NumberTexture" type="TextureRect" parent="Point"]
 anchor_left = 0.2875
 anchor_top = 0.2875
 anchor_right = 0.7125
@@ -33,3 +42,37 @@ stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": true
 }
+
+[node name="BridgeTexture" type="TextureRect" parent="Point"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 100, 100 )
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+
+[node name="HarborTexture" type="TextureRect" parent="Point"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 100, 100 )
+expand = true
+stretch_mode = 6
+
+[node name="RatioLabel21" type="Label" parent="Point"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 1 )
+text = "2 : 1"
+align = 1
+valign = 1
+
+[node name="RatioLabel31" type="Label" parent="Point"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 1 )
+text = "3 : 1"
+align = 1
+valign = 1

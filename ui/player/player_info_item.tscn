@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/player/player_info_item.gd" type="Script" id=1]
+[ext_resource path="res://assets/game_theme.tres" type="Theme" id=2]
+
+[node name="PlayerInfoItem" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1770.0
+margin_bottom = -1030.0
+rect_min_size = Vector2( 100, 50 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="HBox" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 2 )
+theme_type_variation = "HBoxNoSpace"
+
+[node name="Icon" type="TextureRect" parent="HBox"]
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+expand = true
+
+[node name="Text" type="Label" parent="HBox"]
+margin_left = 50.0
+margin_right = 150.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 6.87
+align = 1
+valign = 1

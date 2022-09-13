@@ -85,7 +85,7 @@ puppet func server_accept():
 # 检查客户端信息
 master func check_player_info(net_data):
     var player_info = Protocol.deserialize(net_data) as Protocol.PlayerInfo
-    if GameState.is_accept_connection(player_info):
+    if ConnState.is_accept_connection(player_info):
         client_ids.append(player_info.peer_id)
         emit_signal("client_connected", player_info)
         rpc_id(player_info.peer_id, "server_accept")

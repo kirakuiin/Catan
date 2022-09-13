@@ -58,11 +58,11 @@ config/icon="res://icon.png"
 
 [autoload]
 
+PlayerConfig="*res://common/player_config.gd"
 GameServer="*res://network/game_server.gd"
 SceneMgr="*res://common/scene_mgr.gd"
-PlayerConfig="*res://common/player_config.gd"
 PlayerInfoMgr="*res://common/player_info_mgr.gd"
-GameState="*res://game/game_state.gd"
+ConnState="*res://network/conn_state.gd"
 
 [debug]
 

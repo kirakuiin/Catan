@@ -3,7 +3,7 @@ extends Control
 # 游戏的主界面
 
 func _ready():
-    pass
+    randomize()
 
 
 func _on_start_game():

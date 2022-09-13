@@ -10,6 +10,7 @@ const MapGenerator: Script = preload("res://game/map_generator.gd")
 var _host_info: Protocol.HostInfo
 var _catan_setup_info: Protocol.CatanSetupInfo
 var _map_info: Protocol.MapInfo
+var _order_info: Protocol.PlayerOrderInfo
 
 
 func _init():
@@ -120,7 +121,7 @@ func _on_change_num(index):
 remotesync func change_max_player_num(index: int):
     _catan_setup_info.catan_size = Data.MAPSIZE_DATA[index]
     _host_info.max_player_num = Data.MAPSIZE_DATA[index]
-    GameState.set_max_conn(_host_info.max_player_num-1)
+    ConnState.set_max_conn(_host_info.max_player_num-1)
     _reset_catan_setup()
 
 
@@ -190,14 +191,34 @@ func _on_all_player_ready(is_ready: bool):
 
 
 func _on_start_game():
-    #var seat_info = $PlayerSeat.get_order_info()
-    SceneMgr.open_scene(SceneMgr.WORLD_SCENE)
+    _order_info = $PlayerSeat.get_order_info()
+    if _catan_setup_info.is_random_order:
+        _randomize_order(_order_info)
+    rpc("start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+
+
+func _randomize_order(order_info: Protocol.PlayerOrderInfo):
+    var orders = order_info.order_to_name.keys()
+    var names = order_info.order_to_name.values()
+    orders.shuffle()
+    names.shuffle()
+    for idx in range(len(orders)):
+        order_info.order_to_name[orders[idx]] = names[idx]
+
+
+remotesync func start_game(order_data, setup_data, map_data):
+    var scene = SceneMgr.open_scene(SceneMgr.WORLD_SCENE)
+    var order_info = Protocol.deserialize(order_data)
+    var setup_info = Protocol.deserialize(setup_data)
+    var map_info = Protocol.deserialize(map_data)
+    scene.init(order_info, setup_info, map_info)
 
 
 func _generate_map():
-    var generator := MapGenerator.new()
-    _map_info = generator.generate(_catan_setup_info)
-    rpc("recv_map_info", Protocol.serialize(_map_info))
+    if GameServer.is_server():
+        var generator := MapGenerator.new()
+        _map_info = generator.generate(_catan_setup_info)
+        rpc("recv_map_info", Protocol.serialize(_map_info))
 
 
 remote func recv_map_info(data):
@@ -207,8 +228,7 @@ remote func recv_map_info(data):
 
 
 func _on_preview_map():
-    if GameServer.is_server():
-        _generate_map()
+    _generate_map()
     $CatanMap.init_with_mapinfo(_map_info)
     $CatanMap.show()
     if _catan_setup_info.is_enable_fog:

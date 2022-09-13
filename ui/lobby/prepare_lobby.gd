@@ -190,8 +190,8 @@ func _on_all_player_ready(is_ready: bool):
 
 
 func _on_start_game():
-    pass
     #var seat_info = $PlayerSeat.get_order_info()
+    SceneMgr.open_scene(SceneMgr.WORLD_SCENE)
 
 
 func _generate_map():

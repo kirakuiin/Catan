@@ -1,4 +1,4 @@
-extends Control
+extends Node2D
 
 
 # 拖拽区域

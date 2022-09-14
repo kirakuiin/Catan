@@ -47,3 +47,7 @@ func clear_all():
 func set_all_point_visible(is_visible: bool):
     for child in $Center.get_children():
         child.set_point_visible(is_visible)
+
+
+func get_map_size():
+    return $Backgroud.rect_size

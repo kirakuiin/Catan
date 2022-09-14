@@ -1,14 +1,46 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://ui/player/player_info_item.gd" type="Script" id=1]
-[ext_resource path="res://assets/game_theme.tres" type="Theme" id=2]
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=2]
+
+[sub_resource type="Animation" id=1]
+length = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("HBox/Text:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "highlight"
+length = 3.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("HBox/Text:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.5, 1, 1.5, 2, 2.5, 3, 3.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 0.501961, 0, 1 ), Color( 1, 1, 0, 1 ), Color( 0, 1, 0, 1 ), Color( 0, 0.498039, 1, 1 ), Color( 0, 0, 1, 1 ), Color( 1, 0, 1, 1 ) ]
+}
 
 [node name="PlayerInfoItem" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -1770.0
 margin_bottom = -1030.0
-rect_min_size = Vector2( 100, 50 )
+rect_min_size = Vector2( 150, 50 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
@@ -34,6 +66,11 @@ margin_right = 150.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 6.87
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "0"
 align = 1
 valign = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 1 )
+anims/highlight = SubResource( 2 )

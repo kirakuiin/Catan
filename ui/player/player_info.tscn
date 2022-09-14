@@ -1,34 +1,52 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://ui/player/player_icon.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/game_theme.tres" type="Theme" id=2]
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=2]
 [ext_resource path="res://ui/player/player_info_item.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/cards/lumber.png" type="Texture" id=4]
+[ext_resource path="res://assets/icons/biggest_army.png" type="Texture" id=4]
+[ext_resource path="res://assets/icons/road.png" type="Texture" id=5]
+[ext_resource path="res://assets/icons/resource.png" type="Texture" id=6]
+[ext_resource path="res://assets/icons/trophy.png" type="Texture" id=7]
+[ext_resource path="res://assets/icons/settlement.png" type="Texture" id=8]
+[ext_resource path="res://assets/icons/city.png" type="Texture" id=9]
+[ext_resource path="res://assets/icons/development.png" type="Texture" id=10]
+[ext_resource path="res://assets/icons/longest_road.png" type="Texture" id=11]
+[ext_resource path="res://ui/player/player_info.gd" type="Script" id=12]
 
 [node name="PlayerInfo" type="Control"]
+anchor_right = 0.234375
+anchor_bottom = 0.138889
+rect_min_size = Vector2( 600, 150 )
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1512.0
-margin_bottom = -980.0
-rect_min_size = Vector2( 200, 100 )
+color = Color( 0.03, 0.03, 0.03, 0.713726 )
 
 [node name="HBox" type="HBoxContainer" parent="."]
-margin_right = 384.0
-margin_bottom = 100.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 theme = ExtResource( 2 )
 theme_type_variation = "HBoxNoSpace"
 
 [node name="PlayerIcon" parent="HBox" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 100.0
-margin_bottom = 100.0
+margin_right = 150.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 150, 150 )
 size_flags_vertical = 3
+player_color = Color( 0.756863, 0.129412, 0.027451, 1 )
+order_num = 3
 
 [node name="Grid" type="GridContainer" parent="HBox"]
-margin_left = 100.0
-margin_right = 384.0
-margin_bottom = 100.0
+margin_left = 150.0
+margin_right = 600.0
+margin_bottom = 150.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 2 )
@@ -38,13 +56,97 @@ columns = 3
 [node name="Resource" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 100.0
+margin_right = 150.0
 margin_bottom = 50.0
-icon = ExtResource( 4 )
+hint_tooltip = "资源卡"
+icon = ExtResource( 6 )
 
 [node name="Card" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 100.0
-margin_right = 200.0
+margin_left = 150.0
+margin_right = 300.0
 margin_bottom = 50.0
+hint_tooltip = "发展卡"
+icon = ExtResource( 10 )
+
+[node name="VP" parent="HBox/Grid" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 300.0
+margin_right = 450.0
+margin_bottom = 50.0
+hint_tooltip = "胜利点数"
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": ""
+}
+icon = ExtResource( 7 )
+
+[node name="Settlement" parent="HBox/Grid" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 50.0
+margin_right = 150.0
+margin_bottom = 100.0
+hint_tooltip = "定居点"
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": ""
+}
+icon = ExtResource( 8 )
+
+[node name="City" parent="HBox/Grid" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 150.0
+margin_top = 50.0
+margin_right = 300.0
+margin_bottom = 100.0
+hint_tooltip = "城市"
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": ""
+}
+icon = ExtResource( 9 )
+
+[node name="Road" parent="HBox/Grid" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 300.0
+margin_top = 50.0
+margin_right = 450.0
+margin_bottom = 100.0
+hint_tooltip = "道路"
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": ""
+}
+icon = ExtResource( 5 )
+
+[node name="BiggestArmy" parent="HBox/Grid" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 100.0
+margin_right = 150.0
+margin_bottom = 150.0
+hint_tooltip = "最多召唤骑士"
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": ""
+}
+icon = ExtResource( 4 )
+
+[node name="LongestRoad" parent="HBox/Grid" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 150.0
+margin_top = 100.0
+margin_right = 300.0
+margin_bottom = 150.0
+hint_tooltip = "最长连续道路"
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": ""
+}
+icon = ExtResource( 11 )

@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://common/data.gd"
 }, {
-"base": "Control",
+"base": "Node2D",
 "class": "DragArea",
 "language": "GDScript",
 "path": "res://ui/util/drag_area.gd"
@@ -88,7 +88,7 @@ theme=false
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
-theme/custom="res://assets/game_theme.tres"
+theme/custom="res://assets/theme/game_theme.tres"
 
 [physics]
 

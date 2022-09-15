@@ -23,9 +23,9 @@ func set_num(cur_num: int, max_num: int) -> void:
 
 
 func set_state(state: int) -> void:
-    if state == Protocol.HostState.PLAYING:
+    if state == Data.HostState.PLAYING:
         $InfoContainer/StateLabel.text = '游戏中'
-    elif state == Protocol.HostState.PREPARE:
+    elif state == Data.HostState.PREPARE:
         $InfoContainer/StateLabel.text = '准备中'
 
 

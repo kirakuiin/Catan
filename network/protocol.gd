@@ -46,6 +46,9 @@ static func get_cls(cls_name) -> ProtocolData:
 		"TileInfo": TileInfo,
 		"MapInfo": MapInfo,
 		"HarborInfo": HarborInfo,
+		"PlayerScoreInfo": PlayerScoreInfo,
+		"PlayerBuildingInfo": PlayerBuildingInfo,
+		"RoadInfo": RoadInfo,
 	}
 	return map[cls_name]
 
@@ -84,9 +87,6 @@ static func deserialize(net_data):
 	return result
 
 
-enum HostState {PREPARE, PLAYING}
-
-
 # 主机信息
 class HostInfo:
 	extends ProtocolData
@@ -97,7 +97,7 @@ class HostInfo:
 	var icon_id: int
 	var host_state: int
 
-	func _init(name="", icon=1, cur_num=0, max_num=0, state=HostState.PREPARE):
+	func _init(name="", icon=1, cur_num=0, max_num=0, state=Data.HostState.PREPARE):
 		cls_name = "HostInfo"
 		host_name = name
 		cur_player_num = cur_num
@@ -207,7 +207,7 @@ class MapInfo:
 	var grid_map: Dictionary
 	var harbor_list: Array
 
-	func _init(map: Dictionary = {}, harbor: Array = []):
+	func _init(map: Dictionary={}, harbor: Array=[]):
 		cls_name = "MapInfo"
 		grid_map = map
 		harbor_list = harbor
@@ -219,3 +219,50 @@ class MapInfo:
 
 	func add_harbor(pos: Vector3, harbor_type: int):
 		harbor_list.append(harbor_type)
+
+
+# 玩家资源信息
+class PlayerScoreInfo:
+	extends ProtocolData
+
+	var res_cards: Dictionary
+	var dev_cards: Dictionary
+	var vic_point: int
+	var army_num: int
+	var continue_road: int
+
+	func _init(res: Dictionary={}, dev: Dictionary={}, vp: int=0, army :int=0, cont :int=0):
+		cls_name = "PlayerScoreInfo"
+		res_cards = res
+		dev_cards = dev
+		vic_point = vp
+		army_num = army
+		continue_road = cont
+
+
+# 玩家建筑信息
+class PlayerBuildingInfo:
+	extends ProtocolData
+
+	var citys: Dictionary
+	var settlements: Dictionary
+	var roads: Dictionary
+
+	func _init(city_info: Dictionary={}, settlement_info: Dictionary={}, road_info: Dictionary={}):
+		cls_name = "PlayerBuildingInfo"
+		citys = city_info
+		settlements = settlement_info
+		roads = road_info
+
+
+# 道路信息
+class RoadInfo:
+	extends ProtocolData
+	
+	var begin: Vector3
+	var end: Vector3
+
+	func _init(b: Vector3=Vector3(0, 0, 0), e: Vector3=Vector3(0, 0, 0)):
+		cls_name = "RoadInfo"
+		begin = b
+		end = e

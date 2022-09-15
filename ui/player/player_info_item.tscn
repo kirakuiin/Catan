@@ -1,7 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://ui/player/player_info_item.gd" type="Script" id=1]
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=2]
+[ext_resource path="res://assets/fonts/OPPOSans-B.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=3]
+size = 20
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
 
 [sub_resource type="Animation" id=1]
 length = 0.01
@@ -38,21 +45,24 @@ tracks/0/keys = {
 [node name="PlayerInfoItem" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1770.0
+margin_right = -1820.0
 margin_bottom = -1030.0
-rect_min_size = Vector2( 150, 50 )
+rect_min_size = Vector2( 100, 50 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="HBox" type="HBoxContainer" parent="."]
-anchor_right = 1.0
+anchor_right = 0.666667
 anchor_bottom = 1.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 2 )
 theme_type_variation = "HBoxNoSpace"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Icon" type="TextureRect" parent="HBox"]
 margin_right = 50.0
@@ -62,11 +72,15 @@ expand = true
 
 [node name="Text" type="Label" parent="HBox"]
 margin_left = 50.0
-margin_right = 150.0
+margin_right = 100.0
 margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
+size_flags_stretch_ratio = 2.08
+theme = ExtResource( 2 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = SubResource( 3 )
 text = "0"
 align = 1
 valign = 1

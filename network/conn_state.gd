@@ -55,7 +55,7 @@ class PrepareState:
         return cur_conn < max_conn
 
     func get_state() -> int:
-        return Protocol.HostState.PREPARE
+        return Data.HostState.PREPARE
 
 
 # 游玩状态
@@ -71,7 +71,7 @@ class PlayingState:
         return player_info.player_name in _player_names
 
     func get_state() -> int:
-        return Protocol.HostState.PLAYING
+        return Data.HostState.PLAYING
 
 
 func _on_server_disconnected():

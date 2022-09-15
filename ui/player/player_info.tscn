@@ -16,7 +16,8 @@
 [node name="PlayerInfo" type="Control"]
 anchor_right = 0.234375
 anchor_bottom = 0.138889
-rect_min_size = Vector2( 600, 150 )
+margin_bottom = -0.00012207
+rect_min_size = Vector2( 450, 150 )
 script = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": true
@@ -30,6 +31,7 @@ color = Color( 0.03, 0.03, 0.03, 0.713726 )
 [node name="HBox" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = -150.0
 theme = ExtResource( 2 )
 theme_type_variation = "HBoxNoSpace"
 
@@ -45,7 +47,7 @@ order_num = 3
 
 [node name="Grid" type="GridContainer" parent="HBox"]
 margin_left = 150.0
-margin_right = 600.0
+margin_right = 450.0
 margin_bottom = 150.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -56,7 +58,7 @@ columns = 3
 [node name="Resource" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 150.0
+margin_right = 100.0
 margin_bottom = 50.0
 hint_tooltip = "资源卡"
 icon = ExtResource( 6 )
@@ -64,8 +66,8 @@ icon = ExtResource( 6 )
 [node name="Card" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 150.0
-margin_right = 300.0
+margin_left = 100.0
+margin_right = 200.0
 margin_bottom = 50.0
 hint_tooltip = "发展卡"
 icon = ExtResource( 10 )
@@ -73,8 +75,8 @@ icon = ExtResource( 10 )
 [node name="VP" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 300.0
-margin_right = 450.0
+margin_left = 200.0
+margin_right = 300.0
 margin_bottom = 50.0
 hint_tooltip = "胜利点数"
 __meta__ = {
@@ -87,7 +89,7 @@ icon = ExtResource( 7 )
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 50.0
-margin_right = 150.0
+margin_right = 100.0
 margin_bottom = 100.0
 hint_tooltip = "定居点"
 __meta__ = {
@@ -99,9 +101,9 @@ icon = ExtResource( 8 )
 [node name="City" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 150.0
+margin_left = 100.0
 margin_top = 50.0
-margin_right = 300.0
+margin_right = 200.0
 margin_bottom = 100.0
 hint_tooltip = "城市"
 __meta__ = {
@@ -113,9 +115,9 @@ icon = ExtResource( 9 )
 [node name="Road" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 300.0
+margin_left = 200.0
 margin_top = 50.0
-margin_right = 450.0
+margin_right = 300.0
 margin_bottom = 100.0
 hint_tooltip = "道路"
 __meta__ = {
@@ -128,7 +130,7 @@ icon = ExtResource( 5 )
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 100.0
-margin_right = 150.0
+margin_right = 100.0
 margin_bottom = 150.0
 hint_tooltip = "最多召唤骑士"
 __meta__ = {
@@ -140,9 +142,9 @@ icon = ExtResource( 4 )
 [node name="LongestRoad" parent="HBox/Grid" instance=ExtResource( 3 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 150.0
+margin_left = 100.0
 margin_top = 100.0
-margin_right = 300.0
+margin_right = 200.0
 margin_bottom = 150.0
 hint_tooltip = "最长连续道路"
 __meta__ = {

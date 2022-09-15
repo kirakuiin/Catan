@@ -4,6 +4,10 @@ extends Node
 class_name Data
 
 
+# 主机状态
+enum HostState {PREPARE, PLAYING}
+
+
 # 图标映射数据
 const ICON_DATA: Dictionary = {
     1: "res://assets/icons/aphrodite.png",

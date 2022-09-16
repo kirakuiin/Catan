@@ -20,9 +20,9 @@ _global_script_classes=[ {
 "path": "res://ui/util/drag_area.gd"
 }, {
 "base": "Node",
-"class": "FSM",
+"class": "HSM",
 "language": "GDScript",
-"path": "res://game/state.gd"
+"path": "res://common/hsm.gd"
 }, {
 "base": "Node",
 "class": "Hexlib",
@@ -47,7 +47,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Data": "",
 "DragArea": "",
-"FSM": "",
+"HSM": "",
 "Hexlib": "",
 "NetDefines": "",
 "Protocol": "",

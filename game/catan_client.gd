@@ -14,5 +14,5 @@ func _ready():
 
 
 func _init_node_setup():
-    name = Data.CLIENT
-    add_to_group(Data.CLIENT)
+    name = NetDefines.CLIENT_NAME
+    add_to_group(NetDefines.CLIENT_NAME)

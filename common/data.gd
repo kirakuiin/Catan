@@ -8,11 +8,6 @@ class_name Data
 enum HostState {PREPARE, PLAYING}
 
 
-# 节点名
-const  SERVER: String = "CatanServer"
-const  CLIENT: String = "CatanClient"
-
-
 # 图标映射数据
 const ICON_DATA: Dictionary = {
     1: "res://assets/icons/aphrodite.png",

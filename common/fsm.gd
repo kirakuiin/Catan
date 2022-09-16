@@ -1,9 +1,8 @@
 extends Node
 
 
-# 状态机
+# 有限状态机
 
-class_name FSM
 
 
 # 状态类
@@ -23,30 +22,24 @@ class State:
         return []
 
     # 获得所有的触发器
-    func get_triggers() -> Array:
+    func get_transitions() -> Array:
         return []
 
 
-# 触发器
-class Trigger:
+# 动作
+class Action:
     extends Reference
 
-    var conditions: Array
+    var callback: FuncRef
+    var params: Array
 
-    # 获得目标状态
-    func get_target_state() -> State:
-        return State.new()
+    func _init(cb: FuncRef, param_list: Array):
+        callback = cb
+        params = param_list
 
-    # 获得触发行动
-    func get_actions() -> Array:
-        return []
-
-    # 是否触发
-    func is_trigger() -> bool:
-        var result = true
-        for condition in conditions:
-            result = result and condition.is_meet_condition()
-        return result
+    # 执行动作
+    func invoke():
+        callback.call_funcv(params)
 
 
 # 条件
@@ -58,7 +51,36 @@ class Condition:
         return false
 
 
-# 一般状态机
+# 转换
+class Transition:
+    extends Reference
+
+    var target_state: State
+    var actions: Array
+    var conditions: Array
+    
+    func _init(target:State, ac_list: Array=[], conds: Array=[]):
+        target_state = target
+        actions = ac_list
+        conditions = conds
+
+    # 获得目标状态
+    func get_target_state() -> State:
+        return target_state
+
+    # 获得触发行动
+    func get_actions() -> Array:
+        return actions
+
+    # 是否触发
+    func is_triggered() -> bool:
+        var result = true
+        for condition in conditions:
+            result = result and condition.is_meet_condition()
+        return result
+
+
+# 有限状态机
 class StateMachine:
     extends Reference
 
@@ -70,9 +92,10 @@ class StateMachine:
     # 驱动状态机更新
     func update() -> Array:
         var triggered = null
-        for trigger in cur_state.get_triggers():
-            if trigger.is_trigger():
+        for trigger in cur_state.get_transitions():
+            if trigger.is_triggered():
                 triggered = trigger
+                break
         
         var actions = []
         if triggered:
@@ -84,3 +107,4 @@ class StateMachine:
         else:
             actions.append_array(cur_state.get_actions())
         return actions
+

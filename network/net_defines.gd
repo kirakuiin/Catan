@@ -6,7 +6,12 @@ class_name NetDefines
 
 
 const BROADCAST_ADDR: String = "255.255.255.255"
+const SERVER_NAME: String = "CatanServer"
+const CLIENT_NAME: String = "CatanClient"
 const BROAD_PORT: int = 12345
 const GAME_PORT: int = 32323
 const MAX_PEER: int = 5
 const SERVER_ID: int = 1
+
+
+enum PlayerOpState {NOT_READY, READY}

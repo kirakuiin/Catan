@@ -5,11 +5,11 @@ extends Node
 
 
 func get_client():
-    return get_tree().get_nodes_in_group(Data.CLIENT)[0]
+    return get_tree().get_nodes_in_group(NetDefines.CLIENT_NAME)[0]
 
 
 func get_server():
-    return get_tree().get_nodes_in_group(Data.SERVER)[0]
+    return get_tree().get_nodes_in_group(NetDefines.SERVER_NAME)[0]
 
 
 # C2S
@@ -17,7 +17,7 @@ func get_server():
 
 # 客户端准备就绪
 master func client_ready(player_name: String):
-    print(get_server(), player_name)
+    get_server().player_ready(player_name)
 
 
 # S2C

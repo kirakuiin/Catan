@@ -11,7 +11,7 @@ outline_size = 3
 outline_color = Color( 0.784314, 0.572549, 0.0235294, 1 )
 font_data = ExtResource( 3 )
 
-[node name="Control" type="Control"]
+[node name="Main" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )

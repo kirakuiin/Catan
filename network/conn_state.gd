@@ -2,6 +2,10 @@ extends Node
 
 # 连接状态管理
 
+
+signal state_changed(state)  # 状态变化
+
+
 var game_state: InnerStateInterface = null # 游戏状态
 
 
@@ -16,11 +20,13 @@ func _ready():
 # 切换至准备状态
 func to_prepare():
     game_state = PrepareState.new()
+    emit_signal("state_changed", game_state.get_state())
 
 
 # 切换至游戏状态
 func to_playing(player_names: Array):
     game_state = PlayingState.new(player_names)
+    emit_signal("state_changed", game_state.get_state())
 
 
 # 是否接受连接

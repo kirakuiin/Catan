@@ -74,6 +74,7 @@ func _init_signal():
 	PlayerInfoMgr.connect("player_added", self, "_on_player_added")
 	PlayerInfoMgr.connect("player_removed", self, "_on_player_removed")
 	GameServer.connect("server_disconnected", self, "_on_exit_prepare")
+	ConnState.connect("state_changed", self, "_on_start_client_game")
 	$PlayerSeat.connect("all_player_ready", self, "_on_all_player_ready")
 
 
@@ -193,7 +194,7 @@ func _on_start_game():
 	_order_info = $PlayerSeat.get_order_info()
 	if _catan_setup_info.is_random_order:
 		_randomize_order(_order_info)
-	rpc("start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+	start_game(Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
 
 
 func _randomize_order(order_info: Protocol.PlayerOrderInfo):
@@ -205,12 +206,17 @@ func _randomize_order(order_info: Protocol.PlayerOrderInfo):
 		order_info.order_to_name[orders[idx]] = names[idx]
 
 
-remotesync func start_game(order_data, setup_data, map_data):
+remote func start_game(order_data, setup_data, map_data):
 	var scene = SceneMgr.open_scene(SceneMgr.WORLD_SCENE)
 	var order_info = Protocol.deserialize(order_data)
 	var setup_info = Protocol.deserialize(setup_data)
 	var map_info = Protocol.deserialize(map_data)
 	scene.init(order_info, setup_info, map_info)
+
+
+func _on_start_client_game(state):
+	if state == Data.HostState.PLAYING:
+		rpc("start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
 
 
 func _generate_map():

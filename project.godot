@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://ui/util/drag_area.gd"
 }, {
 "base": "Node",
+"class": "FSM",
+"language": "GDScript",
+"path": "res://game/state.gd"
+}, {
+"base": "Node",
 "class": "Hexlib",
 "language": "GDScript",
 "path": "res://game/hexlib.gd"
@@ -42,6 +47,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Data": "",
 "DragArea": "",
+"FSM": "",
 "Hexlib": "",
 "NetDefines": "",
 "Protocol": "",
@@ -63,6 +69,7 @@ GameServer="*res://network/game_server.gd"
 SceneMgr="*res://common/scene_mgr.gd"
 PlayerInfoMgr="*res://common/player_info_mgr.gd"
 ConnState="*res://network/conn_state.gd"
+PlayingNet="*res://network/playing_net.gd"
 
 [debug]
 

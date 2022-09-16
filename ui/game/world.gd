@@ -4,6 +4,13 @@ extends Node2D
 # 游戏世界
 
 
+const Client: Script = preload("res://game/catan_client.gd")
+const Server: Script = preload("res://game/catan_server.gd")
+
+var _client: Client
+var _server: Server
+
+
 func _ready():
 	$Map/ViewContainer/Viewport/DragArea.connect("mouse_moved", self, "_on_mouse_moved")
 
@@ -12,6 +19,18 @@ func _ready():
 func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
 	$Map/ViewContainer/Viewport/CatanMap.init_with_mapinfo(map)
 	$UIOverlay/Overlay.init(order, setup.catan_size)
+	_init_server(order, setup, map)
+	_init_client()
+
+
+func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
+	_server = Server.new(order, setup, map)
+	self.add_child(_server)
+
+
+func _init_client():
+	_client = Client.new()
+	self.add_child(_client)
 
 
 func _on_mouse_moved(offset: Vector2):

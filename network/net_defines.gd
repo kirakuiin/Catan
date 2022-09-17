@@ -14,4 +14,10 @@ const MAX_PEER: int = 5
 const SERVER_ID: int = 1
 
 
-enum PlayerOpState {NOT_READY, READY}
+enum PlayerOpState {
+    NOT_READY,  # 未就绪
+    READY,   # 就绪
+    WAIT_RESPONSS,  # 等待回应
+    PLACE_SETTLEMENT_DONE,  # 放置定居点完毕
+    PLACE_ROAD_DONE,  # 放置道路完毕
+}

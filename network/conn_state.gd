@@ -21,12 +21,14 @@ func _ready():
 func to_prepare():
     game_state = PrepareState.new()
     emit_signal("state_changed", game_state.get_state())
+    Log.logd("切换至准备状态")
 
 
 # 切换至游戏状态
 func to_playing(player_names: Array):
     game_state = PlayingState.new(player_names)
     emit_signal("state_changed", game_state.get_state())
+    Log.logd("切换至游戏状态")
 
 
 # 是否接受连接

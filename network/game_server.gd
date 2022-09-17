@@ -42,6 +42,7 @@ func host_game():
     get_tree().set_network_peer(peer)
     client_ids = []
     emit_signal("network_started", get_peer_id())
+    Log.logd("创建主机")
 
 
 # 加入主机
@@ -50,6 +51,7 @@ func join_game(ip: String):
     peer.create_client(ip, NetDefines.GAME_PORT)
     get_tree().set_network_peer(peer)
     emit_signal("network_started", get_peer_id())
+    Log.logd("加入主机 ip=[%s]" % ip)
 
 
 # 关闭连接
@@ -60,6 +62,7 @@ func close_game():
         client_ids = []
         get_tree().set_network_peer(null)
         emit_signal("network_ended")
+    Log.logd("关闭网络连接")
 
 
 # 判断是否为服务器
@@ -80,6 +83,7 @@ puppet func send_player_info_to_server():
 # 服务器同意连接
 puppet func server_accept():
     emit_signal("server_accepted")
+    Log.logd("服务端同意连接")
 
 
 # 检查客户端信息
@@ -96,12 +100,14 @@ master func check_player_info(net_data):
 # 客户端断开连接
 remotesync func client_disconnect(peer_id: int):
     emit_signal("client_disconnected", peer_id)
+    Log.logw("客户端[id=%d]断开连接!" % peer_id)
 
 
 # server recv
 func _on_player_connected(id):
     if is_server():
         rpc_id(id, "send_player_info_to_server")
+        Log.logd("客户端[id=%d]连接..." % id)
 
 
 func _on_player_disconnected(id):
@@ -114,8 +120,10 @@ func _on_player_disconnected(id):
 # clients recv only
 func _on_server_disconnected():
     emit_signal("server_disconnected")
+    Log.logw("服务器断开连接")
 
 
 func _on_connected_fail():
     get_tree().set_network_peer(null)
     emit_signal("connection_failed")
+    Log.logw("连接服务器失败")

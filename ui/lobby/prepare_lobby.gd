@@ -63,7 +63,7 @@ func _add_player_item(player_info: Protocol.PlayerInfo):
 
 func _clear_item():
 	for child in Array($PlayerBg/PlayerContainer.get_children()):
-		$PlayerBg/PlayerContainer.remove_child(child)
+		child.free()
 
 
 func _custom_sort(a: Protocol.PlayerInfo, b: Protocol.PlayerInfo) -> bool:
@@ -169,7 +169,7 @@ func _on_player_added(player_info: Protocol.PlayerInfo):
 func _on_player_removed(player_info: Protocol.PlayerInfo):
 	for item in $PlayerBg/PlayerContainer.get_children():
 		if item.get_player_name() == player_info.player_name:
-			$PlayerBg/PlayerContainer.remove_child(item)
+			item.free()
 			break
 	_host_info.cur_player_num -= 1
 
@@ -207,7 +207,7 @@ func _randomize_order(order_info: Protocol.PlayerOrderInfo):
 
 
 remote func start_game(order_data, setup_data, map_data):
-	var scene = SceneMgr.open_scene(SceneMgr.WORLD_SCENE)
+	var scene = SceneMgr.pop_scene(SceneMgr.WORLD_SCENE)
 	var order_info = Protocol.deserialize(order_data)
 	var setup_info = Protocol.deserialize(setup_data)
 	var map_info = Protocol.deserialize(map_data)

@@ -58,7 +58,7 @@ func _on_refresh():
     _hosts.clear()
     _udp_server.listen(NetDefines.BROAD_PORT)
     for child in $Panel/HostScroll/HostList.get_children():
-        $Panel/HostScroll/HostList.remove_child(child)
+        child.free()
 
 
 func _on_create_lobby():

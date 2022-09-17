@@ -36,6 +36,10 @@ class HSMBase:
     # 返回当前的状态机层次
     func get_states() -> Array:
         return []
+        
+    # 激活初始设置
+    func activiate():
+        pass
 
 
 # 状态
@@ -60,6 +64,17 @@ class State:
     
     func get_states() -> Array:
         return [self]
+
+    # 返回根状态机
+    func get_root() -> StateMachine:
+        var parent = get_parent_machine()
+        while not parent is StateMachine:
+            parent = parent.get_parent_machine()
+        return parent
+
+    # 新增转换
+    func add_transition(transition: Transition):
+        _transitions.append(transition)
 
     # 返回父状态机
     func get_parent_machine():
@@ -91,7 +106,7 @@ class Transition:
     var _conditions: Array
     var _level: int
     
-    func _init(target: State, lv: int, ac_list: Array=[], conds: Array=[]):
+    func _init(target: State, lv: int, conds: Array=[], ac_list: Array=[]):
         _target_state = weakref(target)
         _level = lv
         _actions = ac_list
@@ -124,8 +139,14 @@ class SubMachineState:
 
     var _machine: StateMachine
 
+    func _init(parent, ac: Array=[], entry: Array=[], exit: Array=[], trans: Array=[]).(parent):
+        pass
+
     func _to_string():
         return "SubMachine"
+
+    func activiate():
+        _machine.activiate()
 
     func update() -> UpdateResult:
         return _machine.update()
@@ -143,14 +164,26 @@ class SubMachineState:
     func get_cur_state() -> State:
         return _machine.get_cur_state()
 
+    # 根据路径得到一个状态
+    func get_state_by_path(states_path: Array) -> State:
+        return _machine.get_state_by_path(states_path)
+
+    # 得到状态列表
+    func get_state_list() -> Array:
+        return _machine.state_list
+
 
 # 分层状态机
 class StateMachine:
     extends HSMBase
 
-    var _initial_state: State
+    var state_list: Array = []
+    var initial_state: State
     var _cur_state: State
     var _parent: WeakRef
+
+    func _init(parent):
+        _parent = weakref(parent)
 
     func _to_string():
         return "HSMachine"
@@ -160,6 +193,21 @@ class StateMachine:
             return get_cur_state().get_states()
         else:
             return []
+
+    # 激活虚拟机
+    func activiate():
+        for state in state_list:
+            state.activiate()
+
+    # 根据路径得到一个状态
+    func get_state_by_path(states_path: Array) -> State:
+        for state in state_list:
+            if state is states_path[0]:
+                if len(states_path) == 1:
+                    return state
+                elif state.has_method("get_state_by_path"):
+                    return state.get_state_by_path(states_path.slice(1, len(states_path)-1))
+        return null
 
     # 返回当前状态
     func get_cur_state() -> State:
@@ -176,10 +224,17 @@ class StateMachine:
         else:
             return null
 
+    # 返回根状态机
+    func get_root() -> StateMachine:
+        var parent = get_parent_machine()
+        while not parent is StateMachine:
+            parent = parent.get_parent_machine()
+        return parent
+
     func update() -> UpdateResult:
         var result = UpdateResult.new()
         if not get_cur_state():
-            set_cur_state(_initial_state)
+            set_cur_state(initial_state)
             result = UpdateResult.new(0, get_cur_state().get_entry_actions())
         else:
             result = _get_transition_result(_find_transition())
@@ -207,27 +262,27 @@ class StateMachine:
             else:
                 _expand_low_level(result)
         else:
-            result.actions += get_actions()
+            result.actions.append_array(get_actions())
 
     func _expand_same_level(result: UpdateResult):
         var target_state = result.transition.get_target_state()
-        result.actions += get_cur_state().get_exit_actions()
-        result.actions += result.transition.get_actions()
-        result.actions += target_state.get_entry_actions()
+        result.actions.append_array(get_cur_state().get_exit_actions())
+        result.actions.append_array(result.transition.get_actions())
+        result.actions.append_array(target_state.get_entry_actions())
         set_cur_state(target_state)
-        result.actions += get_actions()
+        result.actions.append_array(get_actions())
         result.transition = null
 
     func _expand_high_level(result: UpdateResult):
-        result.actions += get_cur_state().get_exit_actions()
+        result.actions.append_array(get_cur_state().get_exit_actions())
         set_cur_state(null)
         result.level -= 1
 
     func _expand_low_level(result: UpdateResult):
         var target_state = result.transition.get_target_state()
         var target_machine = target_state.get_parent_machine()
-        result.actions += result.transition.get_actions()
-        result.actions += target_machine.update_down(abs(result.transition.level), target_state)
+        result.actions.append_array(result.transition.get_actions())
+        result.actions.append_array(target_machine.update_down(abs(result.transition.level), target_state))
         result.transition = null
 
     func update_down(level: int, state: State) -> Array:
@@ -235,9 +290,9 @@ class StateMachine:
         if level > 0:
             actions = get_parent_machine().update_down(level-1, self)
         if get_cur_state():
-            actions += get_cur_state().get_exit_actions()
+            actions.append_array(get_cur_state().get_exit_actions())
         set_cur_state(state)
-        actions += state.get_entry_actions()
+        actions.append_array(state.get_entry_actions())
         return actions
 
 

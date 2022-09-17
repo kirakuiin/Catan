@@ -40,7 +40,7 @@ func _draw_harbor():
 
 func clear_all():
     for child in $Center.get_children():
-        $Center.remove_child(child)
+        child.free()
     _tile_map.clear()
 
 

@@ -17,4 +17,4 @@ func init(order_info: Protocol.PlayerOrderInfo, catan_size: int):
 
 
 func _on_button_down():
-    SceneMgr.close_scene()
+    SceneMgr.close_pop_scene()

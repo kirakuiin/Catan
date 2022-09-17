@@ -4,8 +4,8 @@ extends Node2D
 # 游戏世界
 
 
-const Client: Script = preload("res://game/catan_client.gd")
-const Server: Script = preload("res://game/catan_server.gd")
+const Client: Script = preload("res://game/client/logic.gd")
+const Server: Script = preload("res://game/server/logic.gd")
 
 var _client: Client
 var _server: Server

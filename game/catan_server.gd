@@ -3,7 +3,11 @@ extends Node
 
 # 游戏中服务器
 
+const ServerState: Script = preload("res://game/server_state.gd")
+
+
 var _server_state: HSM.StateMachine
+var _state_dict: Dictionary
 var _player_buildings: Dictionary
 var _player_scores: Dictionary
 var _map_info: Protocol.MapInfo
@@ -23,8 +27,9 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
 func _ready():
     _init_node_setup()
     if GameServer.is_server():
-        ConnState.to_playing(_order_info.order_to_name.values())
+        _init_state_machine()
         _init_player_state()
+        ConnState.to_playing(_order_info.order_to_name.values())
 
 
 func _init_node_setup():
@@ -39,6 +44,19 @@ func _init_player_state():
 
 func _process(delta):
     pass
+
+
+
+func _init_state_machine():
+    _state_dict[ServerState.InitState] = ServerState.InitState.new(self)
+    _state_dict[ServerState.SetupState] = ServerState.SetupState.new(self)
+    _state_dict[ServerState.TurnState] = ServerState.TurnState.new(self)
+    _state_dict[ServerState.GameOverState] = ServerState.GameOver.new(self)
+
+
+# 获得状态机
+func get_state(cls):
+    return _state_dict[cls]
 
 
 # 玩家就绪

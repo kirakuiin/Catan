@@ -42,6 +42,19 @@ class HSMBase:
 class State:
     extends HSMBase
 
+    var _actions: Array
+    var _entry_actions: Array
+    var _exit_actions: Array
+    var _transitions: Array
+    var _parent: WeakRef
+
+    func _init(parent, ac: Array=[], entry: Array=[], exit: Array=[], trans: Array=[]):
+        _actions = ac
+        _entry_actions = entry
+        _exit_actions = exit
+        _transitions = trans
+        _parent = weakref(parent)
+
     func _to_string():
         return 'HSState'
     
@@ -50,57 +63,57 @@ class State:
 
     # 返回父状态机
     func get_parent_machine():
-        return null
+        return _parent.get_ref()
 
     # 得到所有行动
     func get_actions() -> Array:
-        return []
+        return _actions
 
     # 获得进入此状态该执行的行动
     func get_entry_actions() -> Array:
-        return []
+        return _entry_actions
 
     # 获得退出此状态该执行的行动
     func get_exit_actions() -> Array:
-        return []
+        return _exit_actions
 
     # 获得所有的触发器
     func get_transitions() -> Array:
-        return []
+        return _transitions
 
 
 # 转换
 class Transition:
     extends HSMBase
 
-    var target_state: State
-    var actions: Array
-    var conditions: Array
-    var level: int
+    var _target_state: WeakRef
+    var _actions: Array
+    var _conditions: Array
+    var _level: int
     
     func _init(target: State, lv: int, ac_list: Array=[], conds: Array=[]):
-        target_state = target
-        level = lv
-        actions = ac_list
-        conditions = conds
+        _target_state = weakref(target)
+        _level = lv
+        _actions = ac_list
+        _conditions = conds
 
     # 返回转换的层级
     # 0: 平级, n: 目标高于来源n级, -n: 目标低于来源n级
     func get_level():
-        return level
+        return _level
 
     # 获得目标状态
     func get_target_state() -> State:
-        return target_state
+        return _target_state.get_ref()
 
     # 获得触发行动
     func get_actions() -> Array:
-        return actions
+        return _actions
 
     # 是否触发
     func is_triggered() -> bool:
         var result = true
-        for condition in conditions:
+        for condition in _conditions:
             result = result and condition.is_meet_condition()
         return result
 
@@ -109,26 +122,26 @@ class Transition:
 class SubMachineState:
     extends State
 
-    var machine: StateMachine
+    var _machine: StateMachine
 
     func _to_string():
         return "SubMachine"
 
     func update() -> UpdateResult:
-        return machine.update()
+        return _machine.update()
 
     func get_states() -> Array:
         var states := [self]
-        return states + machine.get_states()
+        return states + _machine.get_states()
         
     func update_down(level: int, state: State) -> Array:
-        return machine.update_down(level, state)
+        return _machine.update_down(level, state)
 
     func set_cur_state(state: State):
-        machine.set_cur_state(state)
+        _machine.set_cur_state(state)
         
     func get_cur_state() -> State:
-        return machine.get_cur_state()
+        return _machine.get_cur_state()
 
 
 # 分层状态机
@@ -137,11 +150,7 @@ class StateMachine:
 
     var _initial_state: State
     var _cur_state: State
-    var _parent
-
-    func _init(ini_state: State, parent=null):
-        _initial_state = ini_state
-        _parent = parent
+    var _parent: WeakRef
 
     func _to_string():
         return "HSMachine"
@@ -159,6 +168,13 @@ class StateMachine:
     # 设置当前状态
     func set_cur_state(state: State):
         _cur_state = state
+
+    # 返回父亲
+    func get_parent_machine():
+        if _parent:
+            return _parent.get_ref()
+        else:
+            return null
 
     func update() -> UpdateResult:
         var result = UpdateResult.new()
@@ -217,7 +233,7 @@ class StateMachine:
     func update_down(level: int, state: State) -> Array:
         var actions := []
         if level > 0:
-            actions = _parent.update_down(level-1, self)
+            actions = get_parent_machine().update_down(level-1, self)
         if get_cur_state():
             actions += get_cur_state().get_exit_actions()
         set_cur_state(state)

@@ -17,17 +17,22 @@ func get_server():
 
 # 客户端准备就绪
 master func client_ready(player_name: String):
-    get_server().player_state_change(player_name, NetDefines.PlayerOpState.READY)
+    get_server().change_player_state(player_name, NetDefines.PlayerOpState.READY)
 
 
 # 客户端放置定居点结束
 master func place_settlement_done(player_name: String):
-    get_server().player_state_change(player_name, NetDefines.PlayerOpState.PLACE_SETTLEMENT_DONE)
+    get_server().change_player_state(player_name, NetDefines.PlayerOpState.DONE)
 
 
 # 客户端放置道路结束
 master func place_road_done(player_name: String):
-    get_server().player_state_change(player_name, NetDefines.PlayerOpState.PLACE_ROAD_DONE)
+    get_server().change_player_state(player_name, NetDefines.PlayerOpState.DONE)
+
+
+# 客户端让过
+master func pass_turn(player_name: String):
+    get_server().change_player_state(player_name, NetDefines.PlayerOpState.PASS)
 
 
 # S2C
@@ -40,3 +45,8 @@ remotesync func place_road():
 # 通知客户端放置定居点
 remotesync func place_settlement():
     get_client().place_settlement()
+
+
+# 通知客户端回合情况
+remotesync func change_assist_info(data):
+    get_client().change_assist_info(Protocol.deserialize(data))

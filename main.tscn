@@ -48,9 +48,6 @@ anchor_top = 0.533333
 anchor_right = 0.233333
 anchor_bottom = 0.592593
 text = "开始游戏"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="CharacterBtn" type="Button" parent="."]
 anchor_left = 0.1
@@ -58,9 +55,6 @@ anchor_top = 0.651852
 anchor_right = 0.233333
 anchor_bottom = 0.711111
 text = "角色信息"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="ExitBtn" type="Button" parent="."]
 anchor_left = 0.1
@@ -69,9 +63,6 @@ anchor_right = 0.233333
 anchor_bottom = 0.82963
 margin_bottom = 6.10352e-05
 text = "退出游戏"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [connection signal="button_down" from="StartGameBtn" to="." method="_on_start_game"]
 [connection signal="button_down" from="CharacterBtn" to="." method="_on_edit_character_info"]

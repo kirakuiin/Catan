@@ -34,7 +34,7 @@ class HSMBase:
         return result
 
     # 返回当前的状态机层次
-    func get_states() -> Array:
+    func get_states_path() -> Array:
         return []
         
     # 激活初始设置
@@ -62,8 +62,19 @@ class State:
     func _to_string():
         return 'HSState'
     
-    func get_states() -> Array:
+    func get_states_path() -> Array:
         return [self]
+
+    # 从父状态机中寻找状态
+    func get_state_in_parent(state_cls) -> State:
+        var parent = get_parent_machine()
+        for state in parent.state_list:
+            if state is state_cls:
+                return state
+        if parent is State:
+            return parent.get_state_in_parent(state_cls)
+        else:
+            return null
 
     # 返回根状态机
     func get_root() -> StateMachine:
@@ -146,14 +157,15 @@ class SubMachineState:
         return "SubMachine"
 
     func activiate():
+        _machine.attach_state = weakref(self)
         _machine.activiate()
 
     func update() -> UpdateResult:
         return _machine.update()
 
-    func get_states() -> Array:
+    func get_states_path() -> Array:
         var states := [self]
-        return states + _machine.get_states()
+        return states + _machine.get_states_path()
         
     func update_down(level: int, state: State) -> Array:
         return _machine.update_down(level, state)
@@ -179,8 +191,12 @@ class StateMachine:
 
     var state_list: Array = []
     var initial_state: State
+
+    var attach_state: WeakRef  # 所有的非顶层状态机都有此属性
+
     var _cur_state: State
     var _parent: WeakRef
+
 
     func _init(parent):
         _parent = weakref(parent)
@@ -188,9 +204,13 @@ class StateMachine:
     func _to_string():
         return "HSMachine"
 
-    func get_states() -> Array:
+    # 返回自身所属的状态, 进对非顶层状态机有效
+    func get_self_state():
+        return attach_state.get_ref()
+
+    func get_states_path() -> Array:
         if get_cur_state():
-            return get_cur_state().get_states()
+            return get_cur_state().get_states_path()
         else:
             return []
 
@@ -282,13 +302,13 @@ class StateMachine:
         var target_state = result.transition.get_target_state()
         var target_machine = target_state.get_parent_machine()
         result.actions.append_array(result.transition.get_actions())
-        result.actions.append_array(target_machine.update_down(abs(result.transition.level), target_state))
+        result.actions.append_array(target_machine.update_down(abs(result.transition.get_level()), target_state))
         result.transition = null
 
     func update_down(level: int, state: State) -> Array:
         var actions := []
         if level > 0:
-            actions = get_parent_machine().update_down(level-1, self)
+            actions = get_parent_machine().update_down(level-1, get_self_state())
         if get_cur_state():
             actions.append_array(get_cur_state().get_exit_actions())
         set_cur_state(state)

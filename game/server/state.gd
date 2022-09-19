@@ -6,6 +6,8 @@ extends Node
 
 const Init: Script = preload("res://game/server/init_state.gd")
 const Setup: Script = preload("res://game/server/setup_state.gd")
+const Turn: Script = preload("res://game/server/turn_state.gd")
+const GameOver: Script = preload("res://game/server/gameover_state.gd")
 
 
 # 服务端状态机
@@ -17,11 +19,16 @@ class CatanStateMachine:
     func _init(server).(null):
         _server_ref = weakref(server)
         _init_all_state()
-        Log.logd("当前状态: %s" % String(get_states()))
+        Log.logd("当前状态: %s" % String(get_states_path()))
 
     func _init_all_state():
-        initial_state = Init.InitState.new(self)
-        state_list = [initial_state, Setup.SetupState.new(self)]
+        state_list = [
+            Init.InitState.new(self),
+            Setup.SetupState.new(self),
+            Turn.TurnState.new(self),
+            GameOver.GameOverState.new(self),
+        ]
+        initial_state = state_list[0]
         activiate()
 
     func get_server():

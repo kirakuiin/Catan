@@ -2,6 +2,9 @@ extends Node
 
 # 布置面板阶段
 
+const Turn: Script = preload("res://game/server/turn_state.gd")
+const Condition: Script = preload("res://game/server/conditions.gd")
+
 
 # 玩家初始化
 class SetupState:
@@ -56,12 +59,14 @@ class PlaceSettlementState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [PlaceDoneCondition.new(
-            _name, get_root().get_server().player_state, NetDefines.PlayerOpState.PLACE_SETTLEMENT_DONE)]
+        var conditions = [Condition.PlayerStateCondition.new(
+                            _name, get_root().get_server().player_state, NetDefines.PlayerOpState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerOpState.WAIT_FOR_RESPONE]))
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_settlement"), [_name]))
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
 
 
 # 放置定居点
@@ -83,11 +88,12 @@ class PlaceRoadState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [PlaceDoneCondition.new(
-            _name, get_root().get_server().player_state, NetDefines.PlayerOpState.PLACE_ROAD_DONE)]
+        var conditions = [Condition.PlayerStateCondition.new(
+                            _name, get_root().get_server().player_state, NetDefines.PlayerOpState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerOpState.WAIT_FOR_RESPONE]))
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_road"), [_name]))
 
 
@@ -101,18 +107,10 @@ class EndState:
     func _to_string():
         return "EndState"
 
+    func activiate():
+        var turn_state = get_root().get_state_by_path([Turn.TurnState])
+        add_transition(HSM.Transition.new(turn_state, 1, [Condition.TrueCondition.new()]))
+        for name in get_parent_machine().get_name_list():
+            _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"),
+                                                    [name, NetDefines.PlayerOpState.READY]))
 
-class PlaceDoneCondition:
-    extends HSM.Condition
-
-    var _name: String
-    var _player_state: Dictionary
-    var _done_type: int
-
-    func _init(name: String, states: Dictionary, done_type: int):
-        _name = name
-        _player_state = states
-        _done_type = done_type
-        
-    func is_meet_condition() -> bool:
-        return _player_state[_name] == _done_type

@@ -5,6 +5,24 @@ extends Node
 class_name Protocol
 
 
+# 类名:类映射
+static func get_cls(cls_name) -> ProtocolData:
+	var map = {
+		"HostInfo": HostInfo,
+		"PlayerInfo": PlayerInfo,
+		"CatanSetupInfo": CatanSetupInfo,
+		"PlayerOrderInfo": PlayerOrderInfo,
+		"TileInfo": TileInfo,
+		"MapInfo": MapInfo,
+		"HarborInfo": HarborInfo,
+		"PlayerScoreInfo": PlayerScoreInfo,
+		"PlayerBuildingInfo": PlayerBuildingInfo,
+		"RoadInfo": RoadInfo,
+		"AssistInfo": AssistInfo,
+	}
+	return map[cls_name]
+
+
 class ProtocolData:
 	extends Reference
 
@@ -34,23 +52,6 @@ class ProtocolData:
 
 	func is_export(name: String):
 		return name.match("?*_?*")
-
-
-# 类名:类映射
-static func get_cls(cls_name) -> ProtocolData:
-	var map = {
-		"HostInfo": HostInfo,
-		"PlayerInfo": PlayerInfo,
-		"CatanSetupInfo": CatanSetupInfo,
-		"PlayerOrderInfo": PlayerOrderInfo,
-		"TileInfo": TileInfo,
-		"MapInfo": MapInfo,
-		"HarborInfo": HarborInfo,
-		"PlayerScoreInfo": PlayerScoreInfo,
-		"PlayerBuildingInfo": PlayerBuildingInfo,
-		"RoadInfo": RoadInfo,
-	}
-	return map[cls_name]
 
 
 # 序列化数据
@@ -266,3 +267,16 @@ class RoadInfo:
 		cls_name = "RoadInfo"
 		begin = b
 		end = e
+
+
+# 辅助信息
+class AssistInfo:
+	extends ProtocolData
+
+	var turn_num: int
+	var player_turn_name: String
+
+	func _init(turn: int=0, turn_name: String=""):
+		cls_name = "AssistInfo"
+		turn_num = turn
+		player_turn_name = turn_name

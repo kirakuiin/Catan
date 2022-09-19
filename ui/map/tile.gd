@@ -41,3 +41,7 @@ func _init_pos():
 	hex.from_vector3(_tile_info.cube_pos)
 	var center := Hexlib.hex_to_pixel(_layout, hex)
 	Util.set_center(self, center)
+
+
+func get_layout() -> Hexlib.HexLayout:
+	return _layout

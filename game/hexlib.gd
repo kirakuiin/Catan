@@ -43,7 +43,7 @@ class Corner:
     var r: int
     var s: int
 
-    func _init(var_q: int, var_r: int, var_s: int):
+    func _init(var_q: int=1, var_r: int=0, var_s: int=0):
         q = var_q
         r = var_r
         s = var_s
@@ -54,6 +54,15 @@ class Corner:
 
     func get_type() -> int:
         return TYPE_POSITIVE if q+r+s == 1 else TYPE_NEGATIVE
+
+    func to_vector3() -> Vector3:
+        return Vector3(q, r, s)
+
+    func from_vector3(vec: Vector3):
+        q = vec.x as int
+        r = vec.y as int
+        s = vec.z as int
+        assert(abs(q+r+s) == 1, '顶点坐标总和绝对值必须为1')
 
 
 # 朝向, fx代表变换矩阵, bx代表逆矩阵
@@ -96,6 +105,9 @@ class HexLayout:
         orientation = ori
         size = v_size
         origin = v_origin
+        
+    func _to_string():
+        return "HexLayout(size=%f, %f)" % [size.x, size.y]
 
 
 # 尖顶方向
@@ -247,7 +259,7 @@ static func hex_to_pixel(layout: HexLayout, coord: Hex) -> Vector2:
 
 
 # 将顶点坐标转化为屏幕坐标
-static func corner_to_pixel(layout: HexLayout, coord: Corner):
+static func corner_to_pixel(layout: HexLayout, coord: Corner) -> Vector2:
     var base_hex = get_corner_adjacency_hex(coord)[0]
     var index = get_corner_index(base_hex, coord)
     var angle = deg2rad(layout.orientation.start_angle - index*60)

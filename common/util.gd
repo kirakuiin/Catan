@@ -19,7 +19,7 @@ static func randi_range(from: int, to: int):
 
 
 # 以中心为坐标设置对象位置
-static func set_center(obj: Control, pos: Vector2):
+static func set_center(obj: Node, pos: Vector2):
     var size = obj.rect_size
     obj.rect_position = Vector2(pos.x-size.x/2, pos.y-size.y/2)
 

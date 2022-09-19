@@ -93,6 +93,7 @@ class PlayerTurnState:
         _init_transitions()
 
     func _init_actions():
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
         _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerOpState.READY]))
 
     func _init_transitions():

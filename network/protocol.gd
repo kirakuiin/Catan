@@ -222,7 +222,7 @@ class MapInfo:
 		harbor_list.append(harbor_type)
 
 
-# 玩家资源信息
+# 玩家分数信息
 class PlayerScoreInfo:
 	extends ProtocolData
 
@@ -239,21 +239,24 @@ class PlayerScoreInfo:
 		vic_point = vp
 		army_num = army
 		continue_road = cont
+		
+	
+# 玩家资源卡信息
 
 
 # 玩家建筑信息
 class PlayerBuildingInfo:
 	extends ProtocolData
 
-	var citys: Dictionary
-	var settlements: Dictionary
-	var roads: Dictionary
+	var city_info: Array
+	var settlement_info: Array
+	var road_info: Array
 
-	func _init(city_info: Dictionary={}, settlement_info: Dictionary={}, road_info: Dictionary={}):
+	func _init(citys: Array=[], settlements: Array=[], roads: Array=[]):
 		cls_name = "PlayerBuildingInfo"
-		citys = city_info
-		settlements = settlement_info
-		roads = road_info
+		city_info = citys
+		settlement_info = settlements
+		road_info = roads
 
 
 # 道路信息
@@ -275,8 +278,12 @@ class AssistInfo:
 
 	var turn_num: int
 	var player_turn_name: String
+	var longgest_name: String
+	var biggest_name: String
 
 	func _init(turn: int=0, turn_name: String=""):
 		cls_name = "AssistInfo"
 		turn_num = turn
 		player_turn_name = turn_name
+		longgest_name = ""
+		biggest_name = ""

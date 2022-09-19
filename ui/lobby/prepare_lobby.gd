@@ -234,7 +234,5 @@ remote func recv_map_info(data):
 
 func _on_preview_map():
 	_generate_map()
-	$CatanMap.init_with_mapinfo(_map_info)
+	$CatanMap.show_preview(_map_info, _catan_setup_info.is_enable_fog)
 	$CatanMap.show()
-	if _catan_setup_info.is_enable_fog:
-		$CatanMap.set_all_point_visible(false)

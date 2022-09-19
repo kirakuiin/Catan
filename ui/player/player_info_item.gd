@@ -13,13 +13,13 @@ func _ready():
     $HBox/Icon.texture = icon
 
 
-func set_text(text: String):
-    $HBox/Text.text = _format % text
+func set_num(num: int):
+    $HBox/Text.text = _format % num
 
 
 func set_format(format: String):
     _format = format
-    set_text($HBox/Text.text)
+    set_num(int($HBox/Text.text))
 
 
 func set_highlight(is_highlight: bool):

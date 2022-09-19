@@ -7,6 +7,8 @@ class_name DragArea
 
 
 signal mouse_moved(relative)
+signal wheel_up()
+signal wheel_down()
 
 
 var _dragging : bool = false
@@ -26,6 +28,10 @@ func _handle_mouse_button(event: InputEventMouseButton):
             _dragging = true
         else:
             _dragging = false
+    elif event.button_index == BUTTON_WHEEL_DOWN:
+        emit_signal("wheel_down")
+    elif event.button_index == BUTTON_WHEEL_UP:
+        emit_signal("wheel_up")
 
 
 func _handle_mouse_motion(event: InputEventMouseMotion):

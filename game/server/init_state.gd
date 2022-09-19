@@ -17,6 +17,8 @@ class InitState:
         var conditions = [Condition.AllReadyCondition.new(get_root().get_server().player_state)]
         var ready = HSM.Transition.new(get_root().get_state_by_path([Setup.SetupState]), 0, conditions)
         add_transition(ready)
+        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_building_info"), []))
+        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_score_info"), []))
     
     func _to_string():
         return 'InitState'

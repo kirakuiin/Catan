@@ -9,8 +9,15 @@ signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal score_info_changed(player_name, score_info)  # 得分信息改变
 
 
+var assist_info: Protocol.AssistInfo
+var player_buildings: Dictionary
+var player_scores: Dictionary
+
+
 func _init():
-    pass
+    assist_info = Protocol.AssistInfo.new()
+    player_buildings = {}
+    player_scores = {}
 
 
 func _ready():
@@ -53,9 +60,26 @@ func pass_turn():
 # S2C
 
 # 修改辅助信息
-func change_assist_info(assist_info: Protocol.AssistInfo):
-    Log.logd("辅助信息变化[%s]" % assist_info)
-    emit_signal("assist_info_changed", assist_info)
+func change_assist_info(info: Protocol.AssistInfo):
+    Log.logd("辅助信息变化[%s]" % info)
+    assist_info = info
+    emit_signal("assist_info_changed", info)
+
+
+# 初始化玩家的建筑信息
+func init_building_info(building_infos: Dictionary):
+    Log.logd("建筑信息初始化[%s]" % [building_infos])
+    player_buildings = building_infos
+    for name in building_infos:
+        emit_signal("building_info_changed", name, building_infos[name])
+
+
+# 初始化玩家的分数信息
+func init_score_info(score_infos: Dictionary):
+    Log.logd("分数信息初始化[%s]" % [score_infos])
+    player_scores = score_infos
+    for name in score_infos:
+        emit_signal("score_info_changed", name, score_infos[name])
 
 
 # 修改指定玩家的建筑信息

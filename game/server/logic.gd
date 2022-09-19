@@ -5,13 +5,14 @@ extends Node
 
 const State: Script = preload("res://game/server/state.gd")
 
-
-var player_buildings: Dictionary
-var player_scores: Dictionary
 var map_info: Protocol.MapInfo
 var order_info: Protocol.PlayerOrderInfo
 var setup_info: Protocol.CatanSetupInfo
+
+var player_buildings: Dictionary
+var player_scores: Dictionary
 var assist_info: Protocol.AssistInfo
+
 var player_state: Dictionary
 
 var _server_state: HSM.StateMachine
@@ -22,12 +23,12 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
     order_info = order
     setup_info = setup
     map_info = map
-    assist_info = Protocol.AssistInfo.new()
 
 
 func _ready():
     _init_node_setup()
     if GameServer.is_server():
+        _init_player_info()
         _init_state_machine()
         _init_player_state()
         ConnState.to_playing(order_info.order_to_name.values())
@@ -46,6 +47,12 @@ func _init_player_state():
         player_state[name] = NetDefines.PlayerOpState.NOT_READY
 
 
+func _init_player_info():
+    assist_info = Protocol.AssistInfo.new()
+    player_buildings = {}
+    player_scores = {}
+
+
 func _process(delta):
     var old_state = String(_server_state.get_states_path())
     var result = _server_state.update()
@@ -62,6 +69,11 @@ func _execute_result(result: HSM.UpdateResult):
 
 func _init_state_machine():
     _server_state = State.CatanStateMachine.new(self)
+    
+
+func _init_player(player_name: String):
+    player_buildings[player_name] = Protocol.PlayerBuildingInfo.new()
+    player_scores[player_name] = Protocol.PlayerScoreInfo.new()
 
 
 # Public
@@ -84,16 +96,21 @@ func add_settlement(player_name: String):
 
 
 # 增加指定玩家的道路
-func add_road(player_name):
+func add_road(player_name: String):
     pass
 
 # C2S
 
 # 玩家状态改变
+
+func client_ready(player_name: String):
+    change_player_state(player_name, NetDefines.PlayerOpState.READY)
+    _init_player(player_name)
+
+
 func change_player_state(player_name: String, state: int):
     Log.logd("玩家[%s]状态变为 %d" % [player_name, state])
     player_state[player_name] = state
-
 
 # S2C
 
@@ -115,3 +132,15 @@ func notify_place_road(player_name):
 func broadcast_assist_info():
     Log.logd("广播辅助信息[%s]" % assist_info)
     PlayingNet.rpc("change_assist_info", Protocol.serialize(assist_info))
+
+
+# 广播建筑信息
+func broadcast_building_info():
+    Log.logd("广播建筑信息[%s]" % player_buildings)
+    PlayingNet.rpc("init_building_info", Protocol.serialize(player_buildings))
+
+
+# 广播分数信息
+func broadcast_score_info():
+    Log.logd("广播分数信息[%s]" % player_scores)
+    PlayingNet.rpc("init_score_info", Protocol.serialize(player_scores))

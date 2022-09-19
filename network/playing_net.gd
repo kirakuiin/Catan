@@ -17,7 +17,7 @@ func get_server():
 
 # 客户端准备就绪
 master func client_ready(player_name: String):
-    get_server().change_player_state(player_name, NetDefines.PlayerOpState.READY)
+    get_server().client_ready(player_name)
 
 
 # 客户端放置定居点结束
@@ -47,6 +47,16 @@ remotesync func place_settlement():
     get_client().place_settlement()
 
 
-# 通知客户端回合情况
+# 通知客户端辅助信息
 remotesync func change_assist_info(data):
     get_client().change_assist_info(Protocol.deserialize(data))
+
+
+# 通知客户端初始化建筑信息
+remotesync func init_building_info(data):
+    get_client().init_building_info(Protocol.deserialize(data))
+
+
+# 通知客户端初始化分数信息
+remotesync func init_score_info(data):
+    get_client().init_score_info(Protocol.deserialize(data))

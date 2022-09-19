@@ -28,7 +28,31 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Center" type="Control" parent="."]
+[node name="Tile" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -0.520813
+margin_top = -0.925903
+margin_right = 0.479187
+margin_bottom = 0.0740967
+mouse_filter = 2
+
+[node name="Road" type="Control" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -0.520813
+margin_top = -0.925903
+margin_right = 0.479187
+margin_bottom = 0.0740967
+mouse_filter = 2
+
+[node name="Property" type="Control" parent="."]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5

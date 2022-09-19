@@ -17,10 +17,10 @@ func _ready():
 
 # 初始化世界
 func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
-	$Map/ViewContainer/Viewport/CatanMap.init_with_mapinfo(map)
-	$UIOverlay/Overlay.init(order, setup.catan_size)
 	_init_server(order, setup, map)
 	_init_client()
+	_init_map(map, setup)
+	_init_overlay(setup, order)
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
@@ -31,6 +31,14 @@ func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInf
 func _init_client():
 	_client = Client.new()
 	self.add_child(_client)
+
+
+func _init_map(map: Protocol.MapInfo, setup: Protocol.CatanSetupInfo):
+	$Map/ViewContainer/Viewport/CatanMap.init_with_mapinfo(map, setup.is_enable_fog)
+
+
+func _init_overlay(setup: Protocol.CatanSetupInfo, order: Protocol.PlayerOrderInfo):
+	$UIOverlay/Overlay.init(order, setup.catan_size)
 
 
 func _on_mouse_moved(offset: Vector2):

@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/fonts/OPPOSans-B.ttf" type="DynamicFontData" id=1]
 
 [sub_resource type="DynamicFont" id=1]
-size = 30
+size = 10
 outline_color = Color( 0.619608, 0.658824, 0.12549, 1 )
 font_data = ExtResource( 1 )
 
@@ -14,3 +14,5 @@ GridNoSpace/constants/hseparation = 0
 GridNoSpace/constants/vseparation = 0
 HBoxNoSpace/base_type = "HBoxContainer"
 HBoxNoSpace/constants/separation = 0
+SmallBtn/base_type = "Button"
+SmallBtn/fonts/font = SubResource( 1 )

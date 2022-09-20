@@ -92,11 +92,13 @@ window/stretch/aspect="expand"
 "主题"=false
 them=false
 theme=false
+snap=false
 
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
 theme/custom="res://assets/theme/game_theme.tres"
+common/snap_controls_to_pixels=false
 
 [physics]
 

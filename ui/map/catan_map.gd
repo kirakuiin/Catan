@@ -6,6 +6,9 @@ extends Control
 
 const Tile: PackedScene = preload("res://ui/map/tile.tscn")
 const Property: PackedScene = preload("res://ui/map/property.tscn")
+const PointHint: PackedScene = preload("res://ui/map/point_hint.tscn")
+const LineHint: PackedScene = preload("res://ui/map/line_hint.tscn")
+
 
 var _map: Protocol.MapInfo
 var _tile_map: Dictionary = {}
@@ -30,7 +33,7 @@ func init_with_mapinfo(map: Protocol.MapInfo, is_enable_fog: bool):
 
 
 func _draw_map():
-	_clear_all()
+	_clear_all_tile()
 	_draw_base()
 	_draw_harbor()
 
@@ -48,10 +51,10 @@ func get_map_size():
 # 在地图上增加定居点
 func add_settlement_to_map(pos: Vector3, order: int):
 	var settlement = Property.instance()
+	$Property.add_child(settlement)
 	settlement.set_pos(_corner_to_pos(pos))
 	settlement.set_order(order)
 	_property_map[pos] = settlement
-	$Property.add_child(settlement)
 
 
 # 在地图上增加道路
@@ -62,6 +65,21 @@ func add_road_to_map(road: Protocol.RoadInfo, order):
 # 升级地图上的城市
 func upgrade_settlement_on_map(pos: Vector3):
 	_property_map[pos].upgrade_to_city()
+
+
+# 展示定居点提示
+func show_settlement_hint():
+	pass
+
+
+# 展示道路提示
+func show_road_hint():
+	pass
+
+
+# 展示升级提示
+func show_upgrade_hint():
+	pass
 
 
 func _draw_base():
@@ -77,13 +95,10 @@ func _draw_harbor():
 		_tile_map[harbor_info.cube_pos].set_harbor_type(harbor_info.harbor_type, harbor_info.harbor_angle)
 
 
-func _clear_all():
+func _clear_all_tile():
 	for child in $Tile.get_children():
 		child.free()
-	for child in $Property.get_children():
-		child.free()
 	_tile_map.clear()
-	_point_map.clear()
 
 
 func _generate_point():
@@ -98,7 +113,14 @@ func _add_point(hex: Hexlib.Hex):
 	for corner in corners:
 		var pos = corner.to_vector3()
 		if not pos in _point_map:
-			_point_map[pos] = true
+			_create_point(pos)
+
+
+func _create_point(pos: Vector3):
+	var hint = PointHint.instance()
+	_point_map[pos] = hint
+	$Point.add_child(hint)
+	hint.set_pos(_corner_to_pos(pos))
 
 
 func _corner_to_pos(pos: Vector3) -> Vector2:

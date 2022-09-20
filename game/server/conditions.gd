@@ -30,7 +30,7 @@ class AllReadyCondition:
 
     func is_meet_condition() -> bool:
         for state in _player_state.values():
-            if state == NetDefines.PlayerOpState.NOT_READY:
+            if state == NetDefines.PlayerState.NOT_READY:
                 return false
         return true
 
@@ -41,9 +41,9 @@ class PlayerStateCondition:
 
     var _name: String
     var _player_state: Dictionary
-    var _need_type: int
+    var _need_type: String
 
-    func _init(name: String, states: Dictionary, type: int):
+    func _init(name: String, states: Dictionary, type: String):
         _name = name
         _player_state = states
         _need_type = type 

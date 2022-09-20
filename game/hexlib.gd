@@ -31,6 +31,12 @@ class Hex:
         assert(q+r+s == 0, "六边形坐标总和必须为0")
 
 
+# 从Vec3中创建六边形
+static func create_hex(pos: Vector3) -> Hex:
+    var hex = Hex.new()
+    hex.from_vector3(pos)
+    return hex
+
 
 # 代表六边形网格中的一个六边形的顶点
 class Corner:
@@ -63,6 +69,13 @@ class Corner:
         r = vec.y as int
         s = vec.z as int
         assert(abs(q+r+s) == 1, '顶点坐标总和绝对值必须为1')
+
+
+# 从Vec3中创建顶点
+static func create_corner(pos: Vector3) -> Corner:
+    var corner = Corner.new()
+    corner.from_vector3(pos)
+    return corner
 
 
 # 朝向, fx代表变换矩阵, bx代表逆矩阵

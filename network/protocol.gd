@@ -181,9 +181,7 @@ class TileInfo:
 		point_type = point
 
 	func to_hex() -> Hexlib.Hex:
-		var hex = Hexlib.Hex.new()
-		hex.from_vector3(cube_pos)
-		return hex
+		return Hexlib.create_hex(cube_pos)
 
 
 # 港口信息
@@ -263,13 +261,23 @@ class PlayerBuildingInfo:
 class RoadInfo:
 	extends ProtocolData
 	
-	var begin: Vector3
-	var end: Vector3
+	var begin_node: Vector3
+	var end_node: Vector3
 
 	func _init(b: Vector3=Vector3(0, 0, 0), e: Vector3=Vector3(0, 0, 0)):
 		cls_name = "RoadInfo"
-		begin = b
-		end = e
+		begin_node = b
+		end_node = e
+
+	func to_tuple():
+		var tuple = [begin_node, end_node]
+		tuple.sort()
+		return tuple
+
+
+# 从元组中创建到道路
+static func create_road(tuple: Array):
+	return RoadInfo.new(tuple[0], tuple[1])
 
 
 # 辅助信息

@@ -54,6 +54,7 @@ anchor_left = 0.1
 anchor_top = 0.651852
 anchor_right = 0.233333
 anchor_bottom = 0.711111
+theme = ExtResource( 1 )
 text = "角色信息"
 
 [node name="ExitBtn" type="Button" parent="."]

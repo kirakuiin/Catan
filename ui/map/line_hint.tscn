@@ -45,7 +45,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1.5, 3 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.196078, 0.196078, 0.196078, 1 ), Color( 1, 1, 1, 1 ) ]
+"values": [ Color( 0.588235, 0.588235, 0, 1 ), Color( 1, 1, 0, 1 ), Color( 0.588235, 0.588235, 0, 1 ) ]
 }
 
 [node name="LineHint" type="Control"]
@@ -53,6 +53,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -1770.0
 margin_bottom = -1050.0
+rect_min_size = Vector2( 50, 10 )
 script = ExtResource( 3 )
 
 [node name="Line" type="TextureRect" parent="."]

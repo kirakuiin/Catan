@@ -39,6 +39,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://network/protocol.gd"
 }, {
+"base": "Reference",
+"class": "StdLib",
+"language": "GDScript",
+"path": "res://common/stdlib.gd"
+}, {
 "base": "Node",
 "class": "Util",
 "language": "GDScript",
@@ -51,6 +56,7 @@ _global_script_class_icons={
 "Hexlib": "",
 "NetDefines": "",
 "Protocol": "",
+"StdLib": "",
 "Util": ""
 }
 

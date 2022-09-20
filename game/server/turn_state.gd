@@ -94,13 +94,13 @@ class PlayerTurnState:
 
     func _init_actions():
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
-        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerOpState.READY]))
+        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.READY]))
 
     func _init_transitions():
         var parent = get_parent_machine()
         var state_list = parent.get_state_list()
         var target = state_list[state_list.find(self)+1]
-        var condition = Condition.PlayerStateCondition.new(_name, get_root().get_server().player_state, NetDefines.PlayerOpState.PASS)
+        var condition = Condition.PlayerStateCondition.new(_name, get_root().get_server().player_state, NetDefines.PlayerState.PASS)
         add_transition(HSM.Transition.new(target, 0, [condition]))
 
 

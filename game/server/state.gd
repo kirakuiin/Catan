@@ -19,7 +19,6 @@ class CatanStateMachine:
     func _init(server).(null):
         _server_ref = weakref(server)
         _init_all_state()
-        Log.logd("当前状态: %s" % String(get_states_path()))
 
     func _init_all_state():
         state_list = [

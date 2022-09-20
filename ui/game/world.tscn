@@ -25,6 +25,7 @@ stretch = true
 size = Vector2( 1920, 1080 )
 handle_input_locally = false
 render_target_update_mode = 3
+gui_snap_controls_to_pixels = false
 
 [node name="DragArea" type="Node2D" parent="Map/ViewContainer/Viewport"]
 script = ExtResource( 4 )

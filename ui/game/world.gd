@@ -17,10 +17,12 @@ func _ready():
 
 # 初始化世界
 func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
-	_init_server(order, setup, map)
-	_init_client()
+	if GameServer.is_server():
+		_init_server(order, setup, map)
+	_init_client(order, setup, map)
 	_init_map(map, setup)
 	_init_overlay(setup, order)
+	_client.start()
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
@@ -28,8 +30,8 @@ func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInf
 	self.add_child(_server)
 
 
-func _init_client():
-	_client = Client.new()
+func _init_client(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
+	_client = Client.new(order, setup, map)
 	self.add_child(_client)
 
 

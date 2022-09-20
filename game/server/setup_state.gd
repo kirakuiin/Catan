@@ -60,11 +60,11 @@ class PlaceSettlementState:
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
         var conditions = [Condition.PlayerStateCondition.new(
-                            _name, get_root().get_server().player_state, NetDefines.PlayerOpState.DONE)]
+                            _name, get_root().get_server().player_state, NetDefines.PlayerState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerOpState.WAIT_FOR_RESPONE]))
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.WAIT_FOR_RESPONE]))
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_settlement"), [_name]))
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
 
@@ -89,12 +89,12 @@ class PlaceRoadState:
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
         var conditions = [Condition.PlayerStateCondition.new(
-                            _name, get_root().get_server().player_state, NetDefines.PlayerOpState.DONE)]
+                            _name, get_root().get_server().player_state, NetDefines.PlayerState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerOpState.WAIT_FOR_RESPONE]))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_road"), [_name]))
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.WAIT_FOR_RESPONE]))
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_road"), [_name, true]))
 
 
 # 结束
@@ -112,5 +112,5 @@ class EndState:
         add_transition(HSM.Transition.new(turn_state, 1, [Condition.TrueCondition.new()]))
         for name in get_parent_machine().get_name_list():
             _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"),
-                                                    [name, NetDefines.PlayerOpState.READY]))
+                                                    [name, NetDefines.PlayerState.READY]))
 

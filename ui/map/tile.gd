@@ -37,8 +37,7 @@ func _init_texture():
 
 
 func _init_pos():
-	var hex := Hexlib.Hex.new()
-	hex.from_vector3(_tile_info.cube_pos)
+	var hex := _tile_info.to_hex()
 	var center := Hexlib.hex_to_pixel(_layout, hex)
 	Util.set_center(self, center)
 

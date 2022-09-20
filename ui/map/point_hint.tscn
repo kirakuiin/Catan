@@ -57,7 +57,7 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id=2]
 resource_name = "pulsation"
-length = 5.0
+length = 3.0
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Circle:rect_scale")
@@ -66,10 +66,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 2.5, 5 ),
+"times": PoolRealArray( 0, 1.5, 3 ),
 "transitions": PoolRealArray( 1, 0.482969, 1 ),
 "update": 0,
-"values": [ Vector2( 1, 1 ), Vector2( 1.1, 1.1 ), Vector2( 1, 1 ) ]
+"values": [ Vector2( 1, 1 ), Vector2( 1.3, 1.3 ), Vector2( 1, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Point:modulate")
@@ -78,7 +78,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 2.5, 5 ),
+"times": PoolRealArray( 0, 1.5, 3 ),
 "transitions": PoolRealArray( 1, 0.482968, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 0.588235, 0.588235, 0.588235, 1 ), Color( 0.863499, 0.863499, 0.863499, 1 ) ]
@@ -90,16 +90,20 @@ anchor_bottom = 1.0
 margin_right = -1860.0
 margin_bottom = -1020.0
 rect_min_size = Vector2( 60, 60 )
+mouse_filter = 1
 script = ExtResource( 3 )
 
 [node name="Confirm" type="ToolButton" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
+mouse_default_cursor_shape = 2
 
 [node name="Point" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 50, 50 )
+mouse_filter = 2
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 6
@@ -109,6 +113,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 50, 50 )
 rect_pivot_offset = Vector2( 30, 30 )
+mouse_filter = 2
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6

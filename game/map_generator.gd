@@ -35,7 +35,7 @@ func _generate_hex_grid() -> Protocol.MapInfo:
 static func _generate_big_grid():
     var map := Protocol.MapInfo.new()
     for vec in [Vector3(0, 0, 0), Vector3(1, -1, 0), Vector3(0, -1, 1), Vector3(-1, 0, 1)]:
-        var center = Hexlib.Hex.new(vec.x, vec.y, vec.z)
+        var center = Hexlib.create_hex(vec)
         for tile in _generate_small_grid(center).grid_map.values():
             map.add_tile(tile)
     return map

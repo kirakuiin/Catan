@@ -40,7 +40,7 @@ func _init_map(map: Protocol.MapInfo, setup: Protocol.CatanSetupInfo):
 
 
 func _init_overlay(setup: Protocol.CatanSetupInfo, order: Protocol.PlayerOrderInfo):
-	$UIOverlay/Overlay.init(order, setup.catan_size)
+	$UIOverlay/Overlay.init(order, setup)
 
 
 func _on_mouse_moved(offset: Vector2):

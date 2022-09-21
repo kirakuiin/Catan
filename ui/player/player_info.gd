@@ -58,7 +58,13 @@ func _on_player_building_changed(name: String, building_info: Protocol.PlayerBui
 func _on_player_score_changed(name: String, score_info: Protocol.PlayerScoreInfo):
     if name == _name:
         $HBox/Grid/VP.set_num(score_info.vic_point)
-        $HBox/Grid/Resource.set_num(len(score_info.res_cards))
+        $HBox/Grid/Resource.set_num(_get_res_num(score_info))
         $HBox/Grid/Card.set_num(len(score_info.dev_cards))
         $HBox/Grid/LongestRoad.set_num(score_info.continue_road)
         $HBox/Grid/BiggestArmy.set_num(score_info.army_num)
+
+func _get_res_num(score_info):
+    var total_num = 0
+    for num in score_info.res_cards.values():
+        total_num += num
+    return total_num

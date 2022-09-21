@@ -50,3 +50,44 @@ class PlayerStateCondition:
         
     func is_meet_condition() -> bool:
         return _player_state[_name] == _need_type
+    
+    
+# 玩家发展卡数量为0
+class DevCardEqualZeroCondition:
+    extends HSM.Condition
+
+    var _name: String
+    var _scores: Dictionary
+
+    func _init(player_name: String, scores_info: Dictionary):
+        _name = player_name
+        _scores = scores_info
+
+    func is_meet_condition() -> bool:
+        return len(_scores[_name].dev_cards) == 0
+
+
+# 骰子数为7
+class DiceEqualSevenCondition:
+    extends HSM.Condition
+
+    var _dice: WeakRef
+
+    func _init(dice):
+        _dice = weakref(dice)
+
+    func is_meet_condition() -> bool:
+        return _dice.get_ref().get_last_num() == Data.PointType.SEVEN
+
+
+# 骰子数不为7
+class DiceNotEqualSevenCondition:
+    extends HSM.Condition
+
+    var _cond: HSM.Condition
+
+    func _init(dice):
+        _cond = DiceEqualSevenCondition.new(dice)
+
+    func is_meet_condition() -> bool:
+        return not _cond.is_meet_condition()

@@ -26,6 +26,7 @@ func _show_player_turn(player_name: String):
     var color = Data.ORDER_DATA[order]
     $PlayerTurn.add_color_override("font_color", color)
     $PlayerTurn.text = "玩家[%s]行动..." % player_name
+    $AnimationPlayer.play("popup")
 
 
 func _show_turn_info(turn_num: int):

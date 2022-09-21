@@ -19,6 +19,7 @@ class InitState:
         add_transition(ready)
         _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_building_info"), []))
         _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_score_info"), []))
+        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_robber_pos"), []))
     
     func _to_string():
         return 'InitState'

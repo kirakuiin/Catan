@@ -6,6 +6,7 @@ extends Control
 func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo):
     $PlayerInfos.init(order, setup.catan_size)
     $GameInfos.init()
+    $Dice.init()
 
 
 func _on_button_down():

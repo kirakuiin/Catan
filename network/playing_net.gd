@@ -72,3 +72,13 @@ remotesync func change_building_info(player_name: String, data):
 # 通知客户端修改指定玩家分数信息
 remotesync func change_score_info(player_name: String, data):
     get_client().change_score_info(player_name, Protocol.deserialize(data))
+
+
+# 通知客户端更新骰子
+remotesync func change_dice(info: Array):
+    get_client().change_dice(info)
+
+
+# 通知客户端更新强盗位置
+remotesync func change_robber_pos(pos: Vector3):
+    get_client().change_robber_pos(pos)

@@ -68,7 +68,7 @@ class State:
     # 从父状态机中寻找状态
     func get_state_in_parent(state_cls) -> State:
         var parent = get_parent_machine()
-        for state in parent.state_list:
+        for state in parent.get_state_list():
             if state is state_cls:
                 return state
         if parent is State:
@@ -116,12 +116,14 @@ class Transition:
     var _actions: Array
     var _conditions: Array
     var _level: int
+    var _is_and: bool
     
-    func _init(target: State, lv: int, conds: Array=[], ac_list: Array=[]):
+    func _init(target: State, lv: int, conds: Array=[], is_and: bool=true, ac_list: Array=[]):
         _target_state = weakref(target)
         _level = lv
         _actions = ac_list
         _conditions = conds
+        _is_and = is_and
 
     # 返回转换的层级
     # 0: 平级, n: 目标高于来源n级, -n: 目标低于来源n级
@@ -138,9 +140,12 @@ class Transition:
 
     # 是否触发
     func is_triggered() -> bool:
-        var result = true
+        var result = true if _is_and else false
         for condition in _conditions:
-            result = result and condition.is_meet_condition()
+            if _is_and:
+                result = result and condition.is_meet_condition()
+            else:
+                result = result or condition.is_meet_condition()
         return result
 
 
@@ -207,6 +212,9 @@ class StateMachine:
     # 返回自身所属的状态, 进对非顶层状态机有效
     func get_self_state():
         return attach_state.get_ref()
+
+    func get_state_list() -> Array:
+        return state_list
 
     func get_states_path() -> Array:
         if get_cur_state():

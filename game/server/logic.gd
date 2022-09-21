@@ -4,6 +4,8 @@ extends Node
 # 游戏中服务器
 
 const State: Script = preload("res://game/server/state.gd")
+const Dice: Script = preload("res://game/server/dice.gd")
+const ResMgr: Script = preload("res://game/server/res_mgr.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -15,8 +17,11 @@ var player_scores: Dictionary
 var assist_info: Protocol.AssistInfo
 
 var player_state: Dictionary
+var dice: Dice
 
 var _server_state: HSM.StateMachine
+var _robber_pos: Vector3
+var _res_mgr: ResMgr
 
 
 # 初始化服务器数据
@@ -24,11 +29,13 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
     order_info = order
     setup_info = setup
     map_info = map
+    dice = Dice.new()
 
 
 func _ready():
     _init_node_setup()
     _init_player_info()
+    _init_robber()
     _init_state_machine()
     _init_player_state()
     ConnState.to_playing(order_info.order_to_name.values())
@@ -49,6 +56,16 @@ func _init_player_info():
     assist_info = Protocol.AssistInfo.new()
     player_buildings = {}
     player_scores = {}
+    _res_mgr = ResMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
+
+
+func _init_robber():
+    var canditate_pos = []
+    for tile in map_info.grid_map.values():
+        if tile.tile_type == Data.TileType.DESERT:
+            canditate_pos.append(tile.cube_pos)
+    canditate_pos.shuffle()
+    _robber_pos = canditate_pos[0]
 
 
 func _process(delta):
@@ -86,6 +103,29 @@ func set_cur_turn_name(player_name: String):
 func update_turn_num():
     assist_info.turn_num += 1
     broadcast_assist_info()
+
+
+# 投掷骰子
+func roll_dice():
+    broadcast_dice_info(dice.roll())
+
+
+# 分发资源
+func dispatch_resource():
+    var affect = _res_mgr.dispatch_by_num(dice.get_last_num())
+    for player in affect.values():
+        change_score_info(player)
+
+
+# 延迟
+func delay(second: float):
+    Log.logi("[server]延迟[%.1f]s" % second)
+    set_process(false)
+    yield(get_tree().create_timer(second), "timeout")
+    set_process(true)
+
+
+# 分配资源
 
 
 # C2S
@@ -147,6 +187,12 @@ func broadcast_score_info():
     PlayingNet.rpc("init_score_info", Protocol.serialize(player_scores))
 
 
+# 广播骰子信息
+func broadcast_dice_info(info: Array):
+    Log.logd("[server]广播骰子信息[%d, %d]" % info)
+    PlayingNet.rpc("change_dice", info)
+
+
 # 更新玩家建筑信息
 func change_building_info(player_name: String):
     Log.logd("[server]更新玩家[%s]建筑信息[%s]" % [player_name, player_buildings[player_name]])
@@ -157,3 +203,14 @@ func change_building_info(player_name: String):
 func change_score_info(player_name: String):
     Log.logd("[server]更新玩家[%s]分数信息[%s]" % [player_name, player_scores[player_name]])
     PlayingNet.rpc("change_score_info", player_name, Protocol.serialize(player_scores[player_name]))
+
+
+# 移动强盗
+func move_robber(player_name: String):
+    Log.logd("[server]玩家[%s]移动强盗..." % player_name)
+
+
+# 更新强盗位置
+func broadcast_robber_pos():
+    Log.logd("[server]更新强盗位置[%s]" % str(_robber_pos))
+    PlayingNet.change_robber_pos(_robber_pos)

@@ -77,7 +77,7 @@ enum AchievementType{ARMY, ROAD}
 
 
 # 点数映射
-enum PointType{ZERO, TWO, THREE, FOUR, FIVE, SIX, EIGHT, NINE, TEN, ELEVEN, TWELVE}
+enum PointType{ZERO=0, TWO=2, THREE=3, FOUR=4, FIVE=5, SIX=6, SEVEN=7, EIGHT=8, NINE=9, TEN=10, ELEVEN=11, TWELVE=12}
 
 
 const POINT_DATA = {
@@ -100,6 +100,15 @@ enum BuildingType{SETTLEMENT, CITY, ROAD}
 
 # 资源映射
 enum ResourceType{LUMBER, BRICK, ORE, WOOL, GRAIN}
+
+
+const TILE_RES = {
+    TileType.FIELD: ResourceType.GRAIN,
+    TileType.PASTURE: ResourceType.WOOL,
+    TileType.FOREST: ResourceType.LUMBER,
+    TileType.MOUNTAIN: ResourceType.ORE,
+    TileType.HILL: ResourceType.BRICK,
+}
 
 
 # 强盗映射

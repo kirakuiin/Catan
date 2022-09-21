@@ -8,6 +8,8 @@ signal assist_info_changed(assist_info)  # 辅助信息改变
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal score_info_changed(player_name, score_info)  # 得分信息改变
 signal client_state_changed(state)  # 客户端状态改变
+signal dice_changed(info)  # 骰子变化
+signal robber_pos_changed(pos)  # 强盗位置变化
 
 
 var map_info: Protocol.MapInfo
@@ -165,6 +167,12 @@ func change_assist_info(info: Protocol.AssistInfo):
     emit_signal("assist_info_changed", info)
 
 
+# 更新骰子
+func change_dice(info: Array):
+    Log.logd("[client]骰子变化[%d, %d]" % info)
+    emit_signal("dice_changed", info)
+
+
 # 初始化玩家的建筑信息
 func init_building_info(building_infos: Dictionary):
     Log.logd("[client]建筑信息初始化[%s]" % [building_infos])
@@ -193,3 +201,9 @@ func change_score_info(player_name: String, score_info: Protocol.PlayerScoreInfo
     Log.logd("[client]玩家[%s]的分数信息改变[%s]" % [player_name, score_info])
     player_scores[player_name] = score_info
     emit_signal("score_info_changed", player_name, score_info)
+
+
+# 修改强盗位置
+func change_robber_pos(pos: Vector3):
+    Log.logd("[client]强盗移动至[%s]" % str(pos))
+    emit_signal("robber_pos_changed", pos)

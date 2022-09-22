@@ -9,6 +9,7 @@ onready var _layout: Hexlib.HexLayout = Hexlib.HexLayout.new(Hexlib.Flat(), rect
 func _ready():
 	_init_texture()
 	_init_pos()
+	_init_particle()
 
 
 func get_layout() -> Hexlib.HexLayout:
@@ -50,9 +51,23 @@ func _init_pos():
 	Util.set_center(self, center)
 
 
+func _init_particle():
+	$Particles2D.visibility_rect = Rect2(-rect_size/2, rect_size)
+	$Particles2D.position = rect_size/2
+	$Particles2D.process_material.emission_ring_radius = rect_size.x/2-10
+	$Particles2D.process_material.emission_ring_inner_radius = rect_size.x/2-20
+
+
 func _on_dice_changed(info: Array):
 	yield(get_tree().create_timer(NetDefines.ROLL_TIME), "timeout")
 	if info[0] + info[1] == _tile_info.point_type:
 		$Point/NumberTexture.modulate = Color.aqua
+		_play_particle()
 	else:
 		$Point/NumberTexture.modulate = Color.white
+
+
+func _play_particle():
+	$Particles2D.emitting = true
+	yield(get_tree().create_timer(NetDefines.ROLL_TIME), "timeout")
+	$Particles2D.emitting = false

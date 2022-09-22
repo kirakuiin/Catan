@@ -111,6 +111,15 @@ const TILE_RES = {
 }
 
 
+const RES_DATA = {
+    ResourceType.LUMBER: "res://assets/cards/lumber.png",
+    ResourceType.WOOL: "res://assets/cards/wool.png",
+    ResourceType.GRAIN: "res://assets/cards/grain.png",
+    ResourceType.BRICK: "res://assets/cards/brick.png",
+    ResourceType.ORE: "res://assets/cards/ore.png",
+}
+
+
 # 强盗映射
 enum EnemyType{ROBBER, PIRATE}
 

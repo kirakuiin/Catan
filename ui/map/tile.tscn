@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://ui/map/tile.gd" type="Script" id=1]
 [ext_resource path="res://assets/tiles/ocean.png" type="Texture" id=2]
 [ext_resource path="res://assets/fonts/OPPOSans-B.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://assets/tiles/bridge.png" type="Texture" id=4]
+[ext_resource path="res://assets/images/star_particle.png" type="Texture" id=5]
+[ext_resource path="res://ui/map/tile_particle.tres" type="Material" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 35
@@ -76,3 +78,11 @@ custom_fonts/font = SubResource( 1 )
 text = "3 : 1"
 align = 1
 valign = 1
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( 100, 100 )
+emitting = false
+amount = 30
+lifetime = 0.1
+process_material = ExtResource( 6 )
+texture = ExtResource( 5 )

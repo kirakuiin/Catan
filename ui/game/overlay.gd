@@ -8,6 +8,7 @@ func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo):
     $GameInfos.init()
     $Dice.init()
     $Operation.init()
+    $ResZone.init()
 
 
 func _on_button_down():

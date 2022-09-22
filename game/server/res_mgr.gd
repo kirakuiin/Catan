@@ -10,6 +10,7 @@ var _size: int
 var _num_to_res: Dictionary
 var _num_to_corner: Dictionary
 var _res_capacity: Dictionary
+var _robber_pos: Vector3
 
 
 func _init(map: Protocol.MapInfo, buildings: Dictionary, scores: Dictionary, catan_size: int):
@@ -32,6 +33,11 @@ func _init_num_corner():
                 _num_to_corner[tile.point_type].add(corner.to_vector3())
 
 
+# 设置强盗位置
+func set_robber(robber_pos: Vector3):
+    _robber_pos = robber_pos
+
+
 # 根据点数分配资源
 func dispatch_by_num(num: int) -> StdLib.Set:
     var affect_player = StdLib.Set.new()
@@ -45,28 +51,53 @@ func dispatch_by_num(num: int) -> StdLib.Set:
                 affect_player.add(player)
     return affect_player
 
+
+# 分配位置相邻的资源
+func dispatch_adjanency_res(corner_pos: Vector3):
+    pass
+
+
 func _update_settlement_res(player: String, corner: Vector3, num: int):
-    var res = _find_corner_res(corner, num)
+    var res = _find_corner_res_with_num(corner, num)
     for res_type in res:
         _give_res_to_player(player, res_type, res[res_type])
 
 func _update_city_res(player: String, corner: Vector3, num: int):
-    var res = _find_corner_res(corner, num)
+    var res = _find_corner_res_with_num(corner, num)
     for res_type in res:
         _give_res_to_player(player, res_type, res[res_type]*2)
 
-func _find_corner_res(corner_pos: Vector3, num: int) -> Dictionary:
+func _find_corner_res_with_num(corner_pos: Vector3, num: int) -> Dictionary:
     var result = {}
-    var corner = Hexlib.create_corner(corner_pos)
-    var hexs = Hexlib.get_corner_adjacency_hex(corner)
-    for hex in hexs:
-        var tile = _map.grid_map[hex.to_vector3()]
-        if tile.point_type == num:
-            var res_type = Data.TILE_RES[tile.tile_type]
+    var res_list = _find_corner_res(corner_pos)
+    for res_tuple in res_list:
+        var res_type = res_tuple[0]
+        var res_point = res_tuple[1]
+        if res_point == num:
             if res_type in result:
                 result[res_type] += 1
             else:
                 result[res_type] = 1
+    return result
+
+func _find_corner_res(corner_pos: Vector3) -> Array:
+    assert(_robber_pos, "must initial robber info")
+    var result = []
+    var corner = Hexlib.create_corner(corner_pos)
+    var hexs = _filter_invalid_tile(Hexlib.get_corner_adjacency_hex(corner))
+    for pos in hexs:
+        var tile = _map.grid_map[pos]
+        var res_type = Data.TILE_RES[tile.tile_type]
+        result.append([res_type, tile.point_type])
+    return result
+
+func _filter_invalid_tile(hexs: Array):
+    var result = []
+    for hex in hexs:
+        var hex_pos = hex.to_vector3()
+        var tile = _map.grid_map[hex_pos]
+        if hex_pos != _robber_pos and tile.point_type != Data.PointType.ZERO:
+            result.append(hex_pos)
     return result
 
 func _give_res_to_player(player: String, res_type: int, num):

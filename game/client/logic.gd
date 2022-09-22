@@ -207,3 +207,8 @@ func change_score_info(player_name: String, score_info: Protocol.PlayerScoreInfo
 func change_robber_pos(pos: Vector3):
     Log.logd("[client]强盗移动至[%s]" % str(pos))
     emit_signal("robber_pos_changed", pos)
+
+
+# 自由行动阶段
+func into_free_action():
+    change_client_state(NetDefines.ClientState.FREE_ACTION)

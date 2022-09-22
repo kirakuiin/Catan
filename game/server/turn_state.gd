@@ -197,8 +197,7 @@ class BuildAndTradeState:
         return "BuildAndTradeState[%s]" % _name
 
     func activiate():
-        var parent = get_parent_machine()
-        var target = parent.get_next_state()
-        print(parent, target)
+        var target = get_parent_machine().get_next_state()
         var condition = Condition.PlayerStateCondition.new(_name, get_root().get_server().player_state, NetDefines.PlayerState.PASS)
         add_transition(HSM.Transition.new(target, 1, [condition]))
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_free_action"), [_name]))

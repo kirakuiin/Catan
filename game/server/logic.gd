@@ -169,6 +169,13 @@ func notify_place_road(player_name, is_setup=false):
     PlayingNet.rpc_id(peer_id, "place_road", is_setup)
 
 
+# 通知玩家自由行动
+func notify_free_action(player_name: String):
+    Log.logd("[server]通知玩家[%s]自由行动" % [player_name])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "into_free_action")
+
+
 # 广播辅助信息
 func broadcast_assist_info():
     Log.logd("[server]广播辅助信息[%s]" % assist_info)

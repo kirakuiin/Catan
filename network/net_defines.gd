@@ -34,3 +34,4 @@ class ClientState:
     const PLACE_ROAD_SETUP: String="放置初始道路"
     const PLACE_ROAD_TURN: String="放置回合道路"
     const UPGRADE_CITY: String="升级城市"
+    const FREE_ACTION: String="自由行动"

@@ -82,3 +82,8 @@ remotesync func change_dice(info: Array):
 # 通知客户端更新强盗位置
 remotesync func change_robber_pos(pos: Vector3):
     get_client().change_robber_pos(pos)
+
+
+# 通知客户端自由行动
+remotesync func into_free_action():
+    get_client().into_free_action()

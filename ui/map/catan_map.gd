@@ -9,6 +9,7 @@ const Property: PackedScene = preload("res://ui/map/property.tscn")
 const Road: PackedScene = preload("res://ui/map/road.tscn")
 const PointHint: PackedScene = preload("res://ui/map/point_hint.tscn")
 const LineHint: PackedScene = preload("res://ui/map/line_hint.tscn")
+const Robber: PackedScene = preload("res://ui/map/robber.tscn")
 
 
 var _map: Protocol.MapInfo
@@ -99,6 +100,7 @@ func _get_layout():
 func _init_signal():
 	_get_client().connect("building_info_changed", self, "_on_building_info_changed")
 	_get_client().connect("client_state_changed", self, "_on_client_state_changed")
+	_get_client().connect("robber_pos_changed", self, "_on_robber_pos_changed")
 
 
 func _on_building_info_changed(player_name: String, building_info: Protocol.PlayerBuildingInfo):
@@ -108,10 +110,10 @@ func _on_building_info_changed(player_name: String, building_info: Protocol.Play
 			_add_settlement_to_map(settlement, order)
 	for city in building_info.city_info:
 		if not city in _city_map:
-			upgrade_settlement_on_map(city)
+			_upgrade_settlement_on_map(city)
 	for road in building_info.road_info:
 		if not road.to_tuple() in _road_map:
-			add_road_to_map(road, order)
+			_add_road_to_map(road, order)
 
 
 func _on_client_state_changed(state):
@@ -171,7 +173,7 @@ func _add_settlement_to_map(pos: Vector3, order: int):
 
 
 # 在地图上增加道路
-func add_road_to_map(road_info: Protocol.RoadInfo, order: int):
+func _add_road_to_map(road_info: Protocol.RoadInfo, order: int):
 	var road = Road.instance()
 	$Road.add_child(road)
 	road.set_pos(_corner_to_pos(road_info.begin_node), _corner_to_pos(road_info.end_node))
@@ -180,6 +182,12 @@ func add_road_to_map(road_info: Protocol.RoadInfo, order: int):
 
 
 # 升级地图上的城市
-func upgrade_settlement_on_map(pos: Vector3):
+func _upgrade_settlement_on_map(pos: Vector3):
 	_city_map[pos] = _settlement_map.erase(pos)
 	_city_map[pos].upgrade_to_city()
+
+
+func _on_robber_pos_changed(pos: Vector3):
+	$Robber/Robber.show()
+	var hex = Hexlib.create_hex(pos)
+	$Robber/Robber.position = Hexlib.hex_to_pixel(_get_layout(), hex)

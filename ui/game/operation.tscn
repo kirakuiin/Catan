@@ -69,3 +69,4 @@ anims/RESET = SubResource( 1 )
 anims/rotate = SubResource( 2 )
 
 [connection signal="button_down" from="DoneBtn" to="." method="_on_layer_turn_done"]
+[connection signal="button_up" from="DoneBtn" to="." method="_on_player_turn_done"]

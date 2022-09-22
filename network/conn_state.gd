@@ -8,8 +8,11 @@ signal state_changed(state)  # 状态变化
 
 var game_state: InnerStateInterface = null # 游戏状态
 
+var _logger: Log.Logger
+
 
 func _ready():
+    _logger = Log.get_logger(Log.LogModule.CONN)
     GameServer.connect("server_disconnected", self, "_on_server_disconnected")
     GameServer.connect("client_disconnected", self, "_on_client_disconnected")
     GameServer.connect("client_connected", self, "_on_client_connected")
@@ -21,14 +24,14 @@ func _ready():
 func to_prepare():
     game_state = PrepareState.new()
     emit_signal("state_changed", game_state.get_state())
-    Log.logd("切换至准备状态")
+    _logger.logd("切换至准备状态")
 
 
 # 切换至游戏状态
 func to_playing(player_names: Array):
     game_state = PlayingState.new(player_names)
     emit_signal("state_changed", game_state.get_state())
-    Log.logd("切换至游戏状态")
+    _logger.logd("切换至游戏状态")
 
 
 # 是否接受连接

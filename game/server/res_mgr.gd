@@ -108,4 +108,4 @@ func _give_res_to_player(player: String, res_type: int, num):
     else:
         _scores[player].res_cards[res_type] += avail_num
     if _res_capacity[res_type] == 0:
-        Log.logw("[server] 类型[%d]的资源耗尽" % res_type)
+        Log.logw("类型[%d]的资源耗尽" % res_type)

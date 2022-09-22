@@ -22,6 +22,7 @@ var dice: Dice
 var _server_state: HSM.StateMachine
 var _robber_pos: Vector3
 var _res_mgr: ResMgr
+var _logger: Log.Logger
 
 
 # 初始化服务器数据
@@ -33,13 +34,14 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
 
 
 func _ready():
+    _logger = Log.get_logger(Log.LogModule.SERVER)
     _init_node_setup()
     _init_player_info()
     _init_robber()
     _init_state_machine()
     _init_player_state()
     ConnState.to_playing(order_info.order_to_name.values())
-    Log.logi("[server]游戏服务端启动...")
+    _logger.logi("游戏服务端启动...")
 
 
 func _init_node_setup():
@@ -73,7 +75,7 @@ func _process(delta):
     var result = _server_state.update()
     var new_state = String(_server_state.get_states_path())
     if old_state != new_state:
-        Log.logd("[server]状态改变%s->%s" % [old_state, new_state])
+        _logger.logd("状态改变%s->%s" % [old_state, new_state])
     _execute_result(result)
     
 
@@ -127,7 +129,7 @@ func initial_resource(player_name: String):
 
 # 延迟
 func delay(second: float):
-    Log.logi("[server]延迟[%.1f]s" % second)
+    _logger.logi("延迟[%.1f]s" % second)
     set_process(false)
     yield(get_tree().create_timer(second), "timeout")
     set_process(true)
@@ -146,7 +148,7 @@ func client_ready(player_name: String):
 
 
 func change_player_state(player_name: String, state: String):
-    Log.logd("[server]玩家[%s]状态变为 '%s'" % [player_name, state])
+    _logger.logd("玩家[%s]状态变为 '%s'" % [player_name, state])
     player_state[player_name] = state
 
 
@@ -165,67 +167,67 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
 
 # 通知玩家放置定居点
 func notify_place_settlement(player_name):
-    Log.logd("[server]通知玩家[%s]放置定居点" % [player_name])
+    _logger.logd("通知玩家[%s]放置定居点" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_settlement")
 
 
 # 通知玩家放置道路
 func notify_place_road(player_name, is_setup=false):
-    Log.logd("[server]通知玩家[%s]放置道路" % [player_name])
+    _logger.logd("通知玩家[%s]放置道路" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_road", is_setup)
 
 
 # 通知玩家自由行动
 func notify_free_action(player_name: String):
-    Log.logd("[server]通知玩家[%s]自由行动" % [player_name])
+    _logger.logd("通知玩家[%s]自由行动" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "into_free_action")
 
 
 # 广播辅助信息
 func broadcast_assist_info():
-    Log.logd("[server]广播辅助信息[%s]" % assist_info)
+    _logger.logd("广播辅助信息[%s]" % assist_info)
     PlayingNet.rpc("change_assist_info", Protocol.serialize(assist_info))
 
 
 # 广播建筑信息
 func broadcast_building_info():
-    Log.logd("[server]广播建筑信息[%s]" % player_buildings)
+    _logger.logd("广播建筑信息[%s]" % player_buildings)
     PlayingNet.rpc("init_building_info", Protocol.serialize(player_buildings))
 
 
 # 广播分数信息
 func broadcast_score_info():
-    Log.logd("[server]广播分数信息[%s]" % player_scores)
+    _logger.logd("广播分数信息[%s]" % player_scores)
     PlayingNet.rpc("init_score_info", Protocol.serialize(player_scores))
 
 
 # 广播骰子信息
 func broadcast_dice_info(info: Array):
-    Log.logd("[server]广播骰子信息[%d, %d]" % info)
+    _logger.logd("广播骰子信息[%d, %d]" % info)
     PlayingNet.rpc("change_dice", info)
 
 
 # 更新玩家建筑信息
 func change_building_info(player_name: String):
-    Log.logd("[server]更新玩家[%s]建筑信息[%s]" % [player_name, player_buildings[player_name]])
+    _logger.logd("更新玩家[%s]建筑信息[%s]" % [player_name, player_buildings[player_name]])
     PlayingNet.rpc("change_building_info", player_name, Protocol.serialize(player_buildings[player_name]))
 
 
 # 更新玩家分数信息
 func change_score_info(player_name: String):
-    Log.logd("[server]更新玩家[%s]分数信息[%s]" % [player_name, player_scores[player_name]])
+    _logger.logd("更新玩家[%s]分数信息[%s]" % [player_name, player_scores[player_name]])
     PlayingNet.rpc("change_score_info", player_name, Protocol.serialize(player_scores[player_name]))
 
 
 # 移动强盗
 func move_robber(player_name: String):
-    Log.logd("[server]玩家[%s]移动强盗..." % player_name)
+    _logger.logd("玩家[%s]移动强盗..." % player_name)
 
 
 # 更新强盗位置
 func broadcast_robber_pos():
-    Log.logd("[server]更新强盗位置[%s]" % str(_robber_pos))
+    _logger.logd("更新强盗位置[%s]" % str(_robber_pos))
     PlayingNet.change_robber_pos(_robber_pos)

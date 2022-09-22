@@ -24,6 +24,8 @@ var point_info: StdLib.Set
 
 var client_state: String  # 客户端状态
 
+var _logger: Log.Logger
+
 
 func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
     order_info = order
@@ -46,8 +48,9 @@ func _init_point_info():
 
 
 func _ready():
+    _logger = Log.get_logger(Log.LogModule.CLIENT)
     _init_node_setup()
-    Log.logi("[client]游戏客户端启动...")
+    _logger.logi("游戏客户端启动...")
 
 
 func _init_node_setup():
@@ -121,7 +124,7 @@ func get_turn_available_road() -> Array:
 # 设置客户端状态
 func change_client_state(state: String):
     client_state = state
-    Log.logd("[client]客户端状态变为 '%s'" % [state])
+    _logger.logd("客户端状态变为 '%s'" % [state])
     emit_signal("client_state_changed", client_state)
 
 
@@ -142,7 +145,7 @@ func place_road_done(road: Protocol.RoadInfo):
 
 # 让过回合
 func pass_turn():
-    Log.logd("[client]玩家[%s]让过回合" % get_name())
+    _logger.logd("玩家[%s]让过回合" % get_name())
     PlayingNet.rpc("pass_turn", get_name())
     change_client_state(NetDefines.ClientState.IDLE)
 
@@ -162,20 +165,20 @@ func place_road(is_setup: bool):
 
 # 修改辅助信息
 func change_assist_info(info: Protocol.AssistInfo):
-    Log.logd("[client]辅助信息变化[%s]" % info)
+    _logger.logd("辅助信息变化[%s]" % info)
     assist_info = info
     emit_signal("assist_info_changed", info)
 
 
 # 更新骰子
 func change_dice(info: Array):
-    Log.logd("[client]骰子变化[%d, %d]" % info)
+    _logger.logd("骰子变化[%d, %d]" % info)
     emit_signal("dice_changed", info)
 
 
 # 初始化玩家的建筑信息
 func init_building_info(building_infos: Dictionary):
-    Log.logd("[client]建筑信息初始化[%s]" % [building_infos])
+    _logger.logd("建筑信息初始化[%s]" % [building_infos])
     player_buildings = building_infos
     for name in building_infos:
         emit_signal("building_info_changed", name, building_infos[name])
@@ -183,7 +186,7 @@ func init_building_info(building_infos: Dictionary):
 
 # 初始化玩家的分数信息
 func init_score_info(score_infos: Dictionary):
-    Log.logd("[client]分数信息初始化[%s]" % [score_infos])
+    _logger.logd("分数信息初始化[%s]" % [score_infos])
     player_scores = score_infos
     for name in score_infos:
         emit_signal("score_info_changed", name, score_infos[name])
@@ -191,21 +194,21 @@ func init_score_info(score_infos: Dictionary):
 
 # 修改指定玩家的建筑信息
 func change_building_info(player_name: String, building_info: Protocol.PlayerBuildingInfo):
-    Log.logd("[client]玩家[%s]的建筑信息改变[%s]" % [player_name, building_info])
+    _logger.logd("玩家[%s]的建筑信息改变[%s]" % [player_name, building_info])
     player_buildings[player_name] = building_info
     emit_signal("building_info_changed", player_name, building_info)
 
 
 # 修改指定玩家的分数信息
 func change_score_info(player_name: String, score_info: Protocol.PlayerScoreInfo):
-    Log.logd("[client]玩家[%s]的分数信息改变[%s]" % [player_name, score_info])
+    _logger.logd("玩家[%s]的分数信息改变[%s]" % [player_name, score_info])
     player_scores[player_name] = score_info
     emit_signal("score_info_changed", player_name, score_info)
 
 
 # 修改强盗位置
 func change_robber_pos(pos: Vector3):
-    Log.logd("[client]强盗移动至[%s]" % str(pos))
+    _logger.logd("强盗移动至[%s]" % str(pos))
     emit_signal("robber_pos_changed", pos)
 
 

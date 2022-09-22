@@ -9,16 +9,18 @@ const WORLD_SCENE: String = "res://ui/game/world.tscn"
 
 
 var _scene_stack: Array = []
+var _logger: Log.Logger
 
 
 func _ready():
 	_scene_stack.append(get_cur_scene())
+	_logger = Log.get_logger(Log.LogModule.SCENE)
 
 
 # 切换场景
 func goto_scene(path):
 	call_deferred("_deferred_goto_scene", path)
-	Log.logd("打开场景[%s]" % path)
+	_logger.logd("打开场景[%s]" % path)
 
 
 func _deferred_goto_scene(path):
@@ -45,7 +47,7 @@ func pop_scene(path):
 	_scene_stack.append(current_scene)
 	get_tree().get_root().add_child(current_scene)
 	get_tree().set_current_scene(current_scene)
-	Log.logd("场景堆栈[%s]" % String(_scene_stack))
+	_logger.logd("场景堆栈[%s]" % String(_scene_stack))
 	return current_scene
 
 
@@ -63,7 +65,7 @@ func _deferred_close_pop_scene():
 	current_scene = _scene_stack.back()
 	current_scene.show()
 	get_tree().set_current_scene(current_scene)
-	Log.logd("场景堆栈[%s]" % String(_scene_stack))
+	_logger.logd("场景堆栈[%s]" % String(_scene_stack))
 
 
 # 返回当前场景

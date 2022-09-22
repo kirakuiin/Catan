@@ -11,6 +11,14 @@ func _ready():
 	_init_pos()
 
 
+func get_layout() -> Hexlib.HexLayout:
+	return _layout
+
+
+func init_signal():
+	PlayingNet.get_client().connect("dice_changed", self, "_on_dice_changed")
+
+
 func set_tile_info(tile_info: Protocol.TileInfo):
 	_tile_info = tile_info
 
@@ -42,5 +50,9 @@ func _init_pos():
 	Util.set_center(self, center)
 
 
-func get_layout() -> Hexlib.HexLayout:
-	return _layout
+func _on_dice_changed(info: Array):
+	yield(get_tree().create_timer(NetDefines.ROLL_TIME), "timeout")
+	if info[0] + info[1] == _tile_info.point_type:
+		$Point/NumberTexture.modulate = Color.aqua
+	else:
+		$Point/NumberTexture.modulate = Color.white

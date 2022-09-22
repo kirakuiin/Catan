@@ -19,9 +19,9 @@ class SetupState:
 
     func _init_all_state():
         for name in get_name_list():
-            _append_state(name)
+            _append_state(name, false)
         for name in get_name_list(true):
-            _append_state(name)
+            _append_state(name, true)
         _machine.state_list.append(EndState.new(self))
         _machine.initial_state = _machine.state_list[0]
 
@@ -29,14 +29,14 @@ class SetupState:
         var orders = get_root().get_server().order_info.order_to_name.keys()
         orders.sort()
         if is_reverse:
-            orders = orders.slice(len(orders)-1, 0, -1)
+            orders.invert()
         var result = []
         for order in orders:
             result.append(get_root().get_server().order_info.order_to_name[order])
         return result
 
-    func _append_state(name: String):
-        _machine.state_list.append(PlaceSettlementState.new(self, name))
+    func _append_state(name: String, is_last):
+        _machine.state_list.append(PlaceSettlementState.new(self, name, is_last))
         _machine.state_list.append(PlaceRoadState.new(self, name))
 
 
@@ -45,9 +45,11 @@ class PlaceSettlementState:
     extends HSM.State
     
     var _name: String
+    var _is_last: bool
 
-    func _init(parent, name: String).(parent):
+    func _init(parent, name: String, is_last_turn: bool).(parent):
         _name = name
+        _is_last = is_last_turn
 
     func _to_string():
         return "PlaceSettlementState[%s]" % _name
@@ -67,6 +69,8 @@ class PlaceSettlementState:
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.WAIT_FOR_RESPONE]))
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_settlement"), [_name]))
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
+        if _is_last:
+            _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "initial_resource"), [_name]))
 
 
 # 放置定居点

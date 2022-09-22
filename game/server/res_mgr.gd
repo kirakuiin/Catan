@@ -53,31 +53,31 @@ func dispatch_by_num(num: int) -> StdLib.Set:
 
 
 # 分配位置相邻的资源
-func dispatch_adjanency_res(corner_pos: Vector3):
-    pass
+func dispatch_initial_res(player_name: String):
+    var corner_pos = _buildings[player_name].settlement_info[-1]
+    var res_list = _find_corner_res(corner_pos)
+    for res in res_list:
+        _give_res_to_player(player_name, res[0], 1)
 
 
 func _update_settlement_res(player: String, corner: Vector3, num: int):
     var res = _find_corner_res_with_num(corner, num)
     for res_type in res:
-        _give_res_to_player(player, res_type, res[res_type])
+        _give_res_to_player(player, res_type, 1)
 
 func _update_city_res(player: String, corner: Vector3, num: int):
     var res = _find_corner_res_with_num(corner, num)
     for res_type in res:
-        _give_res_to_player(player, res_type, res[res_type]*2)
+        _give_res_to_player(player, res_type, 2)
 
-func _find_corner_res_with_num(corner_pos: Vector3, num: int) -> Dictionary:
-    var result = {}
+func _find_corner_res_with_num(corner_pos: Vector3, num: int) -> Array:
+    var result = []
     var res_list = _find_corner_res(corner_pos)
     for res_tuple in res_list:
         var res_type = res_tuple[0]
         var res_point = res_tuple[1]
         if res_point == num:
-            if res_type in result:
-                result[res_type] += 1
-            else:
-                result[res_type] = 1
+            result.append(res_type)
     return result
 
 func _find_corner_res(corner_pos: Vector3) -> Array:

@@ -142,7 +142,7 @@ class RollDiceState:
     func activiate():
         _init_transitions()
         _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "roll_dice"), []))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "delay"), [1.5]))
+        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "delay"), [NetDefines.ROLL_TIME]))
 
     func _init_transitions():
         var robber = get_state_in_parent(MoveRobberState)

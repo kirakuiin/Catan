@@ -112,9 +112,17 @@ func roll_dice():
 
 # 分发资源
 func dispatch_resource():
+    _res_mgr.set_robber(_robber_pos)
     var affect = _res_mgr.dispatch_by_num(dice.get_last_num())
     for player in affect.values():
         change_score_info(player)
+
+
+# 初始化分配资源
+func initial_resource(player_name: String):
+    _res_mgr.set_robber(_robber_pos)
+    _res_mgr.dispatch_initial_res(player_name)
+    change_score_info(player_name)
 
 
 # 延迟
@@ -133,8 +141,8 @@ func delay(second: float):
 # 玩家状态改变
 
 func client_ready(player_name: String):
-    change_player_state(player_name, NetDefines.PlayerState.READY)
     _init_player(player_name)
+    change_player_state(player_name, NetDefines.PlayerState.READY)
 
 
 func change_player_state(player_name: String, state: String):

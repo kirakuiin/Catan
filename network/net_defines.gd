@@ -12,6 +12,7 @@ const BROAD_PORT: int = 12345
 const GAME_PORT: int = 32323
 const MAX_PEER: int = 5
 const SERVER_ID: int = 1
+const ROLL_TIME: float = 1.5
 
 
 # 玩家状态枚举

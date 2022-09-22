@@ -101,6 +101,8 @@ func _init_signal():
 	_get_client().connect("building_info_changed", self, "_on_building_info_changed")
 	_get_client().connect("client_state_changed", self, "_on_client_state_changed")
 	_get_client().connect("robber_pos_changed", self, "_on_robber_pos_changed")
+	for _tile in _tile_map.values():
+		_tile.init_signal()
 
 
 func _on_building_info_changed(player_name: String, building_info: Protocol.PlayerBuildingInfo):

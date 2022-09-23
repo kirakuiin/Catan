@@ -14,10 +14,7 @@ const GameOver: Script = preload("res://game/server/gameover_state.gd")
 class CatanStateMachine:
     extends HSM.StateMachine 
 
-    var _server_ref: WeakRef
-
     func _init(server).(null):
-        _server_ref = weakref(server)
         _init_all_state()
 
     func _init_all_state():
@@ -29,6 +26,3 @@ class CatanStateMachine:
         ]
         initial_state = state_list[0]
         activiate()
-
-    func get_server():
-        return _server_ref.get_ref()

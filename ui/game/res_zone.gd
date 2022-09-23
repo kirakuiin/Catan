@@ -20,6 +20,7 @@ func init():
 
 func _init_signal():
     _get_client().connect("score_info_changed", self, "_on_score_info_changed")
+    _get_client().connect("resource_discarded", self, "_on_resource_discarded")
 
 
 func _get_client():
@@ -84,3 +85,15 @@ func _place_card_by_idx(card, idx: int):
         card.position = Vector2(each_space*idx, 0)
     card.z_index = idx
     
+
+func _on_resource_discarded(num: int):
+    for card in _card_dict.values():
+        card.enable(funcref(self, "_on_inc"), [], funcref(self, "_on_dec"), [])
+
+
+func _on_inc():
+    Log.logd("inc")
+
+
+func _on_dec():
+    Log.logd("dec")

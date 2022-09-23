@@ -4,6 +4,7 @@ extends Node
 
 const Setup: Script = preload("res://game/server/setup_state.gd")
 const Condition: Script = preload("res://game/server/conditions.gd")
+const Action: Script = preload("res://game/server/actions.gd")
 
 
 # 初始状态
@@ -14,12 +15,13 @@ class InitState:
         pass
         
     func activiate():
-        var conditions = [Condition.AllReadyCondition.new(get_root().get_server().player_state)]
-        var ready = HSM.Transition.new(get_root().get_state_by_path([Setup.SetupState]), 0, conditions)
+        _exit_actions.append(Action.broadcast_building())
+        _exit_actions.append(Action.broadcast_scores())
+        _exit_actions.append(Action.broadcast_robber())
+        var conditions = [Condition.AllReadyCondition.new()]
+        var state = get_state_in_parent(Setup.SetupState)
+        var ready = HSM.Transition.new(state, 0, conditions)
         add_transition(ready)
-        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_building_info"), []))
-        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_score_info"), []))
-        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "broadcast_robber_pos"), []))
     
     func _to_string():
         return 'InitState'

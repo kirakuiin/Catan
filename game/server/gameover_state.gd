@@ -2,6 +2,9 @@ extends Node
 
 # 游戏结算状态
 
+const Condition: Script = preload("res://game/server/conditions.gd")
+const Action: Script = preload("res://game/server/actions.gd")
+
 
 # 游戏结束
 class GameOverState:
@@ -21,8 +24,8 @@ class GameOverState:
 
     func get_name_list(is_reverse: bool=false) -> Array:
         var result = []
-        for order in get_root().get_server().order_info.order_to_name:
-            result.append(get_root().get_server().order_info.order_to_name[order])
+        for order in PlayingNet.get_server().order_info.order_to_name:
+            result.append(PlayingNet.get_server().order_info.order_to_name[order])
         return result
 
 

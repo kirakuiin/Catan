@@ -73,7 +73,7 @@ func _draw_harbor():
 
 
 func _generate_point():
-	for point in _get_client().point_info.values():
+	for point in _get_client().get_point_info().values():
 		_create_point(point)
 
 	

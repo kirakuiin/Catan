@@ -4,6 +4,7 @@ extends Node
 
 const Turn: Script = preload("res://game/server/turn_state.gd")
 const Condition: Script = preload("res://game/server/conditions.gd")
+const Action: Script = preload("res://game/server/actions.gd")
 
 
 # 玩家初始化
@@ -26,13 +27,13 @@ class SetupState:
         _machine.initial_state = _machine.state_list[0]
 
     func get_name_list(is_reverse: bool=false) -> Array:
-        var orders = get_root().get_server().order_info.order_to_name.keys()
+        var orders = PlayingNet.get_server().order_info.order_to_name.keys()
         orders.sort()
         if is_reverse:
             orders.invert()
         var result = []
         for order in orders:
-            result.append(get_root().get_server().order_info.order_to_name[order])
+            result.append(PlayingNet.get_server().order_info.order_to_name[order])
         return result
 
     func _append_state(name: String, is_last):
@@ -61,16 +62,14 @@ class PlaceSettlementState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [Condition.PlayerStateCondition.new(
-                            _name, get_root().get_server().player_state, NetDefines.PlayerState.DONE)]
+        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.WAIT_FOR_RESPONE]))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_settlement"), [_name]))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
+        _entry_actions.append(Action.notify_place_settlement(_name))
+        _entry_actions.append(Action.set_turn_name(_name))
         if _is_last:
-            _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "initial_resource"), [_name]))
+            _exit_actions.append(Action.initial_res(_name))
 
 
 # 放置定居点
@@ -92,13 +91,11 @@ class PlaceRoadState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [Condition.PlayerStateCondition.new(
-                            _name, get_root().get_server().player_state, NetDefines.PlayerState.DONE)]
+        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.WAIT_FOR_RESPONE]))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_place_road"), [_name, true]))
+        _entry_actions.append(Action.notify_place_road(_name, true))
 
 
 # 结束
@@ -112,9 +109,8 @@ class EndState:
         return "EndState"
 
     func activiate():
-        var turn_state = get_root().get_state_by_path([Turn.TurnState])
+        var turn_state = get_state_in_parent(Turn.TurnState)
         add_transition(HSM.Transition.new(turn_state, 1, [Condition.TrueCondition.new()]))
         for name in get_parent_machine().get_name_list():
-            _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"),
-                                                    [name, NetDefines.PlayerState.READY]))
+            _exit_actions.append(Action.reset_state(name))
 

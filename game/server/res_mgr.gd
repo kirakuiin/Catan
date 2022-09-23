@@ -38,6 +38,18 @@ func set_robber(robber_pos: Vector3):
     _robber_pos = robber_pos
 
 
+# 获得需要丢弃资源的玩家和需要丢弃的数量
+func get_discard_infos() -> Array:
+    var discard_infos = {}
+    for player in _scores:
+        var total = 0
+        for num in _scores[player].res_cards.values():
+            total += num
+        if total >= 8:
+            discard_infos[player] = total/2
+    return discard_infos
+
+
 # 根据点数分配资源
 func dispatch_by_num(num: int) -> StdLib.Set:
     var affect_player = StdLib.Set.new()

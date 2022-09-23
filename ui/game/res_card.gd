@@ -3,8 +3,10 @@ extends Node2D
 # 资源卡
 
 
-var _cb: FuncRef
-var _params: Array
+var _inc_cb: FuncRef
+var _inc_params: Array
+var _dec_cb: FuncRef
+var _dec_params: Array
 
 
 # 设置卡牌类型
@@ -34,12 +36,25 @@ func get_num() -> int:
     return int($CardImage/Num.text.right(1))
 
 
-# 设置点击回调
-func set_callback(cb: FuncRef, params: Array):
-    _cb = cb
-    _params = params
+# 启动
+func enable(inc_cb: FuncRef, inc_params: Array, dec_cb: FuncRef, dec_params: Array):
+    _inc_cb = inc_cb
+    _inc_params = inc_params
+    _dec_cb = dec_cb
+    _dec_params = dec_params
+    $AnimationPlayer.play("twink")
 
 
-func _on_click_card():
-    if _cb:
-        _cb.call_funcv(_params)
+# 禁止
+func disable():
+    _inc_params = []
+    _dec_params = []
+    $AnimationPlayer.play("RESET")
+
+
+func _on_inc_down():
+    _inc_cb.call_funcv(_inc_params)
+
+
+func _on_dec_down():
+    _dec_cb.call_funcv(_dec_params)

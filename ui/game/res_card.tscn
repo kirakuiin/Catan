@@ -1,8 +1,113 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/cards/brick.png" type="Texture" id=1]
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=2]
 [ext_resource path="res://ui/game/res_card.gd" type="Script" id=3]
+[ext_resource path="res://assets/images/inc.png" type="Texture" id=4]
+[ext_resource path="res://assets/images/dec.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CardImage/Num/Dec:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0.27451, 0.27451, 0.27451, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CardImage/Num/Inc:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0.27451, 0.27451, 0.27451, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CardImage/Num/Inc:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CardImage/Num/Dec:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=1]
+resource_name = "twink"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("CardImage/Num/Dec:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.27451, 0.27451, 0.27451, 1 ), Color( 0.784314, 0, 0, 1 ), Color( 0.27451, 0.27451, 0.27451, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CardImage/Num/Inc:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.27451, 0.27451, 0.27451, 1 ), Color( 0, 1, 0, 1 ), Color( 0.27451, 0.27451, 0.27451, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CardImage/Num/Inc:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CardImage/Num/Dec:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [node name="ResCard" type="Node2D"]
 script = ExtResource( 3 )
@@ -15,15 +120,10 @@ texture = ExtResource( 1 )
 expand = true
 stretch_mode = 6
 
-[node name="Button" type="ToolButton" parent="CardImage"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = 12.0
-margin_bottom = 40.0
-
 [node name="Num" type="Label" parent="CardImage"]
+margin_top = 24.0
 margin_right = 77.0
-margin_bottom = 80.0
+margin_bottom = 104.0
 theme = ExtResource( 2 )
 theme_type_variation = "BigLabel"
 custom_colors/font_color = Color( 0, 0, 0, 1 )
@@ -31,4 +131,36 @@ text = "x1"
 align = 1
 valign = 1
 
-[connection signal="button_up" from="CardImage/Button" to="." method="_on_click_card"]
+[node name="Inc" type="TextureButton" parent="CardImage/Num"]
+visible = false
+modulate = Color( 0.27451, 0.27451, 0.27451, 1 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -22.5
+margin_top = -61.0
+margin_right = 17.5
+margin_bottom = -21.0
+texture_normal = ExtResource( 4 )
+expand = true
+stretch_mode = 5
+
+[node name="Dec" type="TextureButton" parent="CardImage/Num"]
+visible = false
+modulate = Color( 0.27451, 0.27451, 0.27451, 1 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -22.5
+margin_top = 25.0
+margin_right = 17.5
+margin_bottom = 65.0
+texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 2 )
+anims/twink = SubResource( 1 )

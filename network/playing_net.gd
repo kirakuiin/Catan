@@ -87,3 +87,8 @@ remotesync func change_robber_pos(pos: Vector3):
 # 通知客户端自由行动
 remotesync func into_free_action():
     get_client().into_free_action()
+
+
+# 通知客户端丢弃资源
+remotesync func discard_resource(num: int):
+    get_client().discard_resource(num)

@@ -95,6 +95,11 @@ func _init_player(player_name: String):
 
 # Public
 
+# 重置玩家状态
+func reset_player_state(player_name: String):
+    change_player_state(player_name, NetDefines.PlayerState.READY)
+
+
 # 设置当前玩家回合名称
 func set_cur_turn_name(player_name: String):
     assist_info.player_turn_name = player_name
@@ -135,8 +140,11 @@ func delay(second: float):
     set_process(true)
 
 
-# 分配资源
-
+# 丢弃资源
+func discard_resource():
+    var discard_infos = _res_mgr.get_discard_infos()
+    for player in discard_infos:
+        notify_discard_res(player, discard_infos[player])
 
 # C2S
 
@@ -167,13 +175,15 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
 
 # 通知玩家放置定居点
 func notify_place_settlement(player_name):
+    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置定居点" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_settlement")
 
 
 # 通知玩家放置道路
-func notify_place_road(player_name, is_setup=false):
+func notify_place_road(player_name: String, is_setup: bool):
+    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置道路" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_road", is_setup)
@@ -230,4 +240,12 @@ func move_robber(player_name: String):
 # 更新强盗位置
 func broadcast_robber_pos():
     _logger.logd("更新强盗位置[%s]" % str(_robber_pos))
-    PlayingNet.change_robber_pos(_robber_pos)
+    PlayingNet.rpc("change_robber_pos", _robber_pos)
+
+
+# 通知丢弃资源
+func notify_discard_res(player_name: String, num: int):
+    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    _logger.logd("通知[%s]丢弃[%d]资源" % [player_name, num])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "discard_resource", num)

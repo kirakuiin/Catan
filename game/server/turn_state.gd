@@ -4,6 +4,7 @@ extends Node
 
 
 const Condition: Script = preload("res://game/server/conditions.gd")
+const Action: Script = preload("res://game/server/actions.gd")
 
 
 # 大回合状态
@@ -25,11 +26,11 @@ class TurnState:
         _machine.initial_state = _machine.state_list[0]
 
     func get_name_list() -> Array:
-        var orders = get_root().get_server().order_info.order_to_name.keys()
+        var orders = PlayingNet.get_server().order_info.order_to_name.keys()
         orders.sort()
         var result = []
         for order in orders:
-            result.append(get_root().get_server().order_info.order_to_name[order])
+            result.append(PlayingNet.get_server().order_info.order_to_name[order])
         return result
 
 
@@ -47,7 +48,7 @@ class OneTurnBeginState:
         var target = get_parent_machine().get_state_list()[1]
         var condition = Condition.TrueCondition.new()
         add_transition(HSM.Transition.new(target, 0, [condition]))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "update_turn_num"), []))
+        _entry_actions.append(Action.update_turn())
 
 
 # 大回合结束
@@ -83,22 +84,19 @@ class PlayerTurnState:
     func _init_all_state():
         _machine.state_list.append(SpecialPlayCardState.new(self, _name))
         _machine.state_list.append(RollDiceState.new(self, _name))
+        _machine.state_list.append(DispatchResourceState.new(self, _name))
+        _machine.state_list.append(DiscardResourceState.new(self, _name))
         _machine.state_list.append(MoveRobberState.new(self, _name))
         _machine.state_list.append(BuildAndTradeState.new(self, _name))
-        _machine.state_list.append(DispatchResourceState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
         .activiate()
         _init_actions()
-        _init_transitions()
 
     func _init_actions():
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "set_cur_turn_name"), [_name]))
-        _exit_actions.append(HSM.Action.new(funcref(get_root().get_server(), "change_player_state"), [_name, NetDefines.PlayerState.READY]))
-
-    func _init_transitions():
-        pass
+        _entry_actions.append(Action.set_turn_name(_name))
+        _exit_actions.append(Action.reset_state(_name))
 
     func get_next_state():
         var parent = get_parent_machine()
@@ -123,7 +121,7 @@ class SpecialPlayCardState:
         _init_transitions()
 
     func _init_transitions():
-        var condition = Condition.DevCardEqualZeroCondition.new(_name, get_root().get_server().player_scores)
+        var condition = Condition.DevCardEqualZeroCondition.new(_name)
         add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, [condition]))
 
 
@@ -141,14 +139,32 @@ class RollDiceState:
 
     func activiate():
         _init_transitions()
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "roll_dice"), []))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "delay"), [NetDefines.ROLL_TIME]))
+        _entry_actions.append(Action.roll_dice())
+        _entry_actions.append(Action.delay(NetDefines.ROLL_TIME))
 
     func _init_transitions():
-        var robber = get_state_in_parent(MoveRobberState)
-        add_transition(HSM.Transition.new(robber, 0, [Condition.DiceEqualSevenCondition.new(get_root().get_server().dice)]))
+        var robber = get_state_in_parent(DiscardResourceState)
+        add_transition(HSM.Transition.new(robber, 0, [Condition.DiceEqualSevenCondition.new()]))
         var dispatch = get_state_in_parent(DispatchResourceState)
-        add_transition(HSM.Transition.new(dispatch, 0, [Condition.DiceNotEqualSevenCondition.new(get_root().get_server().dice)]))
+        add_transition(HSM.Transition.new(dispatch, 0, [Condition.DiceNotEqualSevenCondition.new()]))
+
+
+# 丢弃资源阶段
+class DiscardResourceState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "DiscardResourceState[%s]" % _name
+
+    func activiate():
+        _entry_actions.append(Action.discard_res())
+        var conditions = [Condition.NotExistStateCondition.new(NetDefines.PlayerState.WAIT_FOR_RESPONE)]
+        add_transition(HSM.Transition.new(get_state_in_parent(MoveRobberState), 0, conditions))
 
 
 # 移动强盗阶段
@@ -180,7 +196,7 @@ class DispatchResourceState:
         return "DispatchResourceState[%s]" % _name
 
     func activiate():
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "dispatch_resource"), []))
+        _entry_actions.append(Action.dispatch_res())
         add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, [Condition.TrueCondition.new()]))
 
 
@@ -198,6 +214,6 @@ class BuildAndTradeState:
 
     func activiate():
         var target = get_parent_machine().get_next_state()
-        var condition = Condition.PlayerStateCondition.new(_name, get_root().get_server().player_state, NetDefines.PlayerState.PASS)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.PASS)
         add_transition(HSM.Transition.new(target, 1, [condition]))
-        _entry_actions.append(HSM.Action.new(funcref(get_root().get_server(), "notify_free_action"), [_name]))
+        _entry_actions.append(Action.notify_free_action(_name))

@@ -102,21 +102,27 @@ func change_client_state(state: String):
 
 # 放置定居点完毕
 func place_settlement_done(pos: Vector3):
-    PlayingNet.rpc("place_settlement_done", get_name(), pos)
     change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("place_settlement_done", get_name(), pos)
 
 
 # 放置道路完毕
 func place_road_done(road: Protocol.RoadInfo):
-    PlayingNet.rpc("place_road_done", get_name(), Protocol.serialize(road))
     change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("place_road_done", get_name(), Protocol.serialize(road))
+
+
+# 通知丢弃结果
+func discard_done(discard_info: Dictionary):
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("discard_done", get_name(), Protocol.serialize(discard_info))
 
 
 # 让过回合
 func pass_turn():
     _logger.logd("玩家[%s]让过回合" % get_name())
-    PlayingNet.rpc("pass_turn", get_name())
     change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("pass_turn", get_name())
 
 
 # S2C

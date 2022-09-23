@@ -9,10 +9,12 @@ anchor_bottom = 1.0
 margin_right = -1820.0
 margin_bottom = -1050.0
 rect_min_size = Vector2( 50, 15 )
+mouse_filter = 2
 script = ExtResource( 2 )
 
 [node name="Road" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 texture = ExtResource( 1 )
 expand = true

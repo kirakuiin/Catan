@@ -164,12 +164,22 @@ func change_player_state(player_name: String, state: String):
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
     change_building_info(player_name)
+    change_player_state(player_name, NetDefines.PlayerState.DONE)
 
 
 # 增加指定玩家的道路
 func add_road(player_name: String, road: Protocol.RoadInfo):
     player_buildings[player_name].road_info.append(road)
     change_building_info(player_name)
+    change_player_state(player_name, NetDefines.PlayerState.DONE)
+
+
+# 丢弃资源完毕
+func discard_done(player_name: String, discard_info: Dictionary):
+    _logger.logd("玩家[%s]丢弃资源[%s]" % [player_name, discard_info])
+    _res_mgr.recycle_player_res(player_name, discard_info)
+    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    change_score_info(player_name)
 
 # S2C
 

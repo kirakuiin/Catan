@@ -1,13 +1,39 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://ui/game/res_zone.gd" type="Script" id=1]
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=2]
 
 [node name="ResZone" type="Control"]
 anchor_right = 0.520833
 anchor_bottom = 0.277778
 margin_right = 6.10352e-05
 rect_min_size = Vector2( 500, 150 )
+mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
+
+[node name="Discard" type="Control" parent="."]
+visible = false
+
+[node name="DiscardBtn" type="Button" parent="Discard"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -66.0
+margin_right = 108.0
+theme = ExtResource( 2 )
+text = "确认丢弃"
+
+[node name="Hint" type="Label" parent="Discard"]
+margin_top = -66.0
+margin_right = 40.0
+theme = ExtResource( 2 )
+theme_type_variation = "BigLabel"
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="button_down" from="Discard/DiscardBtn" to="." method="_on_confirm_discard"]

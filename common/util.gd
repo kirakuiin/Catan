@@ -28,3 +28,11 @@ static func set_center(obj: Control, pos: Vector2):
 static func get_windows_size() -> Vector2:
     return Vector2(ProjectSettings.get_setting("display/window/size/width"),
                         ProjectSettings.get_setting("display/window/size/height"))
+
+
+# 求和
+static func sum(list: Array):
+    var total = 0
+    for num in list:
+        total += num
+    return total

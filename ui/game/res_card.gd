@@ -4,14 +4,19 @@ extends Node2D
 
 
 var _inc_cb: FuncRef
-var _inc_params: Array
 var _dec_cb: FuncRef
-var _dec_params: Array
+var _type: int
 
 
 # 设置卡牌类型
 func set_type(res_type: int):
+    _type = res_type
     $CardImage.texture = ResourceLoader.load(Data.RES_DATA[res_type])
+
+
+# 获得类型
+func get_type() -> int:
+    return _type
 
 
 # 设置高度
@@ -31,30 +36,32 @@ func set_num(num: int):
     $CardImage/Num.text = "x%d" % num
 
 
+# 设置弃牌数量
+func set_discard(num: int):
+    $CardImage/Discard.text = "-%d" % num
+
+
 # 获得数量
 func get_num() -> int:
     return int($CardImage/Num.text.right(1))
 
 
 # 启动
-func enable(inc_cb: FuncRef, inc_params: Array, dec_cb: FuncRef, dec_params: Array):
+func enable(inc_cb: FuncRef, dec_cb: FuncRef):
     _inc_cb = inc_cb
-    _inc_params = inc_params
     _dec_cb = dec_cb
-    _dec_params = dec_params
     $AnimationPlayer.play("twink")
 
 
 # 禁止
 func disable():
-    _inc_params = []
-    _dec_params = []
+    $CardImage/Discard.text = "0"
     $AnimationPlayer.play("RESET")
 
 
 func _on_inc_down():
-    _inc_cb.call_funcv(_inc_params)
+    _inc_cb.call_func(self)
 
 
 func _on_dec_down():
-    _dec_cb.call_funcv(_dec_params)
+    _dec_cb.call_func(self)

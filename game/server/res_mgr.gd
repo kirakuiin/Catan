@@ -42,12 +42,18 @@ func set_robber(robber_pos: Vector3):
 func get_discard_infos() -> Array:
     var discard_infos = {}
     for player in _scores:
-        var total = 0
-        for num in _scores[player].res_cards.values():
-            total += num
+        var total = Util.sum(_scores[player].res_cards.values())
         if total >= 8:
             discard_infos[player] = total/2
     return discard_infos
+
+
+# 回收玩家资源
+func recycle_player_res(player_name: String, recycle_info):
+    var res_info = _scores[player_name].res_cards
+    for res_type in recycle_info:
+        res_info[res_type] -= recycle_info[res_type]
+        _modify_capacity(res_type, recycle_info[res_type])
 
 
 # 根据点数分配资源
@@ -114,10 +120,14 @@ func _filter_invalid_tile(hexs: Array):
 
 func _give_res_to_player(player: String, res_type: int, num):
     var avail_num = min(_res_capacity[res_type], num)
-    _res_capacity[res_type] -= avail_num
+    _modify_capacity(res_type, -avail_num)
     if not res_type in _scores[player].res_cards:
         _scores[player].res_cards[res_type] = avail_num
     else:
         _scores[player].res_cards[res_type] += avail_num
+
+func _modify_capacity(res_type: int, num: int):
+    _res_capacity[res_type] += num
+    Log.logi("类型[%d]的资源由(%d->%d)" % [res_type, _res_capacity[res_type]-num, _res_capacity[res_type]])
     if _res_capacity[res_type] == 0:
         Log.logw("类型[%d]的资源耗尽" % res_type)

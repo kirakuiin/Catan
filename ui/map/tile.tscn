@@ -17,6 +17,7 @@ font_data = ExtResource( 3 )
 anchor_right = 0.104167
 anchor_bottom = 0.185185
 rect_min_size = Vector2( 150, 150 )
+mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
@@ -26,6 +27,7 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 100, 100 )
+mouse_filter = 2
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -33,12 +35,14 @@ stretch_mode = 6
 [node name="Point" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="NumberTexture" type="TextureRect" parent="Point"]
 anchor_left = 0.2875
 anchor_top = 0.2875
 anchor_right = 0.7125
 anchor_bottom = 0.7125
+mouse_filter = 2
 expand = true
 stretch_mode = 6
 __meta__ = {
@@ -50,6 +54,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 100, 100 )
+mouse_filter = 2
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -58,6 +63,7 @@ stretch_mode = 6
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 100, 100 )
+mouse_filter = 2
 expand = true
 stretch_mode = 6
 

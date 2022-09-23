@@ -8,6 +8,8 @@ const Card:PackedScene = preload("res://ui/game/res_card.tscn")
 
 
 var _card_dict: Dictionary
+var _need_discard_num: int
+var _discard_info: Dictionary
 
 
 func _init():
@@ -87,13 +89,58 @@ func _place_card_by_idx(card, idx: int):
     
 
 func _on_resource_discarded(num: int):
+    _init_discard(num)
     for card in _card_dict.values():
-        card.enable(funcref(self, "_on_inc"), [], funcref(self, "_on_dec"), [])
+        card.enable(funcref(self, "_on_inc"), funcref(self, "_on_dec"))
+
+func _init_discard(num: int):
+    _need_discard_num = num
+    _discard_info = {}
+    for res_type in _card_dict:
+        _discard_info[res_type] = 0
+    $Discard.show()
+    $Discard/DiscardBtn.hide()
+    _update_discard_hint()
 
 
-func _on_inc():
-    Log.logd("inc")
+func _on_inc(button):
+    var res_type = button.get_type()
+    if _discard_info[res_type] > 0:
+        _discard_info[res_type] -= 1
+        button.set_num(button.get_num()+1)
+        button.set_discard(_discard_info[res_type])
+        _update_discard_hint()
 
 
-func _on_dec():
-    Log.logd("dec")
+func _on_dec(button):
+    var res_type = button.get_type()
+    if button.get_num() > 0 and _calc_discard_diff() > 0:
+        _discard_info[res_type] += 1
+        button.set_num(button.get_num()-1)
+        button.set_discard(_discard_info[res_type])
+        _update_discard_hint()
+
+
+func _calc_discard_diff():
+    var total = Util.sum(_discard_info.values())
+    return _need_discard_num - total
+
+
+func _update_discard_hint():
+    var diff = _calc_discard_diff()
+    if diff > 0:
+        $Discard/Hint.text = "仍需丢弃[%d]张资源卡" % diff
+        $Discard/DiscardBtn.hide()
+    else:
+        $Discard/Hint.text = ""
+        $Discard/DiscardBtn.show()
+
+
+func _on_confirm_discard():
+    _disable_discard()
+    _get_client().discard_done(_discard_info)
+
+func _disable_discard():
+    for card in _card_dict.values():
+        card.disable()
+    $Discard.hide()

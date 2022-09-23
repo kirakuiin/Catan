@@ -15,7 +15,7 @@ const LOG_PATH: String = "user://%s_catan.log"
 class LogModule:
     extends Reference
 
-    const DEFAULT: String = ""
+    const DEFAULT: String = "game"
     const COMMON: String = "common"
     const SCENE: String = "scene"
     const CLIENT: String = "client"

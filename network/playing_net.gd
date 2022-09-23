@@ -23,18 +23,21 @@ master func client_ready(player_name: String):
 # 客户端放置定居点结束
 master func place_settlement_done(player_name: String, pos: Vector3):
     get_server().add_settlement(player_name, pos)
-    get_server().change_player_state(player_name, NetDefines.PlayerState.DONE)
 
 
 # 客户端放置道路结束
 master func place_road_done(player_name: String, road_data):
     get_server().add_road(player_name, Protocol.deserialize(road_data))
-    get_server().change_player_state(player_name, NetDefines.PlayerState.DONE)
 
 
 # 客户端让过
 master func pass_turn(player_name: String):
     get_server().change_player_state(player_name, NetDefines.PlayerState.PASS)
+
+
+# 丢弃完成
+master func discard_done(player_name: String, discard_data):
+    get_server().discard_done(player_name, Protocol.deserialize(discard_data))
 
 
 # S2C

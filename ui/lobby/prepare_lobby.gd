@@ -123,6 +123,7 @@ remotesync func change_max_player_num(index: int):
 	_host_info.max_player_num = Data.MAPSIZE_DATA[index]
 	ConnState.set_max_conn(_host_info.max_player_num-1)
 	_reset_catan_setup()
+	_generate_map()
 
 
 func _on_change_fog(index: int):

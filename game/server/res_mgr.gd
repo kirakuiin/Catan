@@ -56,6 +56,30 @@ func recycle_player_res(player_name: String, recycle_info):
         _modify_capacity(res_type, recycle_info[res_type])
 
 
+# 抢劫资源
+func rob_resource(from: String, to: String) -> bool:
+    if from != to and Util.sum(_scores[to].res_cards.values()) > 0:
+        _transmit_res_to_player(to, {_random_choice_res(to): 1,}, from)
+        return true
+    else:
+        return false
+
+func _random_choice_res(player: String) -> int:
+    var res_cards = _scores[player].res_cards
+    var types = []
+    for type in res_cards:
+        if res_cards[type] > 0:
+            types.append(type)
+    types.shuffle()
+    return types[0]
+
+func _transmit_res_to_player(from: String, res_info: Dictionary, to: String):
+    for res_type in res_info:
+        var num = res_info[res_type]
+        _scores[from].res_cards[res_type] -= num
+    Util.merge_int_dict(_scores[to].res_cards, res_info)
+
+
 # 根据点数分配资源
 func dispatch_by_num(num: int) -> Dictionary:
     var affect_player = {}

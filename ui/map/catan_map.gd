@@ -16,7 +16,8 @@ var _map: Protocol.MapInfo
 var _tile_map: Dictionary = {}
 var _is_enable_fog: bool
 
-var _point_map: Dictionary = {}
+var _corner_point_map: Dictionary = {}
+var _tile_point_map: Dictionary = {}
 var _road_map: Dictionary = {}
 var _settlement_map: Dictionary = {}
 var _city_map: Dictionary = {}
@@ -76,28 +77,33 @@ func _draw_harbor():
 
 
 func _generate_point():
-	for point in _get_client().get_point_info().values():
-		_create_point(point)
-
+	for point in _get_client().build_mgr.get_point_info().values():
+		_create_corner_point(point)
+	for tile in _map.grid_map.values():
+		if tile.tile_type != Data.TileType.OCEAN:
+			_create_tile_point(tile.cube_pos)
 	
 func _get_client():
 	return PlayingNet.get_client()
 
-
-func _create_point(pos: Vector3):
+func _create_corner_point(pos: Vector3):
 	var hint = PointHint.instance()
-	_point_map[pos] = hint
+	_corner_point_map[pos] = hint
 	$Point.add_child(hint)
 	hint.set_pos(_corner_to_pos(pos))
-
 
 func _corner_to_pos(pos: Vector3) -> Vector2:
 	var corner = Hexlib.create_corner(pos)
 	return Hexlib.corner_to_pixel(_get_layout(), corner)
 
-
 func _get_layout():
 	return _tile_map.values()[0].get_layout()
+
+func _create_tile_point(pos: Vector3):
+	var hint = PointHint.instance()
+	_tile_point_map[pos] = hint
+	$Point.add_child(hint)
+	hint.set_pos(Hexlib.hex_to_pixel(_get_layout(), Hexlib.create_hex(pos)))
 
 
 func _init_signal():
@@ -140,19 +146,19 @@ func _on_client_state_changed(state):
 
 # 展示定居点提示
 func _show_settlement_hint():
-	for point in _get_client().get_available_point():
-		_point_map[point].show()
-		_point_map[point].set_callback(funcref(self, "_on_click_point"), [point])
+	for point in _get_client().build_mgr.get_available_point():
+		_corner_point_map[point].show()
+		_corner_point_map[point].set_callback(funcref(self, "_on_click_corner_point"), [point])
 
-func _on_click_point(point):
-	for point in _point_map.values():
+func _on_click_corner_point(point):
+	for point in _corner_point_map.values():
 		point.hide()
 	_get_client().place_settlement_done(point)
 
 
 # 展示道路提示
 func _show_road_hint(is_setup=false):
-	var roads = _get_client().get_setup_available_road() if is_setup else _get_client().get_turn_available_road()
+	var roads = _get_client().build_mgr.get_setup_available_road() if is_setup else _get_client().build_mgr.get_turn_available_road()
 	for road in roads:
 		_create_road_hint(road)
 		
@@ -175,10 +181,9 @@ func _show_upgrade_hint():
 
 # 移动强盗提示
 func _show_move_robber_hint():
-	# TODO: 实现真实的提示逻辑
-	var pos_list = _get_all_can_rob_tile()
-	pos_list.shuffle()
-	_get_client().set_robber_pos(pos_list[0])
+	for point in _get_all_can_rob_tile():
+		_tile_point_map[point].show()
+		_tile_point_map[point].set_callback(funcref(self, "_on_click_tile_point"), [point])
 
 func _get_all_can_rob_tile() -> Array:
 	var result = []
@@ -187,10 +192,26 @@ func _get_all_can_rob_tile() -> Array:
 			result.append(tile.cube_pos)
 	return result
 
+func _on_click_tile_point(point: Vector3):
+	for point in _tile_point_map.values():
+		point.hide()
+	_get_client().move_robber_done(point)
+
 
 # 抢劫玩家提示
 func _show_rob_player_hint():
-	pass
+	var player_buildings = _get_client().build_mgr.get_tile_player_building(_robber_pos)
+	for player in player_buildings:
+		for point in player_buildings[player]:
+			_corner_point_map[point].show()
+			_corner_point_map[point].set_callback(funcref(self, "_on_click_rob_point"), [player, point])
+	if not player_buildings:
+		_get_client().rob_player_done(_get_client().get_name())  # 如果周围无建筑简化为抢劫自己
+
+func _on_click_rob_point(player: String, point: Vector3):
+	for point in _corner_point_map.values():
+		point.hide()
+	_get_client().rob_player_done(player)
 
 
 # 在地图上增加定居点

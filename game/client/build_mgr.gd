@@ -6,6 +6,7 @@ var _map: Protocol.MapInfo
 var _buildings: Dictionary
 var _scores: Dictionary
 var _size: int
+var _robber_pos: Vector3
 
 var _point_info: StdLib.Set
 
@@ -80,4 +81,20 @@ func _is_valid_land_corner(corner: Hexlib.Corner) -> bool:
 # 获得回合阶段所有的可放置道路
 func get_turn_available_road() -> Array:
     var result = []
+    return result
+
+
+# 获得某个地块所有玩家的建筑位置
+func get_tile_player_building(pos: Vector3) -> Dictionary:
+    var result = {}
+    var hex = Hexlib.create_hex(pos)
+    for corner in Hexlib.get_all_corner(hex):
+        for player in _buildings:
+            var corner_pos = corner.to_vector3()
+            if corner_pos in _buildings[player].settlement_info or corner_pos in _buildings[player].city_info:
+                if player in result:
+                    result[player].append(corner_pos)
+                else:
+                    result[player] = [corner_pos]
+                break
     return result

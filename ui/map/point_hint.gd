@@ -1,6 +1,6 @@
 extends Control
 
-# 定居点提示
+# 点提示
 
 
 var _callback: FuncRef

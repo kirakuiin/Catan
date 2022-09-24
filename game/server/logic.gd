@@ -195,6 +195,18 @@ func move_robber_done(player_name: String, pos: Vector3):
     change_player_state(player_name, NetDefines.PlayerState.DONE)
     broadcast_robber_pos()
 
+    
+# 抢劫玩家完毕
+func rob_player_done(robber: String, robbed_player: String):
+    _logger.logd("玩家[%s]抢劫玩家[%s]" % [robber, robbed_player])
+    var rob_result = _res_mgr.rob_resource(robber, robbed_player)
+    if rob_result:
+        broadcast_message(Message.rob_player(robber, robbed_player))
+        change_score_info(robber)
+        change_score_info(robbed_player)
+    change_player_state(robber, NetDefines.PlayerState.DONE)
+
+
 # S2C
 
 # 通知玩家放置定居点
@@ -274,6 +286,14 @@ func notify_move_robber(player_name: String):
 func broadcast_robber_pos():
     _logger.logd("更新强盗位置[%s]" % str(_robber_pos))
     PlayingNet.rpc("change_robber_pos", _robber_pos)
+
+
+# 通知抢劫玩家
+func notify_rob_player(player_name: String):
+    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    _logger.logd("通知玩家[%s]抢劫玩家..." % player_name)
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "rob_player")
 
 
 # 通知丢弃资源

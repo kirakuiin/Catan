@@ -45,6 +45,11 @@ master func move_robber_done(player_name: String, pos: Vector3):
     get_server().move_robber_done(player_name, pos)
 
 
+# 抢夺玩家完毕
+master func rob_player_done(player_name: String, robbed_player: String):
+    get_server().rob_player_done(player_name, robbed_player)
+
+
 # S2C
 
 # 通知客户端放置道路
@@ -105,6 +110,11 @@ remotesync func discard_resource(num: int):
 # 通知客户端丢弃资源
 remotesync func move_robber():
     get_client().move_robber()
+
+
+# 通知客户端抢劫玩家
+remotesync func rob_player():
+    get_client().rob_player()
 
 
 # 通知客户端播放消息

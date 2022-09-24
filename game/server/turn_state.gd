@@ -87,6 +87,7 @@ class PlayerTurnState:
         _machine.state_list.append(DispatchResourceState.new(self, _name))
         _machine.state_list.append(DiscardResourceState.new(self, _name))
         _machine.state_list.append(MoveRobberState.new(self, _name))
+        _machine.state_list.append(RobPlayerState.new(self, _name))
         _machine.state_list.append(BuildAndTradeState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
@@ -181,6 +182,24 @@ class MoveRobberState:
 
     func activiate():
         _entry_actions.append(Action.move_robber(_name))
+        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
+        add_transition(HSM.Transition.new(get_state_in_parent(RobPlayerState), 0, condition))
+
+
+# 抢夺玩家阶段
+class RobPlayerState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "RobPlayerState[%s]" % _name
+
+    func activiate():
+        _entry_actions.append(Action.rob_player(_name))
         var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
         add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, condition))
 

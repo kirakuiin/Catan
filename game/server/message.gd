@@ -53,3 +53,12 @@ static func dispatch_res(player_name: String, res_info: Dictionary) -> Protocol.
         message.add_resource(res_type)
         message.add_text("[%d] " % res_info[res_type])
     return message
+
+
+# 得到抢劫消息
+static func rob_player(from: String, to: String):
+    var message = Protocol.MessageInfo.new()
+    message.add_player(from)
+    message.add_text(" 抢劫了 ")
+    message.add_player(to)
+    return message

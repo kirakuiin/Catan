@@ -26,11 +26,9 @@ var assist_info: Protocol.AssistInfo
 var player_buildings: Dictionary
 var player_scores: Dictionary
 
-var point_info: StdLib.Set
-
 var client_state: String  # 客户端状态
+var build_mgr: BuildMgr
 
-var _build_mgr: BuildMgr
 var _logger: Log.Logger
 
 
@@ -45,7 +43,7 @@ func _init_local_info():
     assist_info = Protocol.AssistInfo.new()
     player_buildings = {}
     player_scores = {}
-    _build_mgr = BuildMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
+    build_mgr = BuildMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
 
 
 func _ready():
@@ -69,27 +67,6 @@ func start():
 # 获得玩家名称
 func get_name() -> String:
     return PlayerInfoMgr.get_self_info().player_name
-
-
-# 获得提示点位
-func get_point_info() -> StdLib.Set:
-    return _build_mgr.get_point_info()
-
-
-# 获得所有的可放置点位
-func get_available_point() -> Array:
-    return _build_mgr.get_available_point()
-
-
-# 获得布置阶段所有的可放置道路
-func get_setup_available_road() -> Array:
-    return _build_mgr.get_setup_available_road()
-
-
-# 获得回合阶段所有的可放置道路
-func get_turn_available_road() -> Array:
-    var result = []
-    return result
 
 
 # 设置客户端状态
@@ -127,11 +104,18 @@ func pass_turn():
     PlayingNet.rpc("pass_turn", get_name())
 
 
-# 移动强盗位置
-func set_robber_pos(pos: Vector3):
+# 移动强盗位置完毕
+func move_robber_done(pos: Vector3):
     _logger.logd("玩家[%s]移动强盗至[%s]" % [get_name(), str(pos)])
     change_client_state(NetDefines.ClientState.IDLE)
     PlayingNet.rpc("move_robber_done", get_name(), pos)
+
+
+# 抢劫玩家完毕
+func rob_player_done(player: String):
+    _logger.logd("玩家[%s]抢劫玩家[%s]" % [get_name(), player])
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("rob_player_done", get_name(), player)
 
 # S2C
 
@@ -217,3 +201,10 @@ func show_message(message: Protocol.MessageInfo):
 # 移动强盗
 func move_robber():
     change_client_state(NetDefines.ClientState.MOVE_ROBBER)
+    emit_signal("player_hint_showed", "请移动强盗...")
+
+
+# 抢劫玩家
+func rob_player():
+    change_client_state(NetDefines.ClientState.ROB_PLAYER)
+    emit_signal("player_hint_showed", "请抢夺玩家...")

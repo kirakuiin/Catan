@@ -99,7 +99,6 @@ func _find_corner_res_with_num(corner_pos: Vector3, num: int) -> Array:
     return result
 
 func _find_corner_res(corner_pos: Vector3) -> Array:
-    assert(_robber_pos, "must initial robber info")
     var result = []
     var corner = Hexlib.create_corner(corner_pos)
     var hexs = _filter_invalid_tile(Hexlib.get_corner_adjacency_hex(corner))

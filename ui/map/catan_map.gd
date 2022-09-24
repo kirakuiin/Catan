@@ -14,6 +14,7 @@ const Robber: PackedScene = preload("res://ui/map/robber.tscn")
 
 var _map: Protocol.MapInfo
 var _tile_map: Dictionary = {}
+var _is_enable_fog: bool
 
 var _point_map: Dictionary = {}
 var _road_map: Dictionary = {}
@@ -44,6 +45,7 @@ func init_with_mapinfo(map: Protocol.MapInfo, is_enable_fog: bool):
 
 func show_preview(map: Protocol.MapInfo, is_enable_fog: bool):
 	_map = map
+	_is_enable_fog = is_enable_fog
 	_draw_map()
 	set_all_point_visible(not is_enable_fog)
 
@@ -101,6 +103,7 @@ func _init_signal():
 	_get_client().connect("building_info_changed", self, "_on_building_info_changed")
 	_get_client().connect("client_state_changed", self, "_on_client_state_changed")
 	_get_client().connect("robber_pos_changed", self, "_on_robber_pos_changed")
+	_get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
 	for _tile in _tile_map.values():
 		_tile.init_signal()
 
@@ -193,3 +196,8 @@ func _on_robber_pos_changed(pos: Vector3):
 	$Robber/Robber.show()
 	var hex = Hexlib.create_hex(pos)
 	$Robber/Robber.position = Hexlib.hex_to_pixel(_get_layout(), hex)
+
+
+func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
+	if _is_enable_fog == true and assist_info.turn_num == 1:
+		set_all_point_visible(true)

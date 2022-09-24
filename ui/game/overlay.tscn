@@ -3,7 +3,7 @@
 [ext_resource path="res://ui/game/overlay.gd" type="Script" id=1]
 [ext_resource path="res://ui/game/operation.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/game/player_infos.tscn" type="PackedScene" id=3]
-[ext_resource path="res://ui/game/game_infos.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/game/info/game_infos.tscn" type="PackedScene" id=4]
 [ext_resource path="res://ui/game/dice.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/game/res_zone.tscn" type="PackedScene" id=6]
 
@@ -23,11 +23,6 @@ __meta__ = {
 }
 
 [node name="GameInfos" parent="." instance=ExtResource( 4 )]
-anchor_bottom = 0.277778
-margin_bottom = 0.0
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="Operation" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.84375

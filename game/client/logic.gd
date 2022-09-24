@@ -5,6 +5,7 @@ extends Node
 
 
 signal assist_info_changed(assist_info)  # 辅助信息改变
+signal player_hint_showed(hint)  # 提示信息变化
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal score_info_changed(player_name, score_info)  # 得分信息改变
 signal client_state_changed(state)  # 客户端状态改变
@@ -131,11 +132,13 @@ func pass_turn():
 # 放置定居点
 func place_settlement():
     change_client_state(NetDefines.ClientState.PLACE_SETTLEMENT)
+    emit_signal("player_hint_showed", "请放置定居点...")
 
 
 # 放置道路
 func place_road(is_setup: bool):
     change_client_state(NetDefines.ClientState.PLACE_ROAD_SETUP if is_setup else NetDefines.ClientState.PLACE_ROAD_TURN)
+    emit_signal("player_hint_showed", "请放置道路...")
 
 
 # 修改辅助信息
@@ -196,3 +199,4 @@ func into_free_action():
 func discard_resource(num: int):
     change_client_state(NetDefines.ClientState.DISCARD_RESOURCE)
     emit_signal("resource_discarded", num)
+    emit_signal("player_hint_showed", "请丢弃资源...")

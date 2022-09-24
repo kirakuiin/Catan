@@ -180,7 +180,9 @@ class MoveRobberState:
         return "MoveRobberState[%s]" % _name
 
     func activiate():
-        add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, [Condition.TrueCondition.new()]))
+        _entry_actions.append(Action.move_robber(_name))
+        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
+        add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, condition))
 
 
 # 分发资源阶段

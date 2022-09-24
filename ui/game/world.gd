@@ -21,7 +21,7 @@ func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: 
 		_init_server(order, setup, map)
 	_init_client(order, setup, map)
 	_init_map(map, setup)
-	_init_overlay(setup, order)
+	_init_overlay()
 	_client.start()
 
 
@@ -39,8 +39,8 @@ func _init_map(map: Protocol.MapInfo, setup: Protocol.CatanSetupInfo):
 	$Map/ViewContainer/Viewport/CatanMap.init_with_mapinfo(map, setup.is_enable_fog)
 
 
-func _init_overlay(setup: Protocol.CatanSetupInfo, order: Protocol.PlayerOrderInfo):
-	$UIOverlay/Overlay.init(order, setup)
+func _init_overlay():
+	$UIOverlay/Overlay.init()
 
 
 func _on_mouse_moved(offset: Vector2):

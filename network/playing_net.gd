@@ -40,6 +40,11 @@ master func discard_done(player_name: String, discard_data):
     get_server().discard_done(player_name, Protocol.deserialize(discard_data))
 
 
+# 移动强盗完毕
+master func move_robber_done(player_name: String, pos: Vector3):
+    get_server().move_robber_done(player_name, pos)
+
+
 # S2C
 
 # 通知客户端放置道路
@@ -95,3 +100,13 @@ remotesync func into_free_action():
 # 通知客户端丢弃资源
 remotesync func discard_resource(num: int):
     get_client().discard_resource(num)
+
+
+# 通知客户端丢弃资源
+remotesync func move_robber():
+    get_client().move_robber()
+
+
+# 通知客户端播放消息
+remotesync func show_message(data):
+    get_client().show_message(Protocol.deserialize(data))

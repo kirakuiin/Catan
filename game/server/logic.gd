@@ -121,15 +121,17 @@ func roll_dice():
 func dispatch_resource():
     _res_mgr.set_robber(_robber_pos)
     var affect = _res_mgr.dispatch_by_num(dice.get_last_num())
-    for player in affect.values():
+    for player in affect.keys():
         change_score_info(player)
+        broadcast_message(Message.dispatch_res(player, affect[player]))
 
 
 # 初始化分配资源
 func initial_resource(player_name: String):
     _res_mgr.set_robber(_robber_pos)
-    _res_mgr.dispatch_initial_res(player_name)
+    var result = _res_mgr.dispatch_initial_res(player_name)
     change_score_info(player_name)
+    broadcast_message(Message.dispatch_res(player_name, result))
 
 
 # 延迟
@@ -148,13 +150,14 @@ func discard_resource():
 
 # C2S
 
-# 玩家状态改变
 
+# 全部玩家就绪
 func client_ready(player_name: String):
     _init_player(player_name)
     change_player_state(player_name, NetDefines.PlayerState.READY)
 
 
+# 玩家状态改变
 func change_player_state(player_name: String, state: String):
     _logger.logd("玩家[%s]状态变为 '%s'" % [player_name, state])
     player_state[player_name] = state
@@ -165,6 +168,7 @@ func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
     change_building_info(player_name)
     change_player_state(player_name, NetDefines.PlayerState.DONE)
+    broadcast_message(Message.place_settlement(player_name))
 
 
 # 增加指定玩家的道路
@@ -172,6 +176,7 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
     player_buildings[player_name].road_info.append(road)
     change_building_info(player_name)
     change_player_state(player_name, NetDefines.PlayerState.DONE)
+    broadcast_message(Message.place_road(player_name))
 
 
 # 丢弃资源完毕
@@ -180,6 +185,15 @@ func discard_done(player_name: String, discard_info: Dictionary):
     _res_mgr.recycle_player_res(player_name, discard_info)
     change_player_state(player_name, NetDefines.PlayerState.DONE)
     change_score_info(player_name)
+    broadcast_message(Message.discard(player_name, discard_info))
+
+
+# 移动强盗完毕
+func move_robber_done(player_name: String, pos: Vector3):
+    _logger.logd("玩家[%s]强盗移动至%s" % [player_name, str(pos)])
+    _robber_pos = pos
+    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    broadcast_robber_pos()
 
 # S2C
 
@@ -224,6 +238,12 @@ func broadcast_score_info():
     PlayingNet.rpc("init_score_info", Protocol.serialize(player_scores))
 
 
+# 广播消息
+func broadcast_message(message: Protocol.MessageInfo):
+    _logger.logd("广播消息[%s]" % message)
+    PlayingNet.rpc("show_message", Protocol.serialize(message))
+
+
 # 广播骰子信息
 func broadcast_dice_info(info: Array):
     _logger.logd("广播骰子信息[%d, %d]" % info)
@@ -243,8 +263,11 @@ func change_score_info(player_name: String):
 
 
 # 移动强盗
-func move_robber(player_name: String):
-    _logger.logd("玩家[%s]移动强盗..." % player_name)
+func notify_move_robber(player_name: String):
+    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    _logger.logd("通知玩家[%s]移动强盗..." % player_name)
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "move_robber")
 
 
 # 更新强盗位置

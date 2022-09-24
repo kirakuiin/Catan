@@ -62,6 +62,11 @@ static func discard_res() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "discard_resource"), [])
 
 
+# 移动强盗
+static func move_robber(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_move_robber"), [player_name])
+
+
 # 分配资源
 static func dispatch_res() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "dispatch_resource"), [])

@@ -36,3 +36,18 @@ static func sum(list: Array):
     for num in list:
         total += num
     return total
+
+
+# 颜色转字符串
+static func color_to_str(color: Color):
+    var colors = PoolByteArray([color.a8, color.r8, color.g8, color.b8])
+    return "#"+colors.hex_encode()
+
+
+# 合并字典
+static func merge_int_dict(dict_a: Dictionary, dict_b: Dictionary):
+    for k in dict_b:
+        if k in dict_a:
+            dict_a[k] += dict_b[k]
+        else:
+            dict_a[k] = dict_b[k]

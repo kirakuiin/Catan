@@ -57,36 +57,49 @@ func recycle_player_res(player_name: String, recycle_info):
 
 
 # 根据点数分配资源
-func dispatch_by_num(num: int) -> StdLib.Set:
-    var affect_player = StdLib.Set.new()
+func dispatch_by_num(num: int) -> Dictionary:
+    var affect_player = {}
     for corner in _num_to_corner[num].values():
         for player in _buildings:
+            var result = {}
             if corner in _buildings[player].settlement_info:
-                _update_settlement_res(player, corner, num)
-                affect_player.add(player)
+                Util.merge_int_dict(result, _update_settlement_res(player, corner, num))
             if corner in _buildings[player].city_info:
-                _update_city_res(player, corner, num)
-                affect_player.add(player)
+                Util.merge_int_dict(result, _update_city_res(player, corner, num))
+            if result:
+                if player in affect_player:
+                    Util.merge_int_dict(affect_player[player], result)
+                else:
+                    affect_player[player] = result
     return affect_player
 
 
 # 分配位置相邻的资源
-func dispatch_initial_res(player_name: String):
+func dispatch_initial_res(player_name: String) -> Dictionary:
     var corner_pos = _buildings[player_name].settlement_info[-1]
     var res_list = _find_corner_res(corner_pos)
+    var result = {}
     for res in res_list:
         _give_res_to_player(player_name, res[0], 1)
+        result[res[0]] = result[res[0]]+1 if res[0] in result else 1
+    return result
 
 
-func _update_settlement_res(player: String, corner: Vector3, num: int):
+func _update_settlement_res(player: String, corner: Vector3, num: int) -> Dictionary:
     var res = _find_corner_res_with_num(corner, num)
+    var result = {}
     for res_type in res:
+        result[res_type] = result[res_type]+1 if res_type in result else 1
         _give_res_to_player(player, res_type, 1)
+    return result
 
-func _update_city_res(player: String, corner: Vector3, num: int):
+func _update_city_res(player: String, corner: Vector3, num: int) -> Dictionary:
     var res = _find_corner_res_with_num(corner, num)
+    var result = {}
     for res_type in res:
+        result[res_type] = result[res_type]+1 if res_type in result else 1
         _give_res_to_player(player, res_type, 2)
+    return result
 
 func _find_corner_res_with_num(corner_pos: Vector3, num: int) -> Array:
     var result = []

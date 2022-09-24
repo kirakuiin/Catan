@@ -3,8 +3,8 @@ extends Control
 
 # 世界ui覆盖层
 
-func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo):
-    $PlayerInfos.init(order, setup.catan_size)
+func init():
+    $PlayerInfos.init()
     $GameInfos.init()
     $Dice.init()
     $Operation.init()

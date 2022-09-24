@@ -13,6 +13,8 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 1 )
 
+[node name="GameInfos" parent="." instance=ExtResource( 4 )]
+
 [node name="PlayerInfos" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.208333
 anchor_bottom = 0.740741
@@ -21,8 +23,6 @@ margin_bottom = 0.0
 __meta__ = {
 "_edit_use_anchors_": true
 }
-
-[node name="GameInfos" parent="." instance=ExtResource( 4 )]
 
 [node name="Operation" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.84375

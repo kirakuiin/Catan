@@ -20,6 +20,7 @@ var _point_map: Dictionary = {}
 var _road_map: Dictionary = {}
 var _settlement_map: Dictionary = {}
 var _city_map: Dictionary = {}
+var _robber_pos: Vector3
 
 
 func _ready():
@@ -131,6 +132,10 @@ func _on_client_state_changed(state):
 			_show_settlement_hint()
 		NetDefines.ClientState.UPGRADE_CITY:
 			_show_upgrade_hint()
+		NetDefines.ClientState.MOVE_ROBBER:
+			_show_move_robber_hint()
+		NetDefines.ClientState.ROB_PLAYER:
+			_show_rob_player_hint()
 
 
 # 展示定居点提示
@@ -168,6 +173,26 @@ func _show_upgrade_hint():
 	pass
 
 
+# 移动强盗提示
+func _show_move_robber_hint():
+	# TODO: 实现真实的提示逻辑
+	var pos_list = _get_all_can_rob_tile()
+	pos_list.shuffle()
+	_get_client().set_robber_pos(pos_list[0])
+
+func _get_all_can_rob_tile() -> Array:
+	var result = []
+	for tile in _map.grid_map.values():
+		if tile.tile_type != Data.TileType.OCEAN and tile.cube_pos != _robber_pos:
+			result.append(tile.cube_pos)
+	return result
+
+
+# 抢劫玩家提示
+func _show_rob_player_hint():
+	pass
+
+
 # 在地图上增加定居点
 func _add_settlement_to_map(pos: Vector3, order: int):
 	var settlement = Property.instance()
@@ -193,6 +218,7 @@ func _upgrade_settlement_on_map(pos: Vector3):
 
 
 func _on_robber_pos_changed(pos: Vector3):
+	_robber_pos = pos
 	$Robber/Robber.show()
 	var hex = Hexlib.create_hex(pos)
 	$Robber/Robber.position = Hexlib.hex_to_pixel(_get_layout(), hex)

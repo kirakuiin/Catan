@@ -37,3 +37,5 @@ class ClientState:
     const UPGRADE_CITY: String="升级城市"
     const FREE_ACTION: String="自由行动"
     const DISCARD_RESOURCE: String="丢弃资源"
+    const MOVE_ROBBER: String="移动强盗"
+    const ROB_PLAYER: String="抢劫玩家"

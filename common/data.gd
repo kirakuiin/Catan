@@ -72,6 +72,15 @@ const TILE_DATA = {
 enum CardType{KNIGHT, VP, ROAD, PLENTY, MONOPOLY}
 
 
+const DEV_ICON_DATA = {
+    CardType.KNIGHT: "res://assets/icons/development.png",
+    CardType.VP: "res://assets/icons/development.png",
+    CardType.ROAD: "res://assets/icons/development.png",
+    CardType.PLENTY: "res://assets/icons/development.png",
+    CardType.MONOPOLY: "res://assets/icons/development.png",
+}
+
+
 # 成就映射
 enum AchievementType{ARMY, ROAD}
 
@@ -98,6 +107,13 @@ const POINT_DATA = {
 enum BuildingType{SETTLEMENT, CITY, ROAD}
 
 
+const BUILDING_ICON_DATA = {
+    BuildingType.SETTLEMENT: "res://assets/icons/settlement.png",
+    BuildingType.CITY: "res://assets/icons/city.png",
+    BuildingType.ROAD: "res://assets/icons/road.png",
+}
+
+
 # 资源映射
 enum ResourceType{LUMBER, BRICK, ORE, WOOL, GRAIN}
 
@@ -117,6 +133,15 @@ const RES_DATA = {
     ResourceType.GRAIN: "res://assets/cards/grain.png",
     ResourceType.BRICK: "res://assets/cards/brick.png",
     ResourceType.ORE: "res://assets/cards/ore.png",
+}
+
+
+const RES_ICON_DATA = {
+    ResourceType.LUMBER: "res://assets/icons/lumber.png",
+    ResourceType.WOOL: "res://assets/icons/wool.png",
+    ResourceType.GRAIN: "res://assets/icons/grain.png",
+    ResourceType.BRICK: "res://assets/icons/brick.png",
+    ResourceType.ORE: "res://assets/icons/ore.png",
 }
 
 

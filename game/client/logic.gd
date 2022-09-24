@@ -5,13 +5,14 @@ extends Node
 
 
 signal assist_info_changed(assist_info)  # 辅助信息改变
-signal player_hint_showed(hint)  # 提示信息变化
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal score_info_changed(player_name, score_info)  # 得分信息改变
 signal client_state_changed(state)  # 客户端状态改变
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
 signal resource_discarded(num)  # 丢弃资源
+signal player_hint_showed(hint)  # 提示信息变化
+signal message_received(msg)  # 收到信息
 
 
 const BuildMgr: Script = preload("res://game/client/build_mgr.gd")
@@ -126,6 +127,12 @@ func pass_turn():
     PlayingNet.rpc("pass_turn", get_name())
 
 
+# 移动强盗位置
+func set_robber_pos(pos: Vector3):
+    _logger.logd("玩家[%s]移动强盗至[%s]" % [get_name(), str(pos)])
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("move_robber_done", get_name(), pos)
+
 # S2C
 
 
@@ -200,3 +207,13 @@ func discard_resource(num: int):
     change_client_state(NetDefines.ClientState.DISCARD_RESOURCE)
     emit_signal("resource_discarded", num)
     emit_signal("player_hint_showed", "请丢弃资源...")
+
+
+# 播放消息
+func show_message(message: Protocol.MessageInfo):
+    emit_signal("message_received", message)
+
+
+# 移动强盗
+func move_robber():
+    change_client_state(NetDefines.ClientState.MOVE_ROBBER)

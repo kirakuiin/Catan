@@ -53,6 +53,15 @@ static func upgrade_city(player_name: String) -> Protocol.MessageInfo:
     return message
 
 
+# 得到购买卡牌消息
+static func buy_dev_card(player_name: String) -> Protocol.MessageInfo:
+    var message = Protocol.MessageInfo.new()
+    message.add_player(player_name)
+    message.add_text("购买发展卡")
+    message.add_buy_dev()
+    return message
+
+
 # 得到分配资源消息
 static func dispatch_res(player_name: String, res_info: Dictionary) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()

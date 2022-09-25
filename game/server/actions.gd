@@ -42,6 +42,11 @@ static func notify_upgrade_city(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_upgrade_city"), [player_name])
 
 
+# 给予发展卡
+static func give_dev_card(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "give_dev_card"), [player_name])
+
+
 # 初始化资源
 static func initial_res(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "initial_resource"), [player_name])

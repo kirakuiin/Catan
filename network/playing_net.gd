@@ -35,6 +35,11 @@ master func request_upgrade_city(player_name: String):
     get_server().request_upgrade_city(player_name)
 
 
+# 请求购买卡牌
+master func request_buy_dev_card(player_name: String):
+    get_server().request_buy_dev_card(player_name)
+
+
 # 客户端放置定居点结束
 master func place_settlement_done(player_name: String, pos: Vector3):
     get_server().add_settlement(player_name, pos)

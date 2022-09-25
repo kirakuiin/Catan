@@ -75,7 +75,7 @@ func _random_choice_res(player: String) -> int:
     var res_cards = _scores[player].res_cards
     var types = []
     for type in res_cards:
-        if res_cards[type] > 0:
+        for _i in res_cards[type]:
             types.append(type)
     types.shuffle()
     return types[0]

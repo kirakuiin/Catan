@@ -99,6 +99,12 @@ func request_upgrade_city():
     PlayingNet.rpc("request_upgrade_city", get_name())
 
 
+# 请求购买卡牌
+func request_buy_dev_card():
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("request_buy_dev_card", get_name())
+
+
 # 放置定居点完毕
 func place_settlement_done(pos: Vector3):
     change_client_state(NetDefines.ClientState.IDLE)

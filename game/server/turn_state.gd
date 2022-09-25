@@ -92,6 +92,7 @@ class PlayerTurnState:
         _machine.state_list.append(PlaceSettlementState.new(self, _name))
         _machine.state_list.append(PlaceRoadState.new(self, _name))
         _machine.state_list.append(UpgradeCityState.new(self, _name))
+        _machine.state_list.append(BuyDevCardState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
@@ -125,7 +126,9 @@ class SpecialPlayCardState:
         _init_transitions()
 
     func _init_transitions():
-        var condition = Condition.DevCardEqualZeroCondition.new(_name)
+        # TODO: 处理特殊出牌阶段
+        # var condition = Condition.DevCardEqualZeroCondition.new(_name)
+        var condition = Condition.TrueCondition.new()
         add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, [condition]))
 
 
@@ -242,6 +245,7 @@ class BuildAndTradeState:
         _init_settlement_transition()
         _init_road_transition()
         _init_city_transition()
+        _init_buy_transition()
 
     func _init_end_transition():
         var target = get_parent_machine().get_next_state()
@@ -261,6 +265,11 @@ class BuildAndTradeState:
     func _init_city_transition():
         var target = get_state_in_parent(UpgradeCityState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.UPGRADE_CITY)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+
+    func _init_buy_transition():
+        var target = get_state_in_parent(BuyDevCardState)
+        var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUY_DEV_CARD)
         add_transition(HSM.Transition.new(target, 0, [condition]))
 
 
@@ -321,4 +330,24 @@ class UpgradeCityState:
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
         add_transition(HSM.Transition.new(target, 0, [condition]))
         _entry_actions.append(Action.notify_upgrade_city(_name))
+        _exit_actions.append(Action.reset_op_state(_name))
+
+
+# 购买卡牌阶段
+class BuyDevCardState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "BuyDevCardState[%s]" % _name
+
+    func activiate():
+        var target = get_state_in_parent(BuildAndTradeState)
+        var condition = Condition.TrueCondition.new()
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+        _entry_actions.append(Action.give_dev_card(_name))
         _exit_actions.append(Action.reset_op_state(_name))

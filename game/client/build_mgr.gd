@@ -84,7 +84,7 @@ func get_turn_available_road() -> Array:
     var exist_roads = _get_exist_tuple_roads()
     var result = []
     for tuple in possible_roads.values():
-        if not exist_roads.contains(tuple):
+        if not exist_roads.contains(tuple) and not _is_fly_road(tuple):
             result.append(Protocol.create_road(tuple))
     return result
 
@@ -108,6 +108,16 @@ func _get_exist_tuple_roads() -> StdLib.Set:
         for road in _buildings[player].road_info:
             result.add(road.to_tuple())
     return result
+
+func _is_fly_road(tuple: Array) -> bool:
+    var all_corner = _get_player_all_corner(_get_name())
+    var self_corner = tuple[0] if all_corner.contains(tuple[0]) else tuple[1]
+    var other_building_corner = []
+    for player in _buildings:
+        if player != _get_name():
+            other_building_corner.append_array(_buildings[player].settlement_info)
+            other_building_corner.append_array(_buildings[player].city_info)
+    return StdLib.Set.new(other_building_corner).contains(self_corner)
 
 
 # 获得布置阶段所有的可放置点位

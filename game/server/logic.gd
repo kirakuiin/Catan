@@ -6,6 +6,7 @@ extends Node
 const State: Script = preload("res://game/server/state.gd")
 const Dice: Script = preload("res://game/server/dice.gd")
 const ResMgr: Script = preload("res://game/server/res_mgr.gd")
+const CardMgr: Script = preload("res://game/server/card_mgr.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -23,6 +24,7 @@ var dice: Dice
 var _server_state: HSM.StateMachine
 var _robber_pos: Vector3
 var _res_mgr: ResMgr
+var _card_mgr: CardMgr
 var _logger: Log.Logger
 
 
@@ -58,10 +60,11 @@ func _init_player_state():
 
 
 func _init_player_info():
-    assist_info = Protocol.AssistInfo.new()
     player_buildings = {}
     player_scores = {}
     _res_mgr = ResMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
+    _card_mgr = CardMgr.new(player_scores, setup_info.catan_size)
+    assist_info = Protocol.AssistInfo.new(0, "", _card_mgr.get_avail_card_num())
 
 
 func _init_robber():
@@ -199,6 +202,12 @@ func request_upgrade_city(player_name: String):
     change_score_info(player_name)
 
 
+# 请求升级城市
+func request_buy_dev_card(player_name: String):
+    _res_mgr.buy(player_name, Data.OpType.DEV_CARD)
+    change_player_op_state(player_name, NetDefines.PlayerOpState.BUY_DEV_CARD)
+
+
 # 增加指定玩家的定居点
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
@@ -276,6 +285,16 @@ func notify_upgrade_city(player_name: String):
     _logger.logd("通知玩家[%s]升级城市" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "upgrade_city")
+
+
+# 分配指定玩家卡牌
+func give_dev_card(player_name):
+    var type = _card_mgr.give_card_to_player(player_name)
+    _logger.logd("分配玩家[%s]发展卡[%d]" % [player_name, type])
+    assist_info.avail_card = _card_mgr.get_avail_card_num()
+    broadcast_assist_info()
+    change_score_info(player_name)
+    broadcast_message(Message.buy_dev_card(player_name))
 
 
 # 通知玩家自由行动

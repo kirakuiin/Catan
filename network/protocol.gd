@@ -289,11 +289,13 @@ class AssistInfo:
 	var player_turn_name: String
 	var longgest_name: String
 	var biggest_name: String
+	var avail_card: int
 
-	func _init(turn: int=0, turn_name: String=""):
+	func _init(turn: int=0, turn_name: String="", card_num=0):
 		cls_name = "AssistInfo"
 		turn_num = turn
 		player_turn_name = turn_name
+		avail_card = card_num
 		longgest_name = ""
 		biggest_name = ""
 
@@ -307,6 +309,7 @@ class MessageInfo:
 	const RES: int = 3
 	const DEV: int = 4
 	const BUILDING: int = 5
+	const BUY_DEV: int = 6
 
 	var message_list: Array
 
@@ -321,6 +324,10 @@ class MessageInfo:
 	# 追加玩家
 	func add_player(name: String):
 		message_list.append({PLAYER: name})
+
+	# 追加购买发展卡
+	func add_buy_dev():
+		message_list.append({BUY_DEV: 1})
 
 	# 追加资源文本
 	func add_resource(res_type: int):
@@ -358,7 +365,9 @@ class MessageInfo:
 			BUILDING:
 				result = "[img=50x50]%s[/img]" % Data.BUILDING_ICON_DATA[val]
 			DEV:
-				result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA[val]
+				result = "[img=50x50]%s[/img]" % Data.CARD_ICON_DATA[val]
+			BUY_DEV:
+				result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
 		return result
 			
 

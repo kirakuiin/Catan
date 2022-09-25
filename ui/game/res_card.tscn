@@ -94,7 +94,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5, 1 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 0.27451, 0.27451, 0.27451, 1 ), Color( 0, 1, 0, 1 ), Color( 0.27451, 0.27451, 0.27451, 1 ) ]
+"values": [ Color( 0.27451, 0.27451, 0.27451, 1 ), Color( 0.141176, 0.682353, 0.141176, 1 ), Color( 0.27451, 0.27451, 0.27451, 1 ) ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("CardImage/Num/Inc:visible")

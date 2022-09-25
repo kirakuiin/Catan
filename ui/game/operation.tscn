@@ -1,10 +1,18 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://assets/images/clock.png" type="Texture" id=1]
 [ext_resource path="res://assets/images/done_btn_pressed.png" type="Texture" id=2]
 [ext_resource path="res://assets/images/done_btn.png" type="Texture" id=3]
 [ext_resource path="res://ui/game/operation.gd" type="Script" id=4]
 [ext_resource path="res://assets/images/done_btn_disable.png" type="Texture" id=5]
+[ext_resource path="res://assets/images/settlement_btn_disable.png" type="Texture" id=6]
+[ext_resource path="res://assets/images/city_btn.png" type="Texture" id=7]
+[ext_resource path="res://assets/images/development_btn_disable.png" type="Texture" id=8]
+[ext_resource path="res://assets/images/city_btn_disable.png" type="Texture" id=9]
+[ext_resource path="res://assets/images/development_btn.png" type="Texture" id=10]
+[ext_resource path="res://assets/images/settlement_btn.png" type="Texture" id=11]
+[ext_resource path="res://assets/images/road_btn_disable.png" type="Texture" id=12]
+[ext_resource path="res://assets/images/road_btn.png" type="Texture" id=13]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -57,6 +65,7 @@ anchor_left = 0.333333
 anchor_top = 0.333333
 anchor_right = 0.666667
 anchor_bottom = 0.666667
+hint_tooltip = "让过回合"
 disabled = true
 texture_normal = ExtResource( 3 )
 texture_pressed = ExtResource( 2 )
@@ -67,8 +76,72 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
+[node name="Road" type="TextureButton" parent="."]
+anchor_left = 0.24
+anchor_top = 0.04
+anchor_right = 0.44
+anchor_bottom = 0.24
+hint_tooltip = "建造道路"
+disabled = true
+texture_normal = ExtResource( 13 )
+texture_disabled = ExtResource( 12 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="City" type="TextureButton" parent="."]
+anchor_left = 0.06
+anchor_top = 0.52
+anchor_right = 0.26
+anchor_bottom = 0.72
+hint_tooltip = "升级城市"
+disabled = true
+texture_normal = ExtResource( 7 )
+texture_disabled = ExtResource( 9 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Settlement" type="TextureButton" parent="."]
+anchor_left = 0.06
+anchor_top = 0.24
+anchor_right = 0.26
+anchor_bottom = 0.44
+hint_tooltip = "建造定居点"
+disabled = true
+texture_normal = ExtResource( 11 )
+texture_disabled = ExtResource( 6 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="DevCard" type="TextureButton" parent="."]
+anchor_left = 0.24
+anchor_top = 0.74
+anchor_right = 0.44
+anchor_bottom = 0.94
+hint_tooltip = "购买发展卡"
+disabled = true
+texture_normal = ExtResource( 10 )
+texture_disabled = ExtResource( 8 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )
 anims/rotate = SubResource( 2 )
 
 [connection signal="button_up" from="DoneBtn" to="." method="_on_player_turn_done"]
+[connection signal="button_down" from="Road" to="." method="_on_place_road"]
+[connection signal="button_down" from="City" to="." method="_on_upgrade_city"]
+[connection signal="button_down" from="Settlement" to="." method="_on_place_settlement"]
+[connection signal="button_down" from="DevCard" to="." method="_on_buy_dev_card"]

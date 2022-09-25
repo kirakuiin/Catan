@@ -29,3 +29,19 @@ func _get_client():
 
 func _on_player_turn_done():
     _get_client().pass_turn()
+
+
+func _on_place_road():
+	pass # Replace with function body.
+
+
+func _on_upgrade_city():
+	pass # Replace with function body.
+
+
+func _on_place_settlement():
+	pass # Replace with function body.
+
+
+func _on_buy_dev_card():
+	pass # Replace with function body.

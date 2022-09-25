@@ -61,6 +61,21 @@ class PlayerStateCondition:
         
     func is_meet_condition() -> bool:
         return PlayingNet.get_server().player_state[_name] == _need_state
+
+
+# 玩家操作处于指定状态
+class PlayerOpStateCondition:
+    extends HSM.Condition
+
+    var _name: String
+    var _need_state: String
+
+    func _init(name: String, state: String):
+        _name = name
+        _need_state = state
+        
+    func is_meet_condition() -> bool:
+        return PlayingNet.get_server().player_op_state[_name] == _need_state
     
     
 # 玩家发展卡数量为0

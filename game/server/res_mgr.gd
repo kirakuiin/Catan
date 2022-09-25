@@ -48,6 +48,13 @@ func get_discard_infos() -> Array:
     return discard_infos
 
 
+# 购买行为
+func buy(player_name: String, type: int) -> Dictionary:
+    var res_info = Data.OP_DATA[type]
+    recycle_player_res(player_name, res_info)
+    return res_info
+
+
 # 回收玩家资源
 func recycle_player_res(player_name: String, recycle_info):
     var res_info = _scores[player_name].res_cards
@@ -121,7 +128,7 @@ func _update_city_res(player: String, corner: Vector3, num: int) -> Dictionary:
     var res = _find_corner_res_with_num(corner, num)
     var result = {}
     for res_type in res:
-        result[res_type] = result[res_type]+1 if res_type in result else 1
+        result[res_type] = result[res_type]+2 if res_type in result else 2
         _give_res_to_player(player, res_type, 2)
     return result
 

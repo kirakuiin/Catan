@@ -17,6 +17,7 @@ var player_scores: Dictionary
 var assist_info: Protocol.AssistInfo
 
 var player_state: Dictionary
+var player_op_state: Dictionary
 var dice: Dice
 
 var _server_state: HSM.StateMachine
@@ -52,6 +53,8 @@ func _init_node_setup():
 func _init_player_state():
     for name in order_info.order_to_name.values():
         player_state[name] = NetDefines.PlayerState.NOT_READY
+    for name in order_info.order_to_name.values():
+        player_op_state[name] = NetDefines.PlayerOpState.NONE
 
 
 func _init_player_info():
@@ -98,6 +101,11 @@ func _init_player(player_name: String):
 # 重置玩家状态
 func reset_player_state(player_name: String):
     change_player_state(player_name, NetDefines.PlayerState.READY)
+
+
+# 重置玩家操作状态
+func reset_player_op_state(player_name: String):
+    change_player_op_state(player_name, NetDefines.PlayerOpState.NONE)
 
 
 # 设置当前玩家回合名称
@@ -148,6 +156,7 @@ func discard_resource():
     for player in discard_infos:
         notify_discard_res(player, discard_infos[player])
 
+
 # C2S
 
 
@@ -161,6 +170,33 @@ func client_ready(player_name: String):
 func change_player_state(player_name: String, state: String):
     _logger.logd("玩家[%s]状态变为 '%s'" % [player_name, state])
     player_state[player_name] = state
+
+
+# 修改玩家操作状态
+func change_player_op_state(player_name: String, state: String):
+    _logger.logd("玩家[%s]操作变为 '%s'" % [player_name, state])
+    player_op_state[player_name] = state
+
+
+# 请求放置定居点
+func request_place_settlement(player_name: String):
+    change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_SETTLEMENT)
+    _res_mgr.buy(player_name, Data.OpType.SETTLEMENT)
+    change_score_info(player_name)
+
+
+# 请求放置道路
+func request_place_road(player_name: String):
+    change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_ROAD)
+    _res_mgr.buy(player_name, Data.OpType.ROAD)
+    change_score_info(player_name)
+
+
+# 请求升级城市
+func request_upgrade_city(player_name: String):
+    _res_mgr.buy(player_name, Data.OpType.CITY)
+    change_player_op_state(player_name, NetDefines.PlayerOpState.UPGRADE_CITY)
+    change_score_info(player_name)
 
 
 # 增加指定玩家的定居点
@@ -177,6 +213,15 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
     change_building_info(player_name)
     change_player_state(player_name, NetDefines.PlayerState.DONE)
     broadcast_message(Message.place_road(player_name))
+
+
+# 增加指定玩家城市
+func upgrade_city(player_name: String, pos: Vector3):
+    player_buildings[player_name].city_info.append(pos)
+    player_buildings[player_name].settlement_info.erase(pos)
+    change_building_info(player_name)
+    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    broadcast_message(Message.upgrade_city(player_name))
 
 
 # 丢弃资源完毕
@@ -210,11 +255,11 @@ func rob_player_done(robber: String, robbed_player: String):
 # S2C
 
 # 通知玩家放置定居点
-func notify_place_settlement(player_name):
+func notify_place_settlement(player_name: String, is_setup: bool):
     change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置定居点" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
-    PlayingNet.rpc_id(peer_id, "place_settlement")
+    PlayingNet.rpc_id(peer_id, "place_settlement", is_setup)
 
 
 # 通知玩家放置道路
@@ -223,6 +268,14 @@ func notify_place_road(player_name: String, is_setup: bool):
     _logger.logd("通知玩家[%s]放置道路" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_road", is_setup)
+
+
+# 通知玩家放置道路
+func notify_upgrade_city(player_name: String):
+    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    _logger.logd("通知玩家[%s]升级城市" % [player_name])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "upgrade_city")
 
 
 # 通知玩家自由行动

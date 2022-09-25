@@ -134,8 +134,10 @@ func _on_client_state_changed(state):
 			_show_road_hint(true)
 		NetDefines.ClientState.PLACE_ROAD_TURN:
 			_show_road_hint(false)
-		NetDefines.ClientState.PLACE_SETTLEMENT:
-			_show_settlement_hint()
+		NetDefines.ClientState.PLACE_SETTLEMENT_SETUP:
+			_show_settlement_hint(true)
+		NetDefines.ClientState.PLACE_SETTLEMENT_TURN:
+			_show_settlement_hint(false)
 		NetDefines.ClientState.UPGRADE_CITY:
 			_show_upgrade_hint()
 		NetDefines.ClientState.MOVE_ROBBER:
@@ -145,8 +147,8 @@ func _on_client_state_changed(state):
 
 
 # 展示定居点提示
-func _show_settlement_hint():
-	for point in _get_client().build_mgr.get_available_point():
+func _show_settlement_hint(is_setup=false):
+	for point in _get_client().build_mgr.get_setup_available_point() if is_setup else _get_client().build_mgr.get_turn_available_point():
 		_corner_point_map[point].show()
 		_corner_point_map[point].set_callback(funcref(self, "_on_click_corner_point"), [point])
 
@@ -176,7 +178,14 @@ func _on_click_line(road: Protocol.RoadInfo):
 
 # 展示升级提示
 func _show_upgrade_hint():
-	pass
+	for point in _get_client().build_mgr.get_avail_upgrade_point():
+		_corner_point_map[point].show()
+		_corner_point_map[point].set_callback(funcref(self, "_on_click_upgrade_point"), [point])
+
+func _on_click_upgrade_point(point):
+	for point in _corner_point_map.values():
+		point.hide()
+	_get_client().upgrade_city_done(point)
 
 
 # 移动强盗提示
@@ -234,7 +243,8 @@ func _add_road_to_map(road_info: Protocol.RoadInfo, order: int):
 
 # 升级地图上的城市
 func _upgrade_settlement_on_map(pos: Vector3):
-	_city_map[pos] = _settlement_map.erase(pos)
+	_city_map[pos] = _settlement_map[pos]
+	_settlement_map.erase(pos)
 	_city_map[pos].upgrade_to_city()
 
 

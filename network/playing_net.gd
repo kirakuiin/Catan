@@ -20,6 +20,21 @@ master func client_ready(player_name: String):
     get_server().client_ready(player_name)
 
 
+# 请求放置定居点
+master func request_place_settlement(player_name: String):
+    get_server().request_place_settlement(player_name)
+
+
+# 请求放置道路
+master func request_place_road(player_name: String):
+    get_server().request_place_road(player_name)
+
+
+# 请求升级城市
+master func request_upgrade_city(player_name: String):
+    get_server().request_upgrade_city(player_name)
+
+
 # 客户端放置定居点结束
 master func place_settlement_done(player_name: String, pos: Vector3):
     get_server().add_settlement(player_name, pos)
@@ -28,6 +43,11 @@ master func place_settlement_done(player_name: String, pos: Vector3):
 # 客户端放置道路结束
 master func place_road_done(player_name: String, road_data):
     get_server().add_road(player_name, Protocol.deserialize(road_data))
+
+
+# 客户端放置道路结束
+master func upgrade_city_done(player_name: String, pos: Vector3):
+    get_server().upgrade_city(player_name, pos)
 
 
 # 客户端让过
@@ -58,8 +78,13 @@ remotesync func place_road(is_setup):
 
 
 # 通知客户端放置定居点
-remotesync func place_settlement():
-    get_client().place_settlement()
+remotesync func place_settlement(is_setup):
+    get_client().place_settlement(is_setup)
+
+
+# 通知客户端放置定居点
+remotesync func upgrade_city():
+    get_client().upgrade_city()
 
 
 # 通知客户端辅助信息

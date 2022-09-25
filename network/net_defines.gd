@@ -26,12 +26,24 @@ class PlayerState:
     const PASS: String="回合让过"
 
 
+# 玩家操作状态枚举
+class PlayerOpState:
+    extends Reference
+
+    const NONE: String="无操作"
+    const BUILD_SETTLEMENT: String="建造定居点"
+    const BUILD_ROAD: String="建造道路"
+    const UPGRADE_CITY: String="升级城市"
+    const BUY_DEV_CARD: String="购买发展卡"
+
+
 # 客户端状态枚举
 class ClientState:
     extends Reference
 
     const IDLE: String="空闲"
-    const PLACE_SETTLEMENT: String="放置定居点"
+    const PLACE_SETTLEMENT_SETUP: String="放置初始定居点"
+    const PLACE_SETTLEMENT_TURN: String="放置回合定居点"
     const PLACE_ROAD_SETUP: String="放置初始道路"
     const PLACE_ROAD_TURN: String="放置回合道路"
     const UPGRADE_CITY: String="升级城市"

@@ -16,6 +16,7 @@ signal message_received(msg)  # 收到信息
 
 
 const BuildMgr: Script = preload("res://game/client/build_mgr.gd")
+const OpMgr: Script = preload("res://game/client/op_mgr.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -28,6 +29,7 @@ var player_scores: Dictionary
 
 var client_state: String  # 客户端状态
 var build_mgr: BuildMgr
+var op_mgr: OpMgr
 
 var _logger: Log.Logger
 
@@ -44,6 +46,7 @@ func _init_local_info():
     player_buildings = {}
     player_scores = {}
     build_mgr = BuildMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
+    op_mgr = OpMgr.new(player_buildings, player_scores, setup_info.catan_size)
 
 
 func _ready():
@@ -78,6 +81,23 @@ func change_client_state(state: String):
 
 # C2S
 
+# 请求放置定居点
+func request_place_settlement():
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("request_place_settlement", get_name())
+
+
+# 请求放置道路
+func request_place_road():
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("request_place_road", get_name())
+
+
+# 请求升级城市
+func request_upgrade_city():
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("request_upgrade_city", get_name())
+
 
 # 放置定居点完毕
 func place_settlement_done(pos: Vector3):
@@ -89,6 +109,12 @@ func place_settlement_done(pos: Vector3):
 func place_road_done(road: Protocol.RoadInfo):
     change_client_state(NetDefines.ClientState.IDLE)
     PlayingNet.rpc("place_road_done", get_name(), Protocol.serialize(road))
+
+
+# 升级城市完毕
+func upgrade_city_done(pos: Vector3):
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("upgrade_city_done", get_name(), pos)
 
 
 # 通知丢弃结果
@@ -121,8 +147,8 @@ func rob_player_done(player: String):
 
 
 # 放置定居点
-func place_settlement():
-    change_client_state(NetDefines.ClientState.PLACE_SETTLEMENT)
+func place_settlement(is_setup: bool):
+    change_client_state(NetDefines.ClientState.PLACE_SETTLEMENT_SETUP if is_setup else NetDefines.ClientState.PLACE_SETTLEMENT_TURN)
     emit_signal("player_hint_showed", "请放置定居点...")
 
 
@@ -130,6 +156,12 @@ func place_settlement():
 func place_road(is_setup: bool):
     change_client_state(NetDefines.ClientState.PLACE_ROAD_SETUP if is_setup else NetDefines.ClientState.PLACE_ROAD_TURN)
     emit_signal("player_hint_showed", "请放置道路...")
+
+
+# 升级城市
+func upgrade_city():
+    change_client_state(NetDefines.ClientState.UPGRADE_CITY)
+    emit_signal("player_hint_showed", "请升级城市...")
 
 
 # 修改辅助信息

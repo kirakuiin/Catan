@@ -31,6 +31,7 @@ func _get_client():
     return PlayingNet.get_client()
 
 
+# TODO: 更加显眼的投掷动画, 移动到画面中央？
 func _on_dice_changed(info: Array):
 	_dice_value = info
 	$AnimationPlayer.play("roll")

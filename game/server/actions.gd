@@ -7,6 +7,11 @@ static func reset_state(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "reset_player_state"), [player_name])
 
 
+# 重置玩家操作状态
+static func reset_op_state(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "reset_player_op_state"), [player_name])
+
+
 # 广播建筑信息
 static func broadcast_building() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_building_info"), [])
@@ -23,13 +28,18 @@ static func broadcast_robber() -> HSM.Action:
 
 
 # 通知放置定居点
-static func notify_place_settlement(player_name: String) -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_settlement"), [player_name])
+static func notify_place_settlement(player_name: String, is_setup: bool) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_settlement"), [player_name, is_setup])
 
 
 # 通知放置道路
 static func notify_place_road(player_name: String, is_setup: bool) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_road"), [player_name, is_setup])
+
+
+# 通知放置道路
+static func notify_upgrade_city(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_upgrade_city"), [player_name])
 
 
 # 初始化资源

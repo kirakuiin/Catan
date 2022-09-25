@@ -116,6 +116,7 @@ snap=false
 
 common/drop_mouse_on_gui_input_disabled=true
 theme/custom="res://assets/theme/game_theme.tres"
+timers/tooltip_delay_sec=0.1
 common/snap_controls_to_pixels=false
 
 [physics]

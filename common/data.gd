@@ -68,18 +68,6 @@ const TILE_DATA = {
 }
 
 
-# 卡牌映射
-enum CardType{KNIGHT, VP, ROAD, PLENTY, MONOPOLY}
-
-
-const DEV_ICON_DATA = {
-    CardType.KNIGHT: "res://assets/icons/development.png",
-    CardType.VP: "res://assets/icons/development.png",
-    CardType.ROAD: "res://assets/icons/development.png",
-    CardType.PLENTY: "res://assets/icons/development.png",
-    CardType.MONOPOLY: "res://assets/icons/development.png",
-}
-
 
 # 成就映射
 enum AchievementType{ARMY, ROAD}
@@ -100,17 +88,6 @@ const POINT_DATA = {
     PointType.TEN: "res://assets/tiles/number10.png",
     PointType.ELEVEN: "res://assets/tiles/number11.png",
     PointType.TWELVE: "res://assets/tiles/number12.png",
-}
-
-
-# 建筑映射
-enum BuildingType{SETTLEMENT, CITY, ROAD}
-
-
-const BUILDING_ICON_DATA = {
-    BuildingType.SETTLEMENT: "res://assets/icons/settlement.png",
-    BuildingType.CITY: "res://assets/icons/city.png",
-    BuildingType.ROAD: "res://assets/icons/road.png",
 }
 
 
@@ -142,6 +119,71 @@ const RES_ICON_DATA = {
     ResourceType.GRAIN: "res://assets/icons/grain.png",
     ResourceType.BRICK: "res://assets/icons/brick.png",
     ResourceType.ORE: "res://assets/icons/ore.png",
+}
+
+
+# 卡牌映射
+enum CardType{KNIGHT, VP, ROAD, PLENTY, MONOPOLY}
+
+const DEV_ICON_DATA = "res://assets/icons/development.png"
+
+const CARD_ICON_DATA = {
+    CardType.KNIGHT: "res://assets/icons/development.png",
+    CardType.VP: "res://assets/icons/development.png",
+    CardType.ROAD: "res://assets/icons/development.png",
+    CardType.PLENTY: "res://assets/icons/development.png",
+    CardType.MONOPOLY: "res://assets/icons/development.png",
+}
+
+
+# 建筑映射
+enum BuildingType{SETTLEMENT, CITY, ROAD}
+
+const BUILDING_ICON_DATA = {
+    BuildingType.SETTLEMENT: "res://assets/icons/settlement.png",
+    BuildingType.CITY: "res://assets/icons/city.png",
+    BuildingType.ROAD: "res://assets/icons/road.png",
+}
+
+
+# 操作映射
+enum OpType{SETTLEMENT, CITY, ROAD, DEV_CARD}
+
+
+const OP_BTN_DATA = {
+    OpType.SETTLEMENT: "res://assets/images/settlement_btn.png",
+    OpType.CITY: "res://assets/images/city_btn.png",
+    OpType.ROAD: "res://assets/images/road_btn.png",
+    OpType.DEV_CARD: "res://assets/images/development_btn.png"
+}
+
+const OP_DISABLE_DATA = {
+    OpType.SETTLEMENT: "res://assets/images/settlement_btn_disable.png",
+    OpType.CITY: "res://assets/images/city_btn_disable.png",
+    OpType.ROAD: "res://assets/images/road_btn_disable.png",
+    OpType.DEV_CARD: "res://assets/images/development_btn_disable.png"
+}
+
+const OP_DATA = {
+    OpType.SETTLEMENT: {
+        ResourceType.BRICK: 1,
+        ResourceType.WOOL: 1,
+        ResourceType.LUMBER: 1,
+        ResourceType.GRAIN: 1,
+    },
+    OpType.CITY: {
+        ResourceType.GRAIN: 2,
+        ResourceType.ORE: 3,
+    },
+    OpType.ROAD: {
+        ResourceType.BRICK: 1,
+        ResourceType.LUMBER: 1,
+    },
+    OpType.DEV_CARD: {
+        ResourceType.WOOL: 1,
+        ResourceType.ORE: 1,
+        ResourceType.GRAIN: 1,
+    }
 }
 
 

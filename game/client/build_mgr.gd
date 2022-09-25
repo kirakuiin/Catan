@@ -32,8 +32,8 @@ func get_point_info() -> StdLib.Set:
     return _point_info
 
 
-# 获得所有的可放置点位
-func get_available_point() -> Array:
+# 获得布置阶段所有的可放置点位
+func get_setup_available_point() -> Array:
     var result = []
     var all_used_point = _get_all_used_point()
     var not_used_point = _point_info.diff(all_used_point)
@@ -57,12 +57,12 @@ func _get_all_used_point() -> StdLib.Set:
 # 获得布置阶段所有的可放置道路
 func get_setup_available_road() -> Array:
     var result = []
-    var roads = _get_road_from_corner(_buildings[PlayerInfoMgr.get_self_info().player_name].settlement_info[-1])
+    var roads = _get_road_tuple_from_corner(_buildings[_get_name()].settlement_info[-1])
     for tuple in roads.values():
         result.append(Protocol.create_road(tuple))
     return result
 
-func _get_road_from_corner(pos: Vector3) -> StdLib.Set:
+func _get_road_tuple_from_corner(pos: Vector3) -> StdLib.Set:
         var result = StdLib.Set.new()
         var begin = Hexlib.create_corner(pos)
         for end in Hexlib.get_adjacency_corner(begin):
@@ -80,7 +80,49 @@ func _is_valid_land_corner(corner: Hexlib.Corner) -> bool:
 
 # 获得回合阶段所有的可放置道路
 func get_turn_available_road() -> Array:
+    var possible_roads = _get_player_possible_road(_get_name())
+    var exist_roads = _get_exist_tuple_roads()
     var result = []
+    for tuple in possible_roads.values():
+        if not exist_roads.contains(tuple):
+            result.append(Protocol.create_road(tuple))
+    return result
+
+func _get_player_possible_road(player: String) -> StdLib.Set:
+    var road_set = StdLib.Set.new()
+    var corner_set = _get_player_all_corner(_get_name())
+    for corner in corner_set.values():
+        road_set = road_set.union(_get_road_tuple_from_corner(corner))
+    return road_set
+
+func _get_player_all_corner(player: String) -> StdLib.Set:
+    var corner_set = StdLib.Set.new()
+    for road in _buildings[player].road_info:
+        corner_set.add(road.begin_node)
+        corner_set.add(road.end_node)
+    return corner_set
+
+func _get_exist_tuple_roads() -> StdLib.Set:
+    var result = StdLib.Set.new()
+    for player in _buildings:
+        for road in _buildings[player].road_info:
+            result.add(road.to_tuple())
+    return result
+
+
+# 获得布置阶段所有的可放置点位
+func get_turn_available_point() -> Array:
+    var player_corner = _get_player_all_corner(_get_name())
+    var avail_point = StdLib.Set.new(get_setup_available_point())
+    var result = avail_point.intersect(player_corner)
+    return result.values()
+
+
+# 获得可升级的点位
+func get_avail_upgrade_point() -> Array:
+    var result = []
+    for settlement in _buildings[_get_name()].settlement_info:
+        result.append(settlement)
     return result
 
 
@@ -98,3 +140,7 @@ func get_tile_player_building(pos: Vector3) -> Dictionary:
                     result[player] = [corner_pos]
                 break
     return result
+
+
+func _get_name() -> String:
+    return PlayerInfoMgr.get_self_info().player_name

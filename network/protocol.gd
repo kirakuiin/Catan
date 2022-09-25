@@ -335,7 +335,7 @@ class MessageInfo:
 		message_list.append({DEV: dev_type})
 
 	# 转为bbcode
-	func bbcode(order_info: PlayerOrderInfo) -> String:
+	func bbcode(order_info: PlayerOrderInfo=null) -> String:
 		var result = PoolStringArray()
 		for sub_msg in message_list:
 			var type = sub_msg.keys()[0]
@@ -343,13 +343,16 @@ class MessageInfo:
 			result.append(_parse(type, val, order_info))
 		return "".join(result)
 	
-	func _parse(type:int , val, order_info: PlayerOrderInfo) -> String:
+	func _parse(type:int , val, order_info: PlayerOrderInfo=null) -> String:
 		var result = ""
 		match type:
 			TEXT:
 				result = "[valign px=10]%s[/valign]" % str(val)
 			PLAYER:
-				result = "[valign px=10][color=%s]%s[/color][/valign]" % [Util.color_to_str(Data.ORDER_DATA[order_info.get_order(val)]), val]
+				if order_info:
+					result = "[valign px=10][color=%s]%s[/color][/valign]" % [Util.color_to_str(Data.ORDER_DATA[order_info.get_order(val)]), val]
+				else:
+					result = "[valign px=10]%s[/valign]" % val
 			RES:
 				result = "[img=50x50]%s[/img]" % Data.RES_ICON_DATA[val]
 			BUILDING:

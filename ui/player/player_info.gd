@@ -39,6 +39,7 @@ func _get_data(type: int):
     return Data.NUM_DATA[_size].building.each_num[type]
 
 
+# TODO: 更加明显的回合提示
 func _on_player_assist_changed(assist_info: Protocol.AssistInfo):
     if assist_info.player_turn_name == _name:
         $HBox/PlayerIcon.set_on_turn(true)

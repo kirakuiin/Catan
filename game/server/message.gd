@@ -44,6 +44,15 @@ static func place_road(player_name: String) -> Protocol.MessageInfo:
     return message
 
 
+# 得到升级城市消息
+static func upgrade_city(player_name: String) -> Protocol.MessageInfo:
+    var message = Protocol.MessageInfo.new()
+    message.add_player(player_name)
+    message.add_text("升级城市")
+    message.add_building(Data.BuildingType.CITY)
+    return message
+
+
 # 得到分配资源消息
 static func dispatch_res(player_name: String, res_info: Dictionary) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()

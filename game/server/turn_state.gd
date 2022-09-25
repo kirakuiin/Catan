@@ -89,6 +89,9 @@ class PlayerTurnState:
         _machine.state_list.append(MoveRobberState.new(self, _name))
         _machine.state_list.append(RobPlayerState.new(self, _name))
         _machine.state_list.append(BuildAndTradeState.new(self, _name))
+        _machine.state_list.append(PlaceSettlementState.new(self, _name))
+        _machine.state_list.append(PlaceRoadState.new(self, _name))
+        _machine.state_list.append(UpgradeCityState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
@@ -234,7 +237,88 @@ class BuildAndTradeState:
         return "BuildAndTradeState[%s]" % _name
 
     func activiate():
+        _entry_actions.append(Action.notify_free_action(_name))
+        _init_end_transition()
+        _init_settlement_transition()
+        _init_road_transition()
+        _init_city_transition()
+
+    func _init_end_transition():
         var target = get_parent_machine().get_next_state()
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.PASS)
         add_transition(HSM.Transition.new(target, 1, [condition]))
-        _entry_actions.append(Action.notify_free_action(_name))
+
+    func _init_settlement_transition():
+        var target = get_state_in_parent(PlaceSettlementState)
+        var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUILD_SETTLEMENT)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+
+    func _init_road_transition():
+        var target = get_state_in_parent(PlaceRoadState)
+        var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUILD_ROAD)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+
+    func _init_city_transition():
+        var target = get_state_in_parent(UpgradeCityState)
+        var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.UPGRADE_CITY)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+
+
+# 放置定居点阶段
+class PlaceSettlementState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "PlaceSettlement[%s]" % _name
+
+    func activiate():
+        var target = get_state_in_parent(BuildAndTradeState)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+        _entry_actions.append(Action.notify_place_settlement(_name, false))
+        _exit_actions.append(Action.reset_op_state(_name))
+
+
+# 放置道路阶段
+class PlaceRoadState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "PlaceRoad[%s]" % _name
+
+    func activiate():
+        var target = get_state_in_parent(BuildAndTradeState)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+        _entry_actions.append(Action.notify_place_road(_name, false))
+        _exit_actions.append(Action.reset_op_state(_name))
+
+
+# 升级城市阶段
+class UpgradeCityState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "UpgradeCityState[%s]" % _name
+
+    func activiate():
+        var target = get_state_in_parent(BuildAndTradeState)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+        _entry_actions.append(Action.notify_upgrade_city(_name))
+        _exit_actions.append(Action.reset_op_state(_name))

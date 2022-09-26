@@ -10,13 +10,17 @@ anchor_right = 0.208333
 anchor_bottom = 0.138889
 margin_right = -100.0
 rect_min_size = Vector2( 400, 150 )
+mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="Area" type="Area2D" parent="."]
+position = Vector2( 200, 75 )
 
 [node name="Collision" type="CollisionShape2D" parent="Area"]
-position = Vector2( 200, 75 )
 shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}

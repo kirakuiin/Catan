@@ -127,12 +127,12 @@ enum CardType{KNIGHT, VP, ROAD, PLENTY, MONOPOLY}
 
 const DEV_ICON_DATA = "res://assets/icons/development.png"
 
-const CARD_ICON_DATA = {
-    CardType.KNIGHT: "res://assets/icons/development.png",
-    CardType.VP: "res://assets/icons/development.png",
-    CardType.ROAD: "res://assets/icons/development.png",
-    CardType.PLENTY: "res://assets/icons/development.png",
-    CardType.MONOPOLY: "res://assets/icons/development.png",
+const CARD_DATA = {
+    CardType.KNIGHT: "res://assets/cards/knight.png",
+    CardType.VP: "res://assets/cards/vp.png",
+    CardType.ROAD: "res://assets/cards/road.png",
+    CardType.PLENTY: "res://assets/cards/year.png",
+    CardType.MONOPOLY: "res://assets/cards/mono.png",
 }
 
 

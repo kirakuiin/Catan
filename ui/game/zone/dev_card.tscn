@@ -1,26 +1,49 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/cards/brick.png" type="Texture" id=3]
+[ext_resource path="res://assets/cards/knight.png" type="Texture" id=1]
+[ext_resource path="res://ui/game/zone/dev_card.gd" type="Script" id=2]
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=4]
 
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 75, 117 )
+
 [node name="DevCard" type="Node2D"]
+position = Vector2( 488, 400 )
+script = ExtResource( 2 )
 
 [node name="CardImage" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 190, 275 )
+margin_right = 150.0
+margin_bottom = 234.0
+rect_min_size = Vector2( 92, 144 )
 mouse_filter = 2
-texture = ExtResource( 3 )
+texture = ExtResource( 1 )
 expand = true
 stretch_mode = 6
 
 [node name="Num" type="Label" parent="CardImage"]
-margin_top = 24.0
-margin_right = 77.0
-margin_bottom = 104.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -32.0
+margin_right = 33.0
+rect_scale = Vector2( 0.983453, 1 )
 theme = ExtResource( 4 )
-theme_type_variation = "BigLabel"
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "x1"
 align = 1
 valign = 1
+
+[node name="Area" type="Area2D" parent="CardImage"]
+position = Vector2( 75, 117 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Collision" type="CollisionShape2D" parent="CardImage/Area"]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[connection signal="mouse_entered" from="CardImage/Area" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="CardImage/Area" to="." method="_on_mouse_exited"]

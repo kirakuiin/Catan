@@ -25,15 +25,6 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Operation" parent="." instance=ExtResource( 2 )]
-anchor_left = 0.84375
-anchor_top = 0.722222
-margin_right = 0.0
-margin_bottom = 0.0
-__meta__ = {
-"_edit_use_anchors_": true
-}
-
 [node name="Dice" parent="." instance=ExtResource( 5 )]
 anchor_left = 0.958333
 anchor_top = 0.42963
@@ -53,15 +44,25 @@ margin_right = 0.0
 [node name="DevZone" parent="." instance=ExtResource( 7 )]
 anchor_left = 0.554167
 anchor_top = 0.725926
-anchor_right = 0.809375
+anchor_right = 0.795833
 anchor_bottom = 1.0
 margin_right = 0.0
+input_pass_on_modal_close_click = false
+
+[node name="Operation" parent="." instance=ExtResource( 2 )]
+anchor_left = 0.84375
+anchor_top = 0.722222
+margin_right = 0.0
+margin_bottom = 0.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Button" type="Button" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -400.001
-margin_bottom = 104.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -104.0
+margin_right = 400.001
 text = "返回"
 
 [connection signal="button_down" from="Button" to="." method="_on_button_down"]

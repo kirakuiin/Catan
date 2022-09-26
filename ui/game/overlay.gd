@@ -9,6 +9,7 @@ func init():
     $Dice.init()
     $Operation.init()
     $ResZone.init()
+    $DevZone.init()
 
 
 func _on_button_down():

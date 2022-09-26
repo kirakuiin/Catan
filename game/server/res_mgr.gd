@@ -94,9 +94,9 @@ func dispatch_by_num(num: int) -> Dictionary:
         for player in _buildings:
             var result = {}
             if corner in _buildings[player].settlement_info:
-                Util.merge_int_dict(result, _update_settlement_res(player, corner, num))
+                Util.merge_int_dict(result, _update_building_res(player, corner, num, 1))
             if corner in _buildings[player].city_info:
-                Util.merge_int_dict(result, _update_city_res(player, corner, num))
+                Util.merge_int_dict(result, _update_building_res(player, corner, num, 2))
             if result:
                 if player in affect_player:
                     Util.merge_int_dict(affect_player[player], result)
@@ -111,34 +111,26 @@ func dispatch_initial_res(player_name: String) -> Dictionary:
     var res_list = _find_corner_res(corner_pos)
     var result = {}
     for res in res_list:
-        _give_res_to_player(player_name, res[0], 1)
-        result[res[0]] = result[res[0]]+1 if res[0] in result else 1
+        var num = _give_res_to_player(player_name, res[0], 1)
+        result[res[0]] = result[res[0]]+num if res[0] in result else num
     return result
 
 
-func _update_settlement_res(player: String, corner: Vector3, num: int) -> Dictionary:
-    var res = _find_corner_res_with_num(corner, num)
+func _update_building_res(player: String, corner: Vector3, point: int, unit: int) -> Dictionary:
+    var res = _find_corner_res_with_point(corner, point)
     var result = {}
     for res_type in res:
-        result[res_type] = result[res_type]+1 if res_type in result else 1
-        _give_res_to_player(player, res_type, 1)
+        var num = _give_res_to_player(player, res_type, unit)
+        result[res_type] = result[res_type]+num if res_type in result else num
     return result
 
-func _update_city_res(player: String, corner: Vector3, num: int) -> Dictionary:
-    var res = _find_corner_res_with_num(corner, num)
-    var result = {}
-    for res_type in res:
-        result[res_type] = result[res_type]+2 if res_type in result else 2
-        _give_res_to_player(player, res_type, 2)
-    return result
-
-func _find_corner_res_with_num(corner_pos: Vector3, num: int) -> Array:
+func _find_corner_res_with_point(corner_pos: Vector3, point: int) -> Array:
     var result = []
     var res_list = _find_corner_res(corner_pos)
     for res_tuple in res_list:
         var res_type = res_tuple[0]
         var res_point = res_tuple[1]
-        if res_point == num:
+        if res_point == point:
             result.append(res_type)
     return result
 
@@ -161,13 +153,14 @@ func _filter_invalid_tile(hexs: Array):
             result.append(hex_pos)
     return result
 
-func _give_res_to_player(player: String, res_type: int, num):
+func _give_res_to_player(player: String, res_type: int, num) -> int:
     var avail_num = min(_res_capacity[res_type], num)
     _modify_capacity(res_type, -avail_num)
     if not res_type in _scores[player].res_cards:
         _scores[player].res_cards[res_type] = avail_num
     else:
         _scores[player].res_cards[res_type] += avail_num
+    return avail_num
 
 func _modify_capacity(res_type: int, num: int):
     _res_capacity[res_type] += num

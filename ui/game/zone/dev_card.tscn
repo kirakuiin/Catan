@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/cards/brick.png" type="Texture" id=3]
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=4]
+
+[node name="DevCard" type="Node2D"]
+
+[node name="CardImage" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 190, 275 )
+mouse_filter = 2
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 6
+
+[node name="Num" type="Label" parent="CardImage"]
+margin_top = 24.0
+margin_right = 77.0
+margin_bottom = 104.0
+theme = ExtResource( 4 )
+theme_type_variation = "BigLabel"
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "x1"
+align = 1
+valign = 1

@@ -4,7 +4,7 @@ extends Control
 # 卡牌区域
 
 
-const Card:PackedScene = preload("res://ui/game/res_card.tscn")
+const Card:PackedScene = preload("res://ui/game/zone/res_card.tscn")
 
 
 var _card_dict: Dictionary

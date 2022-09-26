@@ -24,7 +24,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=2]
 resource_name = "rotate"
-length = 12.0
+length = 60.0
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("ClockBg:rect_rotation")
@@ -33,10 +33,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 6, 12 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 60 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ 0.0, 180.0, 360.0 ]
+"values": [ 0.0, 360.0 ]
 }
 
 [node name="Operation" type="Control"]
@@ -79,6 +79,7 @@ anchor_right = 0.44
 anchor_bottom = 0.24
 margin_right = 0.0
 margin_bottom = 0.0
+disabled = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -91,6 +92,7 @@ anchor_right = 0.26
 anchor_bottom = 0.44
 margin_right = 0.0
 margin_bottom = 0.0
+disabled = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -102,6 +104,7 @@ anchor_right = 0.26
 anchor_bottom = 0.72
 margin_right = 0.0
 margin_bottom = 0.0
+disabled = true
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -114,6 +117,7 @@ anchor_right = 0.44
 anchor_bottom = 0.94
 margin_right = 0.0
 margin_bottom = 0.0
+disabled = true
 __meta__ = {
 "_edit_use_anchors_": true
 }

@@ -19,6 +19,7 @@ static func get_cls(cls_name) -> ProtocolData:
 		"PlayerBuildingInfo": PlayerBuildingInfo,
 		"RoadInfo": RoadInfo,
 		"AssistInfo": AssistInfo,
+		"BankInfo": BankInfo,
 		"MessageInfo": MessageInfo,
 	}
 	return map[cls_name]
@@ -298,6 +299,19 @@ class AssistInfo:
 		avail_card = card_num
 		longgest_name = ""
 		biggest_name = ""
+
+
+# 银行信息
+class BankInfo:
+	extends ProtocolData
+
+	var avail_card: int
+	var res_info: Dictionary
+
+	func _init(catan_size: int):
+		cls_name = "BankInfo"
+		res_info = Data.NUM_DATA[catan_size].resource.each_num.duplicate(true)
+		avail_card = Data.NUM_DATA[catan_size].card.total_num
 
 
 # 消息信息

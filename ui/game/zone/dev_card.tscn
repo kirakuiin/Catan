@@ -45,5 +45,9 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[connection signal="mouse_entered" from="CardImage/Area" to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="CardImage/Area" to="." method="_on_mouse_exited"]
+[node name="DragBtn" type="ToolButton" parent="CardImage"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[connection signal="mouse_entered" from="CardImage/DragBtn" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="CardImage/DragBtn" to="." method="_on_mouse_exited"]

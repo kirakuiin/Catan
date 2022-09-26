@@ -4,16 +4,27 @@ extends Control
 # 操作面板
 
 
-func _ready():
-    pass
 
 
 func init():
     _init_signal()
+    _init_anim()
 
+func _init_anim():
+    $ClockBg.rect_pivot_offset = $ClockBg.rect_size/2
+    $AnimationPlayer.play("rotate")
+    $AnimationPlayer.stop(false)
 
 func _init_signal():
+    _get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
     _get_client().connect("client_state_changed", self, "_on_client_state_changed")
+
+
+func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
+    if assist_info.player_turn_name == $"/root/PlayerInfoMgr".get_self_info().player_name:
+        $AnimationPlayer.play()
+    else:
+        $AnimationPlayer.stop(false)
 
 
 func _on_client_state_changed(state):

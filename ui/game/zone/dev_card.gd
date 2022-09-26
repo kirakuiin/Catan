@@ -7,6 +7,8 @@ const UP := Vector2(0, -180)
 const SCALE := Vector2(1.6, 1.6)
 
 var _type: int
+var _notify_pos: Vector2
+var _is_zoom: bool = false
 
 
 
@@ -48,13 +50,29 @@ func get_num() -> int:
     return int($CardImage/Num.text.right(1))
 
 
+# 通知位置重排
+func notify_change_pos(pos: Vector2):
+    if _is_zoom:
+        _notify_pos = pos
+    else:
+        position = pos
+
+
 func _on_mouse_entered():
+    print("enter")
+    _is_zoom = true
     position += UP
     position.x -= $CardImage.rect_size.x*(SCALE.x-1)/2
-    scale *= SCALE
+    scale = SCALE
 
 
 func _on_mouse_exited():
-    scale /= SCALE
-    position.x += $CardImage.rect_size.x*(SCALE.x-1)/2
-    position -= UP
+    print("leave")
+    _is_zoom = false
+    scale = Vector2(1, 1)
+    if _notify_pos:
+        position = _notify_pos
+        _notify_pos = Vector2(0, 0)
+    else:
+        position.x += $CardImage.rect_size.x*(SCALE.x-1)/2
+        position -= UP

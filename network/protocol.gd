@@ -18,6 +18,7 @@ static func get_cls(cls_name) -> ProtocolData:
 		"PlayerScoreInfo": PlayerScoreInfo,
 		"PlayerBuildingInfo": PlayerBuildingInfo,
 		"RoadInfo": RoadInfo,
+		"PlayerPersonalInfo": PlayerPersonalInfo,
 		"AssistInfo": AssistInfo,
 		"BankInfo": BankInfo,
 		"MessageInfo": MessageInfo,
@@ -239,10 +240,7 @@ class PlayerScoreInfo:
 		vic_point = vp
 		army_num = army
 		continue_road = cont
-		
 	
-# 玩家资源卡信息
-
 
 # 玩家建筑信息
 class PlayerBuildingInfo:
@@ -280,6 +278,17 @@ class RoadInfo:
 # 从元组中创建到道路
 static func create_road(tuple: Array):
 	return RoadInfo.new(tuple[0], tuple[1])
+
+
+# 玩家个人信息
+class PlayerPersonalInfo:
+	extends ProtocolData
+	
+	var is_played_card: bool
+
+	func _init(is_played=false):
+		cls_name = "PlayerPersonalInfo"
+		is_played_card = is_played
 
 
 # 辅助信息
@@ -377,7 +386,7 @@ class MessageInfo:
 			BUILDING:
 				result = "[img=50x50]%s[/img]" % Data.BUILDING_ICON_DATA[val]
 			DEV:
-				result = "[img=50x50]%s[/img]" % Data.CARD_ICON_DATA[val]
+				result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
 			BUY_DEV:
 				result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
 		return result

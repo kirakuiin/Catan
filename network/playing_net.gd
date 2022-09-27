@@ -57,7 +57,7 @@ master func upgrade_city_done(player_name: String, pos: Vector3):
 
 # 客户端让过
 master func pass_turn(player_name: String):
-    get_server().change_player_state(player_name, NetDefines.PlayerState.PASS)
+    get_server().change_player_net_state(player_name, NetDefines.PlayerNetState.PASS)
 
 
 # 丢弃完成
@@ -73,6 +73,11 @@ master func move_robber_done(player_name: String, pos: Vector3):
 # 抢夺玩家完毕
 master func rob_player_done(player_name: String, robbed_player: String):
     get_server().rob_player_done(player_name, robbed_player)
+
+
+# 打出卡牌
+master func play_card(player_name: String, dev_type: int):
+    get_server().play_card(player_name, dev_type)
 
 
 # S2C
@@ -100,6 +105,11 @@ remotesync func change_assist_info(data):
 # 通知客户端银行信息
 remotesync func change_bank_info(data):
     get_client().change_bank_info(Protocol.deserialize(data))
+
+
+# 通知客户端个人信息
+remotesync func change_personal_info(data):
+    get_client().change_personal_info(Protocol.deserialize(data))
 
 
 # 通知客户端初始化建筑信息

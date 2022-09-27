@@ -170,7 +170,7 @@ class DiscardResourceState:
 
     func activiate():
         _entry_actions.append(Action.discard_res())
-        var conditions = [Condition.NotExistStateCondition.new(NetDefines.PlayerState.WAIT_FOR_RESPONE)]
+        var conditions = [Condition.NotExistStateCondition.new(NetDefines.PlayerNetState.WAIT_FOR_RESPONE)]
         add_transition(HSM.Transition.new(get_state_in_parent(MoveRobberState), 0, conditions))
 
 
@@ -188,7 +188,7 @@ class MoveRobberState:
 
     func activiate():
         _entry_actions.append(Action.move_robber(_name))
-        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
+        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
         add_transition(HSM.Transition.new(get_state_in_parent(RobPlayerState), 0, condition))
 
 
@@ -206,7 +206,7 @@ class RobPlayerState:
 
     func activiate():
         _entry_actions.append(Action.rob_player(_name))
-        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
+        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
         add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, condition))
 
 
@@ -249,7 +249,7 @@ class BuildAndTradeState:
 
     func _init_end_transition():
         var target = get_parent_machine().get_next_state()
-        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.PASS)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.PASS)
         add_transition(HSM.Transition.new(target, 1, [condition]))
 
     func _init_settlement_transition():
@@ -287,7 +287,7 @@ class PlaceSettlementState:
 
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
-        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(target, 0, [condition]))
         _entry_actions.append(Action.notify_place_settlement(_name, false))
         _exit_actions.append(Action.reset_op_state(_name))
@@ -307,7 +307,7 @@ class PlaceRoadState:
 
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
-        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(target, 0, [condition]))
         _entry_actions.append(Action.notify_place_road(_name, false))
         _exit_actions.append(Action.reset_op_state(_name))
@@ -327,7 +327,7 @@ class UpgradeCityState:
 
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
-        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(target, 0, [condition]))
         _entry_actions.append(Action.notify_upgrade_city(_name))
         _exit_actions.append(Action.reset_op_state(_name))

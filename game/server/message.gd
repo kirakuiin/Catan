@@ -80,3 +80,13 @@ static func rob_player(from: String, to: String):
     message.add_text(" 抢劫了 ")
     message.add_player(to)
     return message
+
+
+# 打出卡牌
+static func play_card(player: String, dev_type: int):
+    var message = Protocol.MessageInfo.new()
+    message.add_player(player)
+    message.add_text(" 打出发展卡")
+    message.add_development(dev_type)
+    message.add_text("[%s]" % [Data.CARD_NAME[dev_type]])
+    return message

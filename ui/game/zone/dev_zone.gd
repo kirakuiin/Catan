@@ -15,6 +15,17 @@ func _init():
 	_card_sort = []
 
 
+# 返回碰撞区域
+func get_area():
+	return $Area
+
+
+# 打出卡牌
+func play_card(dev_type):
+	_modify_pile(dev_type, _card_dict[dev_type].get_num()-1)
+	_get_client().play_card(dev_type)
+
+
 func init():
 	_init_signal()
 	_init_collision()
@@ -38,13 +49,16 @@ func _on_score_info_changed(player_name: String, score_info: Protocol.PlayerScor
 		return
 	for dev_type in score_info.dev_cards:
 		var num = score_info.dev_cards[dev_type]
-		if num == 0:
-			_del_card(dev_type)
-		else:
-			_set_card(dev_type, num)
+		_modify_pile(dev_type, num)
 	
 func _is_self(player_name: String):
 	return player_name == PlayerInfoMgr.get_self_info().player_name
+
+func _modify_pile(type: int, num: int):
+	if num == 0:
+		_del_card(type)
+	else:
+		_set_card(type, num)
 
 func _set_card(dev_type: int, num: int):
 	if dev_type in _card_dict:

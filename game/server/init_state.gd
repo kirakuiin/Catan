@@ -19,6 +19,7 @@ class InitState:
         _exit_actions.append(Action.broadcast_bank())
         _exit_actions.append(Action.broadcast_scores())
         _exit_actions.append(Action.broadcast_robber())
+        _exit_actions.append(Action.init_personal_info())
         var conditions = [Condition.AllReadyCondition.new()]
         var state = get_state_in_parent(Setup.SetupState)
         var ready = HSM.Transition.new(state, 0, conditions)

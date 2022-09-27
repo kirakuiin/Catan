@@ -15,10 +15,11 @@ var setup_info: Protocol.CatanSetupInfo
 
 var player_buildings: Dictionary
 var player_scores: Dictionary
+var player_infos: Dictionary
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
 
-var player_state: Dictionary
+var player_net_state: Dictionary
 var player_op_state: Dictionary
 var dice: Dice
 
@@ -55,9 +56,9 @@ func _init_node_setup():
 
 func _init_player_state():
     for name in order_info.order_to_name.values():
-        player_state[name] = NetDefines.PlayerState.NOT_READY
+        player_net_state[name] = NetDefines.PlayerNetState.NOT_READY
     for name in order_info.order_to_name.values():
-        player_op_state[name] = NetDefines.PlayerOpState.NONE
+        player_op_state[name] = NetDefines.PlayerOpStruct.new()
 
 
 func _init_player_info():
@@ -99,18 +100,19 @@ func _init_state_machine():
 func _init_player(player_name: String):
     player_buildings[player_name] = Protocol.PlayerBuildingInfo.new()
     player_scores[player_name] = Protocol.PlayerScoreInfo.new()
+    player_infos[player_name] = Protocol.PlayerPersonalInfo.new()
 
 
 # Public
 
-# 重置玩家状态
-func reset_player_state(player_name: String):
-    change_player_state(player_name, NetDefines.PlayerState.READY)
+# 重置玩家网络状态
+func reset_player_net_state(player_name: String):
+    change_player_net_state(player_name, NetDefines.PlayerNetState.READY)
 
 
 # 重置玩家操作状态
 func reset_player_op_state(player_name: String):
-    change_player_op_state(player_name, NetDefines.PlayerOpState.NONE)
+    change_player_op_state(player_name, NetDefines.PlayerOpState.NONE, [])
 
 
 # 设置当前玩家回合名称
@@ -170,19 +172,19 @@ func discard_resource():
 # 全部玩家就绪
 func client_ready(player_name: String):
     _init_player(player_name)
-    change_player_state(player_name, NetDefines.PlayerState.READY)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.READY)
 
 
-# 玩家状态改变
-func change_player_state(player_name: String, state: String):
-    _logger.logd("玩家[%s]状态变为 '%s'" % [player_name, state])
-    player_state[player_name] = state
+# 玩家网络状态改变
+func change_player_net_state(player_name: String, state: String):
+    _logger.logd("玩家[%s]网络状态变为 '%s'" % [player_name, state])
+    player_net_state[player_name] = state
 
 
 # 修改玩家操作状态
-func change_player_op_state(player_name: String, state: String):
-    _logger.logd("玩家[%s]操作变为 '%s'" % [player_name, state])
-    player_op_state[player_name] = state
+func change_player_op_state(player_name: String, state: String, params: Array=[]):
+    _logger.logd("玩家[%s]操作状态变为 '%s', 参数=%s" % [player_name, state, str(params)])
+    player_op_state[player_name] = NetDefines.PlayerOpStruct.new(state, params)
 
 
 # 请求放置定居点
@@ -220,7 +222,7 @@ func request_buy_dev_card(player_name: String):
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
     change_building_info(player_name)
-    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_message(Message.place_settlement(player_name))
 
 
@@ -228,7 +230,7 @@ func add_settlement(player_name: String, pos: Vector3):
 func add_road(player_name: String, road: Protocol.RoadInfo):
     player_buildings[player_name].road_info.append(road)
     change_building_info(player_name)
-    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_message(Message.place_road(player_name))
 
 
@@ -237,7 +239,7 @@ func upgrade_city(player_name: String, pos: Vector3):
     player_buildings[player_name].city_info.append(pos)
     player_buildings[player_name].settlement_info.erase(pos)
     change_building_info(player_name)
-    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_message(Message.upgrade_city(player_name))
 
 
@@ -245,7 +247,7 @@ func upgrade_city(player_name: String, pos: Vector3):
 func discard_done(player_name: String, discard_info: Dictionary):
     _logger.logd("玩家[%s]丢弃资源[%s]" % [player_name, discard_info])
     _res_mgr.recycle_player_res(player_name, discard_info)
-    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     change_score_info(player_name)
     broadcast_bank_info()
     broadcast_message(Message.discard(player_name, discard_info))
@@ -255,7 +257,7 @@ func discard_done(player_name: String, discard_info: Dictionary):
 func move_robber_done(player_name: String, pos: Vector3):
     _logger.logd("玩家[%s]强盗移动至%s" % [player_name, str(pos)])
     _robber_pos = pos
-    change_player_state(player_name, NetDefines.PlayerState.DONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_robber_pos()
 
     
@@ -267,14 +269,25 @@ func rob_player_done(robber: String, robbed_player: String):
         broadcast_message(Message.rob_player(robber, robbed_player))
         change_score_info(robber)
         change_score_info(robbed_player)
-    change_player_state(robber, NetDefines.PlayerState.DONE)
+    change_player_net_state(robber, NetDefines.PlayerNetState.DONE)
+
+
+# 打出卡牌
+func play_card(player: String, dev_type: int):
+    _logger.logd("玩家[%s]打出卡牌[%d]" % [player, dev_type])
+    _card_mgr.play_card(player, dev_type)
+    broadcast_message(Message.play_card(player, dev_type))
+    change_score_info(player)
+    change_player_op_state(player, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
+    notify_free_action(player)
+    # TODO: 真实的打出逻辑
 
 
 # S2C
 
 # 通知玩家放置定居点
 func notify_place_settlement(player_name: String, is_setup: bool):
-    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置定居点" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_settlement", is_setup)
@@ -282,7 +295,7 @@ func notify_place_settlement(player_name: String, is_setup: bool):
 
 # 通知玩家放置道路
 func notify_place_road(player_name: String, is_setup: bool):
-    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置道路" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "place_road", is_setup)
@@ -290,7 +303,7 @@ func notify_place_road(player_name: String, is_setup: bool):
 
 # 通知玩家放置道路
 func notify_upgrade_city(player_name: String):
-    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]升级城市" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "upgrade_city")
@@ -312,12 +325,20 @@ func notify_free_action(player_name: String):
     PlayingNet.rpc_id(peer_id, "into_free_action")
 
 
+# 通知玩家个人信息变化
+func notify_change_personal_info(player_name: String):
+    _logger.logd("通知玩家[%s]个人信息改变[%s]" % [player_name, player_infos[player_name]])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "change_personal_info", Protocol.serialize(player_infos[player_name]))
+
+
 # 广播辅助信息
 func broadcast_assist_info():
     _logger.logd("广播辅助信息[%s]" % assist_info)
     PlayingNet.rpc("change_assist_info", Protocol.serialize(assist_info))
 
 
+# 广播银行信息
 func broadcast_bank_info():
     _logger.logd("广播银行信息[%s]" % bank_info)
     PlayingNet.rpc("change_bank_info", Protocol.serialize(bank_info))
@@ -341,6 +362,13 @@ func broadcast_message(message: Protocol.MessageInfo):
     PlayingNet.rpc("show_message", Protocol.serialize(message))
 
 
+# 初始化个人信息
+func init_personal_info():
+    _logger.logd("初始个人信息")
+    for player_name in order_info.order_to_name.values():
+        notify_change_personal_info(player_name)
+
+
 # 广播骰子信息
 func broadcast_dice_info(info: Array):
     _logger.logd("广播骰子信息[%d, %d]" % info)
@@ -361,7 +389,7 @@ func change_score_info(player_name: String):
 
 # 移动强盗
 func notify_move_robber(player_name: String):
-    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]移动强盗..." % player_name)
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "move_robber")
@@ -375,7 +403,7 @@ func broadcast_robber_pos():
 
 # 通知抢劫玩家
 func notify_rob_player(player_name: String):
-    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]抢劫玩家..." % player_name)
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "rob_player")
@@ -383,7 +411,7 @@ func notify_rob_player(player_name: String):
 
 # 通知丢弃资源
 func notify_discard_res(player_name: String, num: int):
-    change_player_state(player_name, NetDefines.PlayerState.WAIT_FOR_RESPONE)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知[%s]丢弃[%d]资源" % [player_name, num])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "discard_resource", num)

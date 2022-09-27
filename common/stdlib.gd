@@ -83,3 +83,22 @@ class Set:
     # 目标是否为自己的超集
     func is_super(another: Set) -> bool:
         return another.is_sub(self)
+
+
+# 简单状态
+class SimpleState:
+    extends Reference
+
+    # 进入状态
+    func enter():
+        pass
+
+    # 退出状态
+    func exit():
+        pass
+
+    # 状态转换
+    func to_state(other: SimpleState) -> SimpleState:
+        exit()
+        other.enter()
+        return other

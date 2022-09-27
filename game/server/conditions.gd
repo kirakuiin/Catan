@@ -29,7 +29,7 @@ class NotExistStateCondition:
         _state = state
 
     func is_meet_condition() -> bool:
-        for state in PlayingNet.get_server().player_state.values():
+        for state in PlayingNet.get_server().player_net_state.values():
             if state == _state:
                 return false
         return true
@@ -42,7 +42,7 @@ class AllReadyCondition:
     var _cond: HSM.Condition
 
     func _init():
-        _cond = NotExistStateCondition.new(NetDefines.PlayerState.NOT_READY)
+        _cond = NotExistStateCondition.new(NetDefines.PlayerNetState.NOT_READY)
 
     func is_meet_condition() -> bool:
         return _cond.is_meet_condition()
@@ -60,7 +60,7 @@ class PlayerStateCondition:
         _need_state = state
         
     func is_meet_condition() -> bool:
-        return PlayingNet.get_server().player_state[_name] == _need_state
+        return PlayingNet.get_server().player_net_state[_name] == _need_state
 
 
 # 玩家操作处于指定状态
@@ -75,7 +75,7 @@ class PlayerOpStateCondition:
         _need_state = state
         
     func is_meet_condition() -> bool:
-        return PlayingNet.get_server().player_op_state[_name] == _need_state
+        return PlayingNet.get_server().player_op_state[_name].state == _need_state
     
     
 # 玩家发展卡数量为0

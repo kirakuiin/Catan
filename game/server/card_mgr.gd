@@ -16,6 +16,11 @@ func _init(scores: Dictionary, size: int, bank: Protocol.BankInfo):
     _card_capacity = Data.NUM_DATA[size].card.each_num.duplicate(true)
 
 
+# 打出卡牌
+func play_card(player_name: String, dev_type: int):
+    _scores[player_name].dev_cards[dev_type] -= 1
+
+
 # 给予玩家一张随机卡牌
 func give_card_to_player(player_name: String) -> int:
     var rand_type = []

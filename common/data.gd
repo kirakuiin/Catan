@@ -135,6 +135,14 @@ const CARD_DATA = {
     CardType.MONOPOLY: "res://assets/cards/mono.png",
 }
 
+const CARD_NAME = {
+    CardType.KNIGHT: "骑士",
+    CardType.VP: "胜利",
+    CardType.ROAD: "道路",
+    CardType.PLENTY: "丰年",
+    CardType.MONOPOLY: "垄断",
+}
+
 
 # 建筑映射
 enum BuildingType{SETTLEMENT, CITY, ROAD}

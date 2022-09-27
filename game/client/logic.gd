@@ -5,9 +5,10 @@ extends Node
 
 
 signal assist_info_changed(assist_info)  # 辅助信息改变
-signal bank_info_changed(assist_info)  # 银行信息改变
+signal bank_info_changed(bank_info)  # 银行信息改变
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal score_info_changed(player_name, score_info)  # 得分信息改变
+signal personal_info_changed(personal_info)  # 个人信息改变
 signal client_state_changed(state)  # 客户端状态改变
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
@@ -28,6 +29,7 @@ var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
 var player_buildings: Dictionary
 var player_scores: Dictionary
+var personal_info: Protocol.PlayerPersonalInfo
 
 var client_state: String  # 客户端状态
 var build_mgr: BuildMgr
@@ -80,6 +82,11 @@ func change_client_state(state: String):
     client_state = state
     _logger.logd("客户端状态变为 '%s'" % [state])
     emit_signal("client_state_changed", client_state)
+
+
+# 发送局部信息
+func show_hint(hint: String):
+    emit_signal("player_hint_showed", hint)
 
 
 # C2S
@@ -152,25 +159,32 @@ func rob_player_done(player: String):
     change_client_state(NetDefines.ClientState.IDLE)
     PlayingNet.rpc("rob_player_done", get_name(), player)
 
+
+# 打出卡牌
+func play_card(dev_type: int):
+    _logger.logd("玩家[%s]打出卡牌[%d]" % [get_name(), dev_type])
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("play_card", get_name(), dev_type)
+
 # S2C
 
 
 # 放置定居点
 func place_settlement(is_setup: bool):
     change_client_state(NetDefines.ClientState.PLACE_SETTLEMENT_SETUP if is_setup else NetDefines.ClientState.PLACE_SETTLEMENT_TURN)
-    emit_signal("player_hint_showed", "请放置定居点...")
+    show_hint("请放置定居点...")
 
 
 # 放置道路
 func place_road(is_setup: bool):
     change_client_state(NetDefines.ClientState.PLACE_ROAD_SETUP if is_setup else NetDefines.ClientState.PLACE_ROAD_TURN)
-    emit_signal("player_hint_showed", "请放置道路...")
+    show_hint("请放置道路...")
 
 
 # 升级城市
 func upgrade_city():
     change_client_state(NetDefines.ClientState.UPGRADE_CITY)
-    emit_signal("player_hint_showed", "请升级城市...")
+    show_hint("请升级城市...")
 
 
 # 修改辅助信息
@@ -223,6 +237,13 @@ func change_score_info(player_name: String, score_info: Protocol.PlayerScoreInfo
     emit_signal("score_info_changed", player_name, score_info)
 
 
+# 修改玩家个人信息
+func change_personal_info(info: Protocol.PlayerPersonalInfo):
+    _logger.logd("个人信息改变[%s]" % [info])
+    personal_info = info
+    emit_signal("personal_info_changed", info)
+
+
 # 修改强盗位置
 func change_robber_pos(pos: Vector3):
     _logger.logd("强盗移动至[%s]" % str(pos))
@@ -238,7 +259,7 @@ func into_free_action():
 func discard_resource(num: int):
     change_client_state(NetDefines.ClientState.DISCARD_RESOURCE)
     emit_signal("resource_discarded", num)
-    emit_signal("player_hint_showed", "请丢弃资源...")
+    show_hint("请丢弃资源...")
 
 
 # 播放消息
@@ -249,10 +270,10 @@ func show_message(message: Protocol.MessageInfo):
 # 移动强盗
 func move_robber():
     change_client_state(NetDefines.ClientState.MOVE_ROBBER)
-    emit_signal("player_hint_showed", "请移动强盗...")
+    show_hint("请移动强盗...")
 
 
 # 抢劫玩家
 func rob_player():
     change_client_state(NetDefines.ClientState.ROB_PLAYER)
-    emit_signal("player_hint_showed", "请抢夺玩家...")
+    show_hint("请抢夺玩家...")

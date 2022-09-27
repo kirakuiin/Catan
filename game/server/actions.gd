@@ -4,7 +4,7 @@ extends Node
 
 # 重置玩家状态
 static func reset_state(player_name: String) -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "reset_player_state"), [player_name])
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "reset_player_net_state"), [player_name])
 
 
 # 重置玩家操作状态
@@ -30,6 +30,11 @@ static func broadcast_scores() -> HSM.Action:
 # 广播强盗信息
 static func broadcast_robber() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_robber_pos"), [])
+
+
+# 广播个人信息
+static func init_personal_info() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "init_personal_info"), [])
 
 
 # 通知放置定居点

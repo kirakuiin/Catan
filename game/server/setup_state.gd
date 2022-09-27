@@ -62,7 +62,7 @@ class PlaceSettlementState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
+        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():
@@ -91,7 +91,7 @@ class PlaceRoadState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerState.DONE)]
+        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
         add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
 
     func _init_actions():

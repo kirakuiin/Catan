@@ -21,9 +21,9 @@ script = ExtResource( 1 )
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 0.0
-margin_left = -824.0
-margin_right = -224.0
-margin_bottom = 100.0
+margin_left = -742.0
+margin_right = -142.0
+margin_bottom = 80.0
 
 [node name="PlayerInfos" parent="." instance=ExtResource( 3 )]
 anchor_right = 0.208333

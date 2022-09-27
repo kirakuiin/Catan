@@ -16,6 +16,7 @@ class InitState:
         
     func activiate():
         _exit_actions.append(Action.broadcast_building())
+        _exit_actions.append(Action.broadcast_bank())
         _exit_actions.append(Action.broadcast_scores())
         _exit_actions.append(Action.broadcast_robber())
         var conditions = [Condition.AllReadyCondition.new()]

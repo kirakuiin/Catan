@@ -17,6 +17,11 @@ static func broadcast_building() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_building_info"), [])
 
 
+# 广播银行信息
+static func broadcast_bank() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_bank_info"), [])
+
+
 # 广播分数信息
 static func broadcast_scores() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_score_info"), [])

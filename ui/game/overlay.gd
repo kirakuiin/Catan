@@ -6,6 +6,7 @@ extends Control
 func init():
     $PlayerInfos.init()
     $GameInfos.init()
+    $BankInfo.init()
     $Dice.init()
     $Operation.init()
     $ResZone.init()

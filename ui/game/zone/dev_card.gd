@@ -59,7 +59,6 @@ func notify_change_pos(pos: Vector2):
 
 
 func _on_mouse_entered():
-    print("enter")
     _is_zoom = true
     position += UP
     position.x -= $CardImage.rect_size.x*(SCALE.x-1)/2
@@ -67,7 +66,6 @@ func _on_mouse_entered():
 
 
 func _on_mouse_exited():
-    print("leave")
     _is_zoom = false
     scale = Vector2(1, 1)
     if _notify_pos:

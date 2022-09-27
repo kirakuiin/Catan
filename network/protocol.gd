@@ -290,13 +290,11 @@ class AssistInfo:
 	var player_turn_name: String
 	var longgest_name: String
 	var biggest_name: String
-	var avail_card: int
 
-	func _init(turn: int=0, turn_name: String="", card_num=0):
+	func _init(turn: int=0, turn_name: String=""):
 		cls_name = "AssistInfo"
 		turn_num = turn
 		player_turn_name = turn_name
-		avail_card = card_num
 		longgest_name = ""
 		biggest_name = ""
 
@@ -308,7 +306,7 @@ class BankInfo:
 	var avail_card: int
 	var res_info: Dictionary
 
-	func _init(catan_size: int):
+	func _init(catan_size: int=Data.CatanSize.SMALL):
 		cls_name = "BankInfo"
 		res_info = Data.NUM_DATA[catan_size].resource.each_num.duplicate(true)
 		avail_card = Data.NUM_DATA[catan_size].card.total_num

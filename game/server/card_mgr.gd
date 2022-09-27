@@ -4,19 +4,16 @@ extends Reference
 
 var _scores: Dictionary
 var _size: int
+var _bank: Protocol.BankInfo
 
 var _card_capacity: Dictionary
 
 
-func _init(scores: Dictionary, size: int):
+func _init(scores: Dictionary, size: int, bank: Protocol.BankInfo):
     _scores = scores
     _size = size
+    _bank = bank
     _card_capacity = Data.NUM_DATA[size].card.each_num.duplicate(true)
-
-
-# 获得可抽卡牌总数
-func get_avail_card_num() -> int:
-    return Util.sum(_card_capacity.values())
 
 
 # 给予玩家一张随机卡牌
@@ -33,5 +30,6 @@ func give_card_to_player(player_name: String) -> int:
     
 func _modify_capacity(type: int):
     _card_capacity[type] -= 1
+    _bank.avail_card -= 1
     Log.logd("类型[%d]的卡牌由(%d->%d)" % [type, _card_capacity[type]+1, _card_capacity[type]])
             

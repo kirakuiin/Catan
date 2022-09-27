@@ -5,6 +5,7 @@ extends Node
 
 
 signal assist_info_changed(assist_info)  # 辅助信息改变
+signal bank_info_changed(assist_info)  # 银行信息改变
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal score_info_changed(player_name, score_info)  # 得分信息改变
 signal client_state_changed(state)  # 客户端状态改变
@@ -24,6 +25,7 @@ var order_info: Protocol.PlayerOrderInfo
 var setup_info: Protocol.CatanSetupInfo
 
 var assist_info: Protocol.AssistInfo
+var bank_info: Protocol.BankInfo
 var player_buildings: Dictionary
 var player_scores: Dictionary
 
@@ -43,6 +45,7 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
 func _init_local_info():
     client_state = NetDefines.ClientState.IDLE
     assist_info = Protocol.AssistInfo.new()
+    bank_info = Protocol.BankInfo.new()
     player_buildings = {}
     player_scores = {}
     build_mgr = BuildMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
@@ -175,6 +178,13 @@ func change_assist_info(info: Protocol.AssistInfo):
     _logger.logd("辅助信息变化[%s]" % info)
     assist_info = info
     emit_signal("assist_info_changed", info)
+
+
+# 修改银行信息
+func change_bank_info(info: Protocol.BankInfo):
+    _logger.logd("银行信息变化[%s]" % info)
+    bank_info = info
+    emit_signal("bank_info_changed", info)
 
 
 # 更新骰子

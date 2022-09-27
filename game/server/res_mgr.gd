@@ -5,20 +5,20 @@ extends Reference
 var _map: Protocol.MapInfo
 var _buildings: Dictionary
 var _scores: Dictionary
+var _bank: Protocol.BankInfo
 var _size: int
 
 var _num_to_res: Dictionary
 var _num_to_corner: Dictionary
-var _res_capacity: Dictionary
 var _robber_pos: Vector3
 
 
-func _init(map: Protocol.MapInfo, buildings: Dictionary, scores: Dictionary, catan_size: int):
+func _init(map: Protocol.MapInfo, buildings: Dictionary, scores: Dictionary, catan_size: int, bank: Protocol.BankInfo):
     _map = map
     _buildings = buildings
     _scores = scores
     _size = catan_size
-    _res_capacity = Data.NUM_DATA[_size].resource.each_num.duplicate(true)
+    _bank = bank
     _init_num_corner()
 
 
@@ -154,7 +154,7 @@ func _filter_invalid_tile(hexs: Array):
     return result
 
 func _give_res_to_player(player: String, res_type: int, num) -> int:
-    var avail_num = min(_res_capacity[res_type], num)
+    var avail_num = min(_bank.res_info[res_type], num)
     _modify_capacity(res_type, -avail_num)
     if not res_type in _scores[player].res_cards:
         _scores[player].res_cards[res_type] = avail_num
@@ -163,7 +163,5 @@ func _give_res_to_player(player: String, res_type: int, num) -> int:
     return avail_num
 
 func _modify_capacity(res_type: int, num: int):
-    _res_capacity[res_type] += num
-    Log.logi("类型[%d]的资源由(%d->%d)" % [res_type, _res_capacity[res_type]-num, _res_capacity[res_type]])
-    if _res_capacity[res_type] == 0:
-        Log.logw("类型[%d]的资源耗尽" % res_type)
+    _bank.res_info[res_type] += num
+    Log.logi("类型[%d]的资源由(%d->%d)" % [res_type, _bank.res_info[res_type]-num, _bank.res_info[res_type]])

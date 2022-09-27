@@ -16,6 +16,7 @@ var setup_info: Protocol.CatanSetupInfo
 var player_buildings: Dictionary
 var player_scores: Dictionary
 var assist_info: Protocol.AssistInfo
+var bank_info: Protocol.BankInfo
 
 var player_state: Dictionary
 var player_op_state: Dictionary
@@ -62,9 +63,10 @@ func _init_player_state():
 func _init_player_info():
     player_buildings = {}
     player_scores = {}
-    _res_mgr = ResMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
-    _card_mgr = CardMgr.new(player_scores, setup_info.catan_size)
-    assist_info = Protocol.AssistInfo.new(0, "", _card_mgr.get_avail_card_num())
+    assist_info = Protocol.AssistInfo.new()
+    bank_info = Protocol.BankInfo.new(setup_info.catan_size)
+    _res_mgr = ResMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size, bank_info)
+    _card_mgr = CardMgr.new(player_scores, setup_info.catan_size, bank_info)
 
 
 func _init_robber():
@@ -132,6 +134,7 @@ func roll_dice():
 func dispatch_resource():
     _res_mgr.set_robber(_robber_pos)
     var affect = _res_mgr.dispatch_by_num(dice.get_last_num())
+    broadcast_bank_info()
     for player in affect.keys():
         change_score_info(player)
         broadcast_message(Message.dispatch_res(player, affect[player]))
@@ -141,6 +144,7 @@ func dispatch_resource():
 func initial_resource(player_name: String):
     _res_mgr.set_robber(_robber_pos)
     var result = _res_mgr.dispatch_initial_res(player_name)
+    broadcast_bank_info()
     change_score_info(player_name)
     broadcast_message(Message.dispatch_res(player_name, result))
 
@@ -185,6 +189,7 @@ func change_player_op_state(player_name: String, state: String):
 func request_place_settlement(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_SETTLEMENT)
     _res_mgr.buy(player_name, Data.OpType.SETTLEMENT)
+    broadcast_bank_info()
     change_score_info(player_name)
 
 
@@ -192,12 +197,14 @@ func request_place_settlement(player_name: String):
 func request_place_road(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_ROAD)
     _res_mgr.buy(player_name, Data.OpType.ROAD)
+    broadcast_bank_info()
     change_score_info(player_name)
 
 
 # 请求升级城市
 func request_upgrade_city(player_name: String):
     _res_mgr.buy(player_name, Data.OpType.CITY)
+    broadcast_bank_info()
     change_player_op_state(player_name, NetDefines.PlayerOpState.UPGRADE_CITY)
     change_score_info(player_name)
 
@@ -205,6 +212,7 @@ func request_upgrade_city(player_name: String):
 # 请求升级城市
 func request_buy_dev_card(player_name: String):
     _res_mgr.buy(player_name, Data.OpType.DEV_CARD)
+    broadcast_bank_info()
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUY_DEV_CARD)
 
 
@@ -239,6 +247,7 @@ func discard_done(player_name: String, discard_info: Dictionary):
     _res_mgr.recycle_player_res(player_name, discard_info)
     change_player_state(player_name, NetDefines.PlayerState.DONE)
     change_score_info(player_name)
+    broadcast_bank_info()
     broadcast_message(Message.discard(player_name, discard_info))
 
 
@@ -291,8 +300,7 @@ func notify_upgrade_city(player_name: String):
 func give_dev_card(player_name):
     var type = _card_mgr.give_card_to_player(player_name)
     _logger.logd("分配玩家[%s]发展卡[%d]" % [player_name, type])
-    assist_info.avail_card = _card_mgr.get_avail_card_num()
-    broadcast_assist_info()
+    broadcast_bank_info()
     change_score_info(player_name)
     broadcast_message(Message.buy_dev_card(player_name))
 
@@ -308,6 +316,11 @@ func notify_free_action(player_name: String):
 func broadcast_assist_info():
     _logger.logd("广播辅助信息[%s]" % assist_info)
     PlayingNet.rpc("change_assist_info", Protocol.serialize(assist_info))
+
+
+func broadcast_bank_info():
+    _logger.logd("广播银行信息[%s]" % bank_info)
+    PlayingNet.rpc("change_bank_info", Protocol.serialize(bank_info))
 
 
 # 广播建筑信息

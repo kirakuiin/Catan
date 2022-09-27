@@ -1,0 +1,137 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://ui/game/info/bank_info.gd" type="Script" id=1]
+[ext_resource path="res://assets/icons/lumber.png" type="Texture" id=2]
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=3]
+[ext_resource path="res://assets/icons/wool.png" type="Texture" id=4]
+[ext_resource path="res://assets/icons/brick.png" type="Texture" id=5]
+[ext_resource path="res://assets/icons/ore.png" type="Texture" id=6]
+[ext_resource path="res://assets/icons/grain.png" type="Texture" id=7]
+
+[node name="BankInfo" type="Control"]
+anchor_right = 0.3125
+anchor_bottom = 0.0925926
+mouse_filter = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Lumber" type="TextureRect" parent="."]
+margin_right = 100.0
+margin_bottom = 100.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="RichTextLabel" parent="Lumber"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+theme_type_variation = "BigRichLabel"
+bbcode_enabled = true
+bbcode_text = "11"
+text = "11"
+scroll_active = false
+
+[node name="Wool" type="TextureRect" parent="."]
+margin_left = 100.0
+margin_right = 200.0
+margin_bottom = 100.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="RichTextLabel" parent="Wool"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+theme_type_variation = "BigRichLabel"
+bbcode_enabled = true
+bbcode_text = "11"
+text = "11"
+scroll_active = false
+
+[node name="Brick" type="TextureRect" parent="."]
+margin_left = 200.0
+margin_right = 300.0
+margin_bottom = 100.0
+texture = ExtResource( 5 )
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="RichTextLabel" parent="Brick"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+theme_type_variation = "BigRichLabel"
+bbcode_enabled = true
+bbcode_text = "11"
+text = "11"
+scroll_active = false
+
+[node name="Ore" type="TextureRect" parent="."]
+margin_left = 300.0
+margin_right = 400.0
+margin_bottom = 100.0
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="RichTextLabel" parent="Ore"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+theme_type_variation = "BigRichLabel"
+bbcode_enabled = true
+bbcode_text = "11"
+text = "11"
+scroll_active = false
+
+[node name="Grain" type="TextureRect" parent="."]
+margin_left = 400.0
+margin_right = 500.0
+margin_bottom = 100.0
+texture = ExtResource( 7 )
+expand = true
+stretch_mode = 6
+
+[node name="Label" type="RichTextLabel" parent="Grain"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+theme = ExtResource( 3 )
+theme_type_variation = "BigRichLabel"
+bbcode_enabled = true
+bbcode_text = "11"
+text = "11"
+scroll_active = false

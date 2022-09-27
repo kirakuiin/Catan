@@ -97,6 +97,11 @@ remotesync func change_assist_info(data):
     get_client().change_assist_info(Protocol.deserialize(data))
 
 
+# 通知客户端银行信息
+remotesync func change_bank_info(data):
+    get_client().change_bank_info(Protocol.deserialize(data))
+
+
 # 通知客户端初始化建筑信息
 remotesync func init_building_info(data):
     get_client().init_building_info(Protocol.deserialize(data))

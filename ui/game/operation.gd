@@ -56,7 +56,7 @@ func _on_check_road(state):
 
 
 func _on_check_dev_card(state):
-    $DevCard.disabled = not(_is_free(state) and _get_client().op_mgr.can_buy_dev() and _get_client().assist_info.avail_card > 0)
+    $DevCard.disabled = not(_is_free(state) and _get_client().op_mgr.can_buy_dev() and _get_client().bank_info.avail_card > 0)
 
 
 func _get_client():

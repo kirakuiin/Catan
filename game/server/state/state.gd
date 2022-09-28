@@ -4,10 +4,10 @@ extends Node
 # 服务端状态
 
 
-const Init: Script = preload("res://game/server/init_state.gd")
-const Setup: Script = preload("res://game/server/setup_state.gd")
-const Turn: Script = preload("res://game/server/turn_state.gd")
-const GameOver: Script = preload("res://game/server/gameover_state.gd")
+const Init: Script = preload("res://game/server/state/init_state.gd")
+const Setup: Script = preload("res://game/server/state/setup_state.gd")
+const Turn: Script = preload("res://game/server/state/turn_state.gd")
+const GameOver: Script = preload("res://game/server/state/gameover_state.gd")
 
 
 # 服务端状态机

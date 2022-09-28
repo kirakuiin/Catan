@@ -66,7 +66,7 @@ class Logger:
 
     var log_level: int = LogLevel.INFO
     var is_stdout: bool = true
-    var is_save_file: bool = false
+    var is_save_file: bool = true
     var is_show_time: bool = false
     var is_show_track: bool = false
 
@@ -125,6 +125,6 @@ class Logger:
         return result
 
     func _save_file(msg):
-        _file.store_string(msg)
+        _file.store_string(msg+"\n")
         _file.flush()
 

@@ -2,9 +2,9 @@ extends Node
 
 # 布置面板阶段
 
-const Turn: Script = preload("res://game/server/turn_state.gd")
-const Condition: Script = preload("res://game/server/conditions.gd")
-const Action: Script = preload("res://game/server/actions.gd")
+const Turn: Script = preload("res://game/server/state/turn_state.gd")
+const Condition: Script = preload("res://game/server/state/conditions.gd")
+const Action: Script = preload("res://game/server/state/actions.gd")
 
 
 # 玩家初始化

@@ -3,7 +3,7 @@ extends Node
 
 # 游戏中服务器
 
-const State: Script = preload("res://game/server/state.gd")
+const State: Script = preload("res://game/server/state/state.gd")
 const Dice: Script = preload("res://game/server/dice.gd")
 const ResMgr: Script = preload("res://game/server/res_mgr.gd")
 const CardMgr: Script = preload("res://game/server/card_mgr.gd")
@@ -166,6 +166,12 @@ func discard_resource():
         notify_discard_res(player, discard_infos[player])
 
 
+# 设置出卡状态
+func set_play_card(player_name: String, is_play: bool):
+    player_infos[player_name].is_played_card = is_play
+    change_personal_info(player_name)
+
+
 # C2S
 
 
@@ -276,11 +282,9 @@ func rob_player_done(robber: String, robbed_player: String):
 func play_card(player: String, dev_type: int):
     _logger.logd("玩家[%s]打出卡牌[%d]" % [player, dev_type])
     _card_mgr.play_card(player, dev_type)
-    broadcast_message(Message.play_card(player, dev_type))
     change_score_info(player)
+    broadcast_message(Message.play_card(player, dev_type))
     change_player_op_state(player, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
-    notify_free_action(player)
-    # TODO: 真实的打出逻辑
 
 
 # S2C
@@ -326,7 +330,7 @@ func notify_free_action(player_name: String):
 
 
 # 通知玩家个人信息变化
-func notify_change_personal_info(player_name: String):
+func change_personal_info(player_name: String):
     _logger.logd("通知玩家[%s]个人信息改变[%s]" % [player_name, player_infos[player_name]])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "change_personal_info", Protocol.serialize(player_infos[player_name]))
@@ -360,13 +364,6 @@ func broadcast_score_info():
 func broadcast_message(message: Protocol.MessageInfo):
     _logger.logd("广播消息[%s]" % message)
     PlayingNet.rpc("show_message", Protocol.serialize(message))
-
-
-# 初始化个人信息
-func init_personal_info():
-    _logger.logd("初始个人信息")
-    for player_name in order_info.order_to_name.values():
-        notify_change_personal_info(player_name)
 
 
 # 广播骰子信息

@@ -32,9 +32,9 @@ static func broadcast_robber() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_robber_pos"), [])
 
 
-# 广播个人信息
-static func init_personal_info() -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "init_personal_info"), [])
+# 修改个人信息
+static func set_play_card(player_name: String, is_play: bool) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "set_play_card"), [player_name, is_play])
 
 
 # 通知放置定居点

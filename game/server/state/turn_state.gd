@@ -3,8 +3,9 @@ extends Node
 # 回合状态
 
 
-const Condition: Script = preload("res://game/server/conditions.gd")
-const Action: Script = preload("res://game/server/actions.gd")
+const Condition: Script = preload("res://game/server/state/conditions.gd")
+const Action: Script = preload("res://game/server/state/actions.gd")
+const CardPath = "res://game/server/state/card_state.gd"
 
 
 # 大回合状态
@@ -82,6 +83,7 @@ class PlayerTurnState:
         return 'PlayerTurnState[%s]' % _name
 
     func _init_all_state():
+        var CardState: Script = load(CardPath)
         _machine.state_list.append(SpecialPlayCardState.new(self, _name))
         _machine.state_list.append(RollDiceState.new(self, _name))
         _machine.state_list.append(DispatchResourceState.new(self, _name))
@@ -93,6 +95,7 @@ class PlayerTurnState:
         _machine.state_list.append(PlaceRoadState.new(self, _name))
         _machine.state_list.append(UpgradeCityState.new(self, _name))
         _machine.state_list.append(BuyDevCardState.new(self, _name))
+        _machine.state_list.append(CardState.PlayCardState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
@@ -101,6 +104,7 @@ class PlayerTurnState:
 
     func _init_actions():
         _entry_actions.append(Action.set_turn_name(_name))
+        _entry_actions.append(Action.set_play_card(_name, false))
         _exit_actions.append(Action.reset_state(_name))
 
     func get_next_state():
@@ -189,7 +193,7 @@ class MoveRobberState:
     func activiate():
         _entry_actions.append(Action.move_robber(_name))
         var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
-        add_transition(HSM.Transition.new(get_state_in_parent(RobPlayerState), 0, condition))
+        add_transition(HSM.Transition.new(get_state_in_parent(RobPlayerState), 1, condition))
 
 
 # 抢夺玩家阶段
@@ -246,6 +250,7 @@ class BuildAndTradeState:
         _init_road_transition()
         _init_city_transition()
         _init_buy_transition()
+        _init_play_transition()
 
     func _init_end_transition():
         var target = get_parent_machine().get_next_state()
@@ -270,6 +275,12 @@ class BuildAndTradeState:
     func _init_buy_transition():
         var target = get_state_in_parent(BuyDevCardState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUY_DEV_CARD)
+        add_transition(HSM.Transition.new(target, 0, [condition]))
+
+    func _init_play_transition():
+        var CardState: Script = load(CardPath)
+        var target = get_state_in_parent(CardState.PlayCardState)
+        var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.PLAY_CARD)
         add_transition(HSM.Transition.new(target, 0, [condition]))
 
 

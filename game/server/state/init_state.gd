@@ -2,9 +2,9 @@ extends Node
 
 # 初始状态逻辑
 
-const Setup: Script = preload("res://game/server/setup_state.gd")
-const Condition: Script = preload("res://game/server/conditions.gd")
-const Action: Script = preload("res://game/server/actions.gd")
+const Setup: Script = preload("res://game/server/state/setup_state.gd")
+const Condition: Script = preload("res://game/server/state/conditions.gd")
+const Action: Script = preload("res://game/server/state/actions.gd")
 
 
 # 初始状态
@@ -19,7 +19,6 @@ class InitState:
         _exit_actions.append(Action.broadcast_bank())
         _exit_actions.append(Action.broadcast_scores())
         _exit_actions.append(Action.broadcast_robber())
-        _exit_actions.append(Action.init_personal_info())
         var conditions = [Condition.AllReadyCondition.new()]
         var state = get_state_in_parent(Setup.SetupState)
         var ready = HSM.Transition.new(state, 0, conditions)

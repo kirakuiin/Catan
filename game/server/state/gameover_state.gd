@@ -2,8 +2,8 @@ extends Node
 
 # 游戏结算状态
 
-const Condition: Script = preload("res://game/server/conditions.gd")
-const Action: Script = preload("res://game/server/actions.gd")
+const Condition: Script = preload("res://game/server/state/conditions.gd")
+const Action: Script = preload("res://game/server/state/actions.gd")
 
 
 # 游戏结束

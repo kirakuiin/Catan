@@ -262,6 +262,7 @@ class StateMachine:
     func update() -> UpdateResult:
         var result = UpdateResult.new()
         if not get_cur_state():
+            assert(initial_state, "初始状态不能为空")
             set_cur_state(initial_state)
             result = UpdateResult.new(0, get_cur_state().get_entry_actions())
         else:

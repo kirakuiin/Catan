@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Message",
 "language": "GDScript",
-"path": "res://game/server/message.gd"
+"path": "res://game/message.gd"
 }, {
 "base": "Node",
 "class": "NetDefines",

@@ -5,7 +5,7 @@ extends Node
 
 const Condition: Script = preload("res://game/server/state/conditions.gd")
 const Action: Script = preload("res://game/server/state/actions.gd")
-const CardPath = "res://game/server/state/card_state.gd"
+const Card: Script = preload("res://game/server/state/card_state.gd")
 
 
 # 大回合状态
@@ -47,8 +47,7 @@ class OneTurnBeginState:
 
     func activiate():
         var target = get_parent_machine().get_state_list()[1]
-        var condition = Condition.TrueCondition.new()
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, HSM.TrueCondition.new()))
         _entry_actions.append(Action.update_turn())
 
 
@@ -64,8 +63,7 @@ class OneTurnEndState:
 
     func activiate():
         var target = get_state_in_parent(OneTurnBeginState)
-        var condition = Condition.TrueCondition.new()
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, HSM.TrueCondition.new()))
 
 
 # 玩家回合状态
@@ -83,7 +81,6 @@ class PlayerTurnState:
         return 'PlayerTurnState[%s]' % _name
 
     func _init_all_state():
-        var CardState: Script = load(CardPath)
         _machine.state_list.append(SpecialPlayCardState.new(self, _name))
         _machine.state_list.append(RollDiceState.new(self, _name))
         _machine.state_list.append(DispatchResourceState.new(self, _name))
@@ -95,7 +92,7 @@ class PlayerTurnState:
         _machine.state_list.append(PlaceRoadState.new(self, _name))
         _machine.state_list.append(UpgradeCityState.new(self, _name))
         _machine.state_list.append(BuyDevCardState.new(self, _name))
-        _machine.state_list.append(CardState.PlayCardState.new(self, _name))
+        _machine.state_list.append(Card.PlayCardState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
@@ -132,8 +129,7 @@ class SpecialPlayCardState:
     func _init_transitions():
         # TODO: 处理特殊出牌阶段
         # var condition = Condition.DevCardEqualZeroCondition.new(_name)
-        var condition = Condition.TrueCondition.new()
-        add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, [condition]))
+        add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, HSM.TrueCondition.new()))
 
 
 # 投掷骰子阶段
@@ -155,9 +151,9 @@ class RollDiceState:
 
     func _init_transitions():
         var robber = get_state_in_parent(DiscardResourceState)
-        add_transition(HSM.Transition.new(robber, 0, [Condition.DiceEqualSevenCondition.new()]))
+        add_transition(HSM.Transition.new(robber, 0, Condition.DiceEqualSevenCondition.new()))
         var dispatch = get_state_in_parent(DispatchResourceState)
-        add_transition(HSM.Transition.new(dispatch, 0, [Condition.DiceNotEqualSevenCondition.new()]))
+        add_transition(HSM.Transition.new(dispatch, 0, HSM.NotCondition.new(Condition.DiceEqualSevenCondition.new())))
 
 
 # 丢弃资源阶段
@@ -174,8 +170,8 @@ class DiscardResourceState:
 
     func activiate():
         _entry_actions.append(Action.discard_res())
-        var conditions = [Condition.NotExistStateCondition.new(NetDefines.PlayerNetState.WAIT_FOR_RESPONE)]
-        add_transition(HSM.Transition.new(get_state_in_parent(MoveRobberState), 0, conditions))
+        var condition = Condition.NotExistStateCondition.new(NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+        add_transition(HSM.Transition.new(get_state_in_parent(MoveRobberState), 0, condition))
 
 
 # 移动强盗阶段
@@ -192,8 +188,8 @@ class MoveRobberState:
 
     func activiate():
         _entry_actions.append(Action.move_robber(_name))
-        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
-        add_transition(HSM.Transition.new(get_state_in_parent(RobPlayerState), 1, condition))
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
+        add_transition(HSM.Transition.new(get_state_in_parent(RobPlayerState), 0, condition))
 
 
 # 抢夺玩家阶段
@@ -210,7 +206,7 @@ class RobPlayerState:
 
     func activiate():
         _entry_actions.append(Action.rob_player(_name))
-        var condition = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, condition))
 
 
@@ -228,7 +224,7 @@ class DispatchResourceState:
 
     func activiate():
         _entry_actions.append(Action.dispatch_res())
-        add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, [Condition.TrueCondition.new()]))
+        add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, HSM.TrueCondition.new()))
 
 
 # 建造交易阶段
@@ -255,33 +251,32 @@ class BuildAndTradeState:
     func _init_end_transition():
         var target = get_parent_machine().get_next_state()
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.PASS)
-        add_transition(HSM.Transition.new(target, 1, [condition]))
+        add_transition(HSM.Transition.new(target, 1, condition))
 
     func _init_settlement_transition():
         var target = get_state_in_parent(PlaceSettlementState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUILD_SETTLEMENT)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
 
     func _init_road_transition():
         var target = get_state_in_parent(PlaceRoadState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUILD_ROAD)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
 
     func _init_city_transition():
         var target = get_state_in_parent(UpgradeCityState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.UPGRADE_CITY)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
 
     func _init_buy_transition():
         var target = get_state_in_parent(BuyDevCardState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.BUY_DEV_CARD)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
 
     func _init_play_transition():
-        var CardState: Script = load(CardPath)
-        var target = get_state_in_parent(CardState.PlayCardState)
+        var target = get_state_in_parent(Card.PlayCardState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.PLAY_CARD)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
 
 
 # 放置定居点阶段
@@ -294,12 +289,12 @@ class PlaceSettlementState:
         _name = name
 
     func _to_string():
-        return "PlaceSettlement[%s]" % _name
+        return "PlaceSettlementState[%s]" % _name
 
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
         _entry_actions.append(Action.notify_place_settlement(_name, false))
         _exit_actions.append(Action.reset_op_state(_name))
 
@@ -314,12 +309,12 @@ class PlaceRoadState:
         _name = name
 
     func _to_string():
-        return "PlaceRoad[%s]" % _name
+        return "PlaceRoadState[%s]" % _name
 
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
         _entry_actions.append(Action.notify_place_road(_name, false))
         _exit_actions.append(Action.reset_op_state(_name))
 
@@ -339,7 +334,7 @@ class UpgradeCityState:
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, condition))
         _entry_actions.append(Action.notify_upgrade_city(_name))
         _exit_actions.append(Action.reset_op_state(_name))
 
@@ -358,7 +353,6 @@ class BuyDevCardState:
 
     func activiate():
         var target = get_state_in_parent(BuildAndTradeState)
-        var condition = Condition.TrueCondition.new()
-        add_transition(HSM.Transition.new(target, 0, [condition]))
+        add_transition(HSM.Transition.new(target, 0, HSM.TrueCondition.new()))
         _entry_actions.append(Action.give_dev_card(_name))
         _exit_actions.append(Action.reset_op_state(_name))

@@ -114,16 +114,14 @@ class Transition:
 
     var _target_state: WeakRef
     var _actions: Array
-    var _conditions: Array
+    var _condition: Condition
     var _level: int
-    var _is_and: bool
     
-    func _init(target: State, lv: int, conds: Array=[], is_and: bool=true, ac_list: Array=[]):
+    func _init(target: State, lv: int, cond: Condition, ac_list: Array=[]):
         _target_state = weakref(target)
         _level = lv
         _actions = ac_list
-        _conditions = conds
-        _is_and = is_and
+        _condition = cond
 
     # 返回转换的层级
     # 0: 平级, n: 目标高于来源n级, -n: 目标低于来源n级
@@ -140,13 +138,7 @@ class Transition:
 
     # 是否触发
     func is_triggered() -> bool:
-        var result = true if _is_and else false
-        for condition in _conditions:
-            if _is_and:
-                result = result and condition.is_meet_condition()
-            else:
-                result = result or condition.is_meet_condition()
-        return result
+        return _condition.is_meet_condition()
 
 
 # 混合状态状态机
@@ -348,3 +340,64 @@ class Condition:
     # 是否满足条件
     func is_meet_condition() -> bool:
         return false
+
+
+# 永远为真
+class TrueCondition:
+    extends Condition
+
+    func is_meet_condition() -> bool:
+        return true
+
+
+# 永远为假
+class FalseCondition:
+    extends Condition
+
+    func is_meet_condition() -> bool:
+        return false
+
+
+# 取反
+class NotCondition:
+    extends Condition
+
+    var _cond: Condition
+
+    func _init(cond: Condition):
+        _cond = cond
+
+    func is_meet_condition() -> bool:
+        return not _cond.is_meet_condition()
+    
+
+# 和
+class AndCondition:
+    extends Condition
+
+    var _cond_list: Array
+
+    func _init(cond_list: Array):
+        _cond_list = cond_list
+
+    func is_meet_condition() -> bool:
+        var result = true
+        for cond in _cond_list:
+            result = result and cond.is_meet_condition()
+        return result
+
+
+# 或
+class OrCondition:
+    extends Condition
+
+    var _cond_list: Array
+
+    func _init(cond_list: Array):
+        _cond_list = cond_list
+
+    func is_meet_condition() -> bool:
+        var result = false
+        for cond in _cond_list:
+            result = result or cond.is_meet_condition()
+        return result

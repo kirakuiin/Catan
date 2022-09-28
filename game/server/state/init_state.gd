@@ -19,9 +19,9 @@ class InitState:
         _exit_actions.append(Action.broadcast_bank())
         _exit_actions.append(Action.broadcast_scores())
         _exit_actions.append(Action.broadcast_robber())
-        var conditions = [Condition.AllReadyCondition.new()]
+        var condition = Condition.AllReadyCondition.new()
         var state = get_state_in_parent(Setup.SetupState)
-        var ready = HSM.Transition.new(state, 0, conditions)
+        var ready = HSM.Transition.new(state, 0, condition)
         add_transition(ready)
     
     func _to_string():

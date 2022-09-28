@@ -119,6 +119,10 @@ theme/custom="res://assets/theme/game_theme.tres"
 timers/tooltip_delay_sec=0.1
 common/snap_controls_to_pixels=false
 
+[network]
+
+limits/debugger_stdout/max_chars_per_second=20480
+
 [physics]
 
 common/enable_pause_aware_picking=true

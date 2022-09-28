@@ -3,22 +3,6 @@ extends Node
 # 转换条件
 
 
-# 永远为真
-class TrueCondition:
-    extends HSM.Condition
-
-    func is_meet_condition() -> bool:
-        return true
-
-
-# 永远为假
-class FalseCondition:
-    extends HSM.Condition
-
-    func is_meet_condition() -> bool:
-        return false
-
-
 # 不存在某种状态
 class NotExistStateCondition:
     extends HSM.Condition
@@ -114,16 +98,3 @@ class DiceEqualSevenCondition:
 
     func is_meet_condition() -> bool:
         return PlayingNet.get_server().dice.get_last_num() == Data.PointType.SEVEN
-
-
-# 骰子数不为7
-class DiceNotEqualSevenCondition:
-    extends HSM.Condition
-
-    var _cond: HSM.Condition
-
-    func _init():
-        _cond = DiceEqualSevenCondition.new()
-
-    func is_meet_condition() -> bool:
-        return not _cond.is_meet_condition()

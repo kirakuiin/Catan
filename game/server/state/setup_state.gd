@@ -62,8 +62,8 @@ class PlaceSettlementState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
-        add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
+        add_transition(HSM.Transition.new(state_list[index+1], 0, condition))
 
     func _init_actions():
         _entry_actions.append(Action.notify_place_settlement(_name, true))
@@ -91,8 +91,8 @@ class PlaceRoadState:
     func _init_transitions():
         var state_list = get_parent_machine().get_state_list() as Array
         var index = state_list.find(self)
-        var conditions = [Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)]
-        add_transition(HSM.Transition.new(state_list[index+1], 0, conditions))
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
+        add_transition(HSM.Transition.new(state_list[index+1], 0, condition))
 
     func _init_actions():
         _entry_actions.append(Action.notify_place_road(_name, true))
@@ -110,7 +110,7 @@ class EndState:
 
     func activiate():
         var turn_state = get_state_in_parent(Turn.TurnState)
-        add_transition(HSM.Transition.new(turn_state, 1, [Condition.TrueCondition.new()]))
+        add_transition(HSM.Transition.new(turn_state, 1, HSM.TrueCondition.new()))
         for name in get_parent_machine().get_name_list():
             _exit_actions.append(Action.reset_state(name))
 

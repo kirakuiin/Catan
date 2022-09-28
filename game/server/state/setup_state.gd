@@ -112,5 +112,5 @@ class EndState:
         var turn_state = get_state_in_parent(Turn.TurnState)
         add_transition(HSM.Transition.new(turn_state, 1, HSM.TrueCondition.new()))
         for name in get_parent_machine().get_name_list():
-            _exit_actions.append(Action.reset_state(name))
+            _exit_actions.append(Action.reset_net_state(name))
 

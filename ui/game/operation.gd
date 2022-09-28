@@ -36,7 +36,7 @@ func _on_client_state_changed(state):
 
 
 func _on_check_done(state):
-    $DoneBtn.disabled = not _is_free(state)
+    $DoneBtn.disabled = not (_is_free(state) or state == NetDefines.ClientState.PLAY_BEFORE_DICE)
 
 
 func _is_free(state):

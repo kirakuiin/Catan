@@ -53,11 +53,14 @@ func _show_turn_info(turn_num: int):
         $Turn.text = "回合[%d]" % turn_num
 
 
-func _on_player_hint_showed(hint: String):
+func _on_player_hint_showed(hint: String, is_always_show: bool):
     $SingleInfo.show()
     $SingleInfo.text = hint
-    $HintPlayer.stop()
-    $HintPlayer.play("show_hint")
+    if not is_always_show:
+        $HintPlayer.stop()
+        $HintPlayer.play("show_hint")
+    else:
+        $HintPlayer.play("RESET")
 
 
 func _on_client_state_changed(state: String):

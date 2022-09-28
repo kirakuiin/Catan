@@ -98,3 +98,11 @@ class DiceEqualSevenCondition:
 
     func is_meet_condition() -> bool:
         return PlayingNet.get_server().dice.get_last_num() == Data.PointType.SEVEN
+
+
+# 玩家回合是否投掷过骰子
+class HasRollDiceCondition:
+    extends HSM.Condition
+
+    func is_meet_condition() -> bool:
+        return PlayingNet.get_server().has_roll_dice

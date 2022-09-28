@@ -22,6 +22,7 @@ var bank_info: Protocol.BankInfo
 var player_net_state: Dictionary
 var player_op_state: Dictionary
 var dice: Dice
+var has_roll_dice: bool
 
 var _server_state: HSM.StateMachine
 var _robber_pos: Vector3
@@ -118,6 +119,7 @@ func reset_player_op_state(player_name: String):
 # 设置当前玩家回合名称
 func set_cur_turn_name(player_name: String):
     assist_info.player_turn_name = player_name
+    has_roll_dice = false
     broadcast_assist_info()
 
 
@@ -130,6 +132,7 @@ func update_turn_num():
 # 投掷骰子
 func roll_dice():
     broadcast_dice_info(dice.roll())
+    has_roll_dice = true
 
 
 # 分发资源
@@ -412,3 +415,11 @@ func notify_discard_res(player_name: String, num: int):
     _logger.logd("通知[%s]丢弃[%d]资源" % [player_name, num])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "discard_resource", num)
+
+   
+# 通知特殊出卡
+func notify_special_play(player_name: String):
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+    _logger.logd("通知[%s]特殊出牌" % [player_name])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "special_play")

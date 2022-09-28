@@ -71,7 +71,9 @@ class PlayEndState:
         _exit_actions.append(Action.set_play_card(_name, true))
         _exit_actions.append(Action.reset_op_state(_name))
         var Turn = load("res://game/server/state/turn_state.gd")
-        add_transition(HSM.Transition.new(get_state_in_parent(Turn.BuildAndTradeState), 2, HSM.TrueCondition.new()))
+        var has_roll_dice = Condition.HasRollDiceCondition.new()
+        add_transition(HSM.Transition.new(get_state_in_parent(Turn.RollDiceState), 2, HSM.NotCondition.new(has_roll_dice)))
+        add_transition(HSM.Transition.new(get_state_in_parent(Turn.BuildAndTradeState), 2, has_roll_dice))
 
 
 # 骑士卡

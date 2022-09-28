@@ -13,7 +13,7 @@ signal client_state_changed(state)  # 客户端状态改变
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
 signal resource_discarded(num)  # 丢弃资源
-signal player_hint_showed(hint)  # 提示信息变化
+signal player_hint_showed(hint, always_show)  # 提示信息变化
 signal message_received(msg)  # 收到信息
 
 
@@ -85,8 +85,8 @@ func change_client_state(state: String):
 
 
 # 发送局部信息
-func show_hint(hint: String):
-    emit_signal("player_hint_showed", hint)
+func show_hint(hint: String, is_always_show: bool=false):
+    emit_signal("player_hint_showed", hint, is_always_show)
 
 
 # C2S
@@ -277,3 +277,9 @@ func move_robber():
 func rob_player():
     change_client_state(NetDefines.ClientState.ROB_PLAYER)
     show_hint("请抢夺玩家...")
+
+
+# 特殊出卡
+func special_play():
+    change_client_state(NetDefines.ClientState.PLAY_BEFORE_DICE)
+    show_hint("是否打出骑士卡?", true)

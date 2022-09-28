@@ -81,6 +81,7 @@ class PlayerTurnState:
         return 'PlayerTurnState[%s]' % _name
 
     func _init_all_state():
+        _machine.state_list.append(PrepareState.new(self, _name))
         _machine.state_list.append(SpecialPlayCardState.new(self, _name))
         _machine.state_list.append(RollDiceState.new(self, _name))
         _machine.state_list.append(DispatchResourceState.new(self, _name))
@@ -102,13 +103,35 @@ class PlayerTurnState:
     func _init_actions():
         _entry_actions.append(Action.set_turn_name(_name))
         _entry_actions.append(Action.set_play_card(_name, false))
-        _exit_actions.append(Action.reset_state(_name))
+        _exit_actions.append(Action.reset_net_state(_name))
 
     func get_next_state():
         var parent = get_parent_machine()
         var state_list = parent.get_state_list()
         var target = state_list[state_list.find(self)+1]
         return target
+
+
+# 准备阶段
+class PrepareState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "PrepareState[%s]" % _name
+
+    func activiate():
+        _init_transitions()
+
+    func _init_transitions():
+        var equal_zero = Condition.DevCardEqualZeroCondition.new(_name)
+        add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, equal_zero))
+        var not_equal = HSM.NotCondition.new(equal_zero)
+        add_transition(HSM.Transition.new(get_state_in_parent(SpecialPlayCardState), 0, not_equal))
 
 
 # 特殊出牌阶段
@@ -127,9 +150,12 @@ class SpecialPlayCardState:
         _init_transitions()
 
     func _init_transitions():
-        # TODO: 处理特殊出牌阶段
-        # var condition = Condition.DevCardEqualZeroCondition.new(_name)
-        add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, HSM.TrueCondition.new()))
+        _entry_actions.append(Action.notify_special_play(_name))
+        _exit_actions.append(Action.reset_net_state(_name))
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.PASS)
+        add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, condition))
+        condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.PLAY_CARD)
+        add_transition(HSM.Transition.new(get_state_in_parent(Card.PlayCardState), 0, condition))
 
 
 # 投掷骰子阶段

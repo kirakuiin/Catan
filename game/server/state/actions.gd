@@ -3,7 +3,7 @@ extends Node
 # 行动
 
 # 重置玩家状态
-static func reset_state(player_name: String) -> HSM.Action:
+static func reset_net_state(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "reset_player_net_state"), [player_name])
 
 
@@ -50,6 +50,11 @@ static func notify_place_road(player_name: String, is_setup: bool) -> HSM.Action
 # 通知放置道路
 static func notify_upgrade_city(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_upgrade_city"), [player_name])
+
+
+# 通知特殊出牌
+static func notify_special_play(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_special_play"), [player_name])
 
 
 # 给予发展卡

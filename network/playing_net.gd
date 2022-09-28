@@ -162,6 +162,11 @@ remotesync func rob_player():
     get_client().rob_player()
 
 
+# 通知客户端特殊出卡
+remotesync func special_play():
+    get_client().special_play()
+
+
 # 通知客户端播放消息
 remotesync func show_message(data):
     get_client().show_message(Protocol.deserialize(data))

@@ -17,6 +17,10 @@ func set_callback(cb: FuncRef, param: Array):
     _params = param
 
 
+func set_hint_color(color: Color):
+    modulate = color
+
+
 func set_pos(pos: Vector2):
     Util.set_center(self, pos)
 

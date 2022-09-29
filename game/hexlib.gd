@@ -249,10 +249,20 @@ static func get_corner_index(hex: Hex, corner: Corner) -> int:
 
 # 判断顶点是否属于六边形
 static func is_hex_corner(hex: Hex, corner: Corner) -> bool:
-    for hex_cor in hex.get_all_corner():
+    for hex_cor in get_all_corner(hex):
         if corner_equal(hex_cor, corner):
             return true
     return false
+
+
+# 返回两个六边形的交点
+static func hex_intersect(hex_a: Hex, hex_b: Hex) -> Array:
+    var result = []
+    var corner_a = get_all_corner(hex_a)
+    for corner in corner_a:
+        if is_hex_corner(hex_b, corner):
+            result.append(corner)
+    return result
 
 
 # 两个六边形之间的相对角度

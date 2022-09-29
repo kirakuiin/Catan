@@ -76,7 +76,7 @@ mouse_filter = 1
 mouse_default_cursor_shape = 2
 
 [node name="Point" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0.588235 )
+modulate = Color( 1, 1, 1, 0.490196 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 50, 50 )

@@ -81,7 +81,7 @@ class PlayerTurnState:
         return 'PlayerTurnState[%s]' % _name
 
     func _init_all_state():
-        # TODO: 实现分数计算
+        # TODO: 实现分数检查
         _machine.state_list.append(PrepareState.new(self, _name))
         _machine.state_list.append(SpecialPlayCardState.new(self, _name))
         _machine.state_list.append(RollDiceState.new(self, _name))

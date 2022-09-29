@@ -73,7 +73,7 @@ func _draw_base():
 
 func _draw_harbor():
 	for harbor_info in _map.harbor_list:
-		_tile_map[harbor_info.cube_pos].set_harbor_type(harbor_info.harbor_type, harbor_info.harbor_angle)
+		_tile_map[harbor_info.cube_pos].set_harbor_type(harbor_info.harbor_type, harbor_info.get_harbor_angle())
 
 
 func _generate_point():
@@ -91,6 +91,10 @@ func _create_corner_point(pos: Vector3):
 	_corner_point_map[pos] = hint
 	$Point.add_child(hint)
 	hint.set_pos(_corner_to_pos(pos))
+	if pos in _map.get_all_harbor_near_corner():
+		hint.set_hint_color(Color.aqua)
+	else:
+		hint.set_hint_color(Color.gold)
 
 func _corner_to_pos(pos: Vector3) -> Vector2:
 	var corner = Hexlib.create_corner(pos)
@@ -104,6 +108,7 @@ func _create_tile_point(pos: Vector3):
 	_tile_point_map[pos] = hint
 	$Point.add_child(hint)
 	hint.set_pos(Hexlib.hex_to_pixel(_get_layout(), Hexlib.create_hex(pos)))
+	hint.set_hint_color(Color.silver)
 
 
 func _init_signal():

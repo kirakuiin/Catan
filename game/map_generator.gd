@@ -215,8 +215,8 @@ func _add_harbor(map: Protocol.MapInfo) -> Protocol.MapInfo:
     var split = len(ocean_list) / Data.NUM_DATA[_setup_info.catan_size].harbor.total_num
     var data = Data.NUM_DATA[_setup_info.catan_size]["harbor"].duplicate(true)
     for idx in range(data.total_num):
-        map.harbor_list.append(Protocol.HarborInfo.new(ocean_list[idx*split], _get_random_harbor(data.each_num),
-                                                        _get_harbor_angle(map, ocean_list[idx*split])))
+        map.harbor_list.append(Protocol.HarborInfo.new(
+            ocean_list[idx*split], _get_harbor_near_pos(map, ocean_list[idx*split]), _get_random_harbor(data.each_num)))
     return map
 
 
@@ -252,8 +252,8 @@ func _find_first_ocean_tile(map: Protocol.MapInfo):
             return tile
 
 
-func _get_harbor_angle(map: Protocol.MapInfo, ocean_pos: Vector3):
+func _get_harbor_near_pos(map: Protocol.MapInfo, ocean_pos: Vector3) -> Vector3:
     var ocean_hex = map.grid_map[ocean_pos].to_hex()
     var neighbor_list := _get_all_neighbor(map, ocean_hex, false)
     var rand_hex = neighbor_list[Util.randi_range(0, len(neighbor_list))]
-    return Hexlib.hex_relative_angle(ocean_hex, rand_hex)
+    return rand_hex.to_vector3()

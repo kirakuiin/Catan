@@ -143,10 +143,10 @@ func dispatch_initial_res(player_name: String) -> Dictionary:
     # for res in res_list:
     #     var num = _give_res_to_player(player_name, res[0], 1)
     #     Util.dict_add(result, res[0], num)
-    var res_list = [[Data.ResourceType.WOOL, 1], [Data.ResourceType.ORE, 1], [Data.ResourceType.GRAIN, 1]]
+    var res_list = [[Data.ResourceType.LUMBER, 1], [Data.ResourceType.BRICK, 1], [Data.ResourceType.WOOL, 1], [Data.ResourceType.ORE, 1], [Data.ResourceType.GRAIN, 1]]
     var result = {}
     for res in res_list:
-        var num = _give_res_to_player(player_name, res[0], 10)
+        var num = _give_res_to_player(player_name, res[0], 8)
         Util.dict_add(result, res[0], num)
     return result
 

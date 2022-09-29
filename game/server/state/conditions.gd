@@ -106,3 +106,47 @@ class HasRollDiceCondition:
 
     func is_meet_condition() -> bool:
         return PlayingNet.get_server().has_roll_dice
+
+
+# 玩家剩余道路数量
+class PlayerRoadNumCondition:
+    extends HSM.Condition
+
+    var _name: String
+    var _num: int
+
+    func _init(player_name: String, num: int):
+        _name = player_name
+        _num = num
+
+    func is_meet_condition() -> bool:
+        var server = PlayingNet.get_server()
+        var cur_num = len(server.player_buildings[_name].road_info)
+        var max_num = Data.NUM_DATA[server.setup_info.catan_size].building.each_num[Data.BuildingType.ROAD]
+        return max_num-cur_num == _num
+
+
+# 玩家没有剩余道路
+class PlayerNoRoadCondition:
+    extends HSM.Condition
+
+    var _cond: HSM.Condition
+
+    func _init(player_name: String):
+        _cond = PlayerRoadNumCondition.new(player_name, 0)
+
+    func is_meet_condition() -> bool:
+        return _cond.is_meet_condition()
+
+
+# 玩家还剩余一条道路
+class PlayerOneRoadCondition:
+    extends HSM.Condition
+
+    var _cond: HSM.Condition
+
+    func _init(player_name: String):
+        _cond = PlayerRoadNumCondition.new(player_name, 1)
+
+    func is_meet_condition() -> bool:
+        return _cond.is_meet_condition()

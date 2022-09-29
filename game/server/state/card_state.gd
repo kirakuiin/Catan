@@ -148,13 +148,35 @@ class ExecuteRoadState:
         return "ExecuteRoadState[%s]" % _name
 
     func _init_all_state():
+        _machine.state_list.append(CheckRoadState.new(self, _name))
         _machine.state_list.append(PlaceRoadState.new(self, _name))
         _machine.state_list.append(PlaceRoadState.new(self, _name))
         _machine.state_list.append(PlayEndState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
-    func get_next_state(state):
-        return _machine.state_list[_machine.state_list.find(state)+1]
+    func get_state_by_idx(state, idx: int):
+        return _machine.state_list[_machine.state_list.find(state)+idx]
+
+
+# 检查放置道路
+class CheckRoadState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "CheckRoadState[%s]" % _name
+
+    func activiate():
+        var no_road = Condition.PlayerNoRoadCondition.new(_name)
+        var one_road = Condition.PlayerOneRoadCondition.new(_name)
+        var other = HSM.NotCondition.new(HSM.OrCondition.new([no_road, one_road]))
+        add_transition(HSM.Transition.new(get_parent_machine().get_state_by_idx(self, 1), 0, other))
+        add_transition(HSM.Transition.new(get_parent_machine().get_state_by_idx(self, 2), 0, one_road))
+        add_transition(HSM.Transition.new(get_parent_machine().get_state_by_idx(self, 3), 0, no_road))
 
 
 # 放置道路
@@ -173,7 +195,7 @@ class PlaceRoadState:
         _entry_actions.append(Action.notify_place_road(_name, false))
         _exit_actions.append(Action.reset_op_state(_name))
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
-        add_transition(HSM.Transition.new(get_parent_machine().get_next_state(self), 0, condition))
+        add_transition(HSM.Transition.new(get_parent_machine().get_state_by_idx(self, 1), 0, condition))
 
 
 # 丰年卡

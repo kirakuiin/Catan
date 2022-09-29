@@ -181,7 +181,7 @@ func _check_can_play_card() -> bool:
 		return false
 	elif _get_client().client_state == NetDefines.ClientState.PLAY_BEFORE_DICE and _type != Data.CardType.KNIGHT:
 		return false
-	elif _type in [Data.CardType.VP, Data.CardType.PLENTY, Data.CardType.MONOPOLY]: # TODO: 支持丰年和垄断
+	elif _type == Data.CardType.VP:
 		return false
 	else:
 		return true

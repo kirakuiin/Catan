@@ -167,6 +167,16 @@ remotesync func special_play():
     get_client().special_play()
 
 
+# 通知客户端选择获得资源
+remotesync func choose_res():
+    get_client().choose_res()
+
+
+# 通知客户端选择垄断类型
+remotesync func choose_mono_type():
+    get_client().choose_mono_type()
+
+
 # 通知客户端播放消息
 remotesync func show_message(data):
     get_client().show_message(Protocol.deserialize(data))

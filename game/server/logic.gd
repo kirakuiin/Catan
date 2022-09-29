@@ -423,3 +423,19 @@ func notify_special_play(player_name: String):
     _logger.logd("通知[%s]特殊出牌" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "special_play")
+
+
+# 通知选择获得资源
+func notify_choose_res(player_name: String):
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+    _logger.logd("通知[%s]选择获得的资源" % [player_name])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "choose_res")
+
+
+# 通知选择垄断类型
+func notify_choose_mono_type(player_name: String):
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+    _logger.logd("通知[%s]选择垄断的资源类型" % [player_name])
+    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    PlayingNet.rpc_id(peer_id, "choose_mono_type")

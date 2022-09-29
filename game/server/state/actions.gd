@@ -57,6 +57,16 @@ static func notify_special_play(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_special_play"), [player_name])
 
 
+# 通知选择资源
+static func notify_choose_res(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_choose_res"), [player_name])
+
+
+# 通知选择垄断类型
+static func notify_choose_mono_type(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_choose_mono_type"), [player_name])
+
+
 # 给予发展卡
 static func give_dev_card(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "give_dev_card"), [player_name])

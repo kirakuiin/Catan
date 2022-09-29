@@ -283,3 +283,15 @@ func rob_player():
 func special_play():
     change_client_state(NetDefines.ClientState.PLAY_BEFORE_DICE)
     show_hint("是否打出骑士卡?", true)
+
+
+# 选择资源
+func choose_res():
+    change_client_state(NetDefines.ClientState.CHOOSE_RES)
+    show_hint("选择两个任意资源...")
+
+
+# 选择垄断类型
+func choose_mono_type():
+    change_client_state(NetDefines.ClientState.CHOOSE_MONO_TYPE)
+    show_hint("选择一种类型的资源垄断...")

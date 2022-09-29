@@ -65,3 +65,5 @@ class ClientState:
     const DISCARD_RESOURCE: String="丢弃资源"
     const MOVE_ROBBER: String="移动强盗"
     const ROB_PLAYER: String="抢劫玩家"
+    const CHOOSE_RES: String="选择获得资源"
+    const CHOOSE_MONO_TYPE: String="选择垄断类型"

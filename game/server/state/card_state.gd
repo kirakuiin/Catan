@@ -191,8 +191,27 @@ class ExecutePlentyState:
         return "ExecutePlentyState[%s]" % _name
 
     func _init_all_state():
-        _machine.state_list.append(HSM.State.new(self))
+        _machine.state_list.append(ChooseResState.new(self, _name))
+        _machine.state_list.append(PlayEndState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
+
+
+# 选择资源状态
+class ChooseResState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "ChooseResState[%s]" % _name
+
+    func activiate():
+        _entry_actions.append(Action.notify_choose_res(_name))
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
+        add_transition(HSM.Transition.new(get_state_in_parent(PlayEndState), 0, condition))
 
 
 # 垄断卡
@@ -210,5 +229,24 @@ class ExecuteMonoState:
         return "ExecuteMonoState[%s]" % _name
 
     func _init_all_state():
-        _machine.state_list.append(HSM.State.new(self))
+        _machine.state_list.append(ChooseMonoTypeState.new(self, _name))
+        _machine.state_list.append(PlayEndState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
+
+
+# 选择垄断类型状态
+class ChooseMonoTypeState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "ChooseMonoTypeState[%s]" % _name
+
+    func activiate():
+        _entry_actions.append(Action.notify_choose_mono_type(_name))
+        var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
+        add_transition(HSM.Transition.new(get_state_in_parent(PlayEndState), 0, condition))

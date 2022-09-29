@@ -181,7 +181,7 @@ func _check_can_play_card() -> bool:
 	elif _get_client().client_state == NetDefines.ClientState.PLAY_BEFORE_DICE and _type != Data.CardType.KNIGHT:
 		_get_client().show_hint("此阶段只能打出骑士卡!")
 		return false
-	elif _get_client().personal_info.is_played_card:
+	elif _get_client().player_personals[_get_client().get_name()].is_played_card:
 		_get_client().show_hint("每回合只能打出一张牌!")
 		return false
 	else:

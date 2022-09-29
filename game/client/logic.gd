@@ -7,8 +7,8 @@ extends Node
 signal assist_info_changed(assist_info)  # 辅助信息改变
 signal bank_info_changed(bank_info)  # 银行信息改变
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
-signal score_info_changed(player_name, score_info)  # 得分信息改变
-signal personal_info_changed(personal_info)  # 个人信息改变
+signal card_info_changed(player_name, card_info)  # 得分信息改变
+signal personal_info_changed(player_name, personal_info)  # 个人信息改变
 signal client_state_changed(state)  # 客户端状态改变
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
@@ -28,8 +28,8 @@ var setup_info: Protocol.CatanSetupInfo
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
 var player_buildings: Dictionary
-var player_scores: Dictionary
-var personal_info: Protocol.PlayerPersonalInfo
+var player_cards: Dictionary
+var player_personals: Dictionary
 
 var client_state: String  # 客户端状态
 var build_mgr: BuildMgr
@@ -49,9 +49,10 @@ func _init_local_info():
     assist_info = Protocol.AssistInfo.new()
     bank_info = Protocol.BankInfo.new()
     player_buildings = {}
-    player_scores = {}
-    build_mgr = BuildMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size)
-    op_mgr = OpMgr.new(player_buildings, player_scores, setup_info.catan_size)
+    player_cards = {}
+    player_personals = {}
+    build_mgr = BuildMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size)
+    op_mgr = OpMgr.new(player_buildings, player_cards, setup_info.catan_size)
 
 
 func _ready():
@@ -225,16 +226,21 @@ func change_dice(info: Array):
 func init_building_info(building_infos: Dictionary):
     _logger.logd("建筑信息初始化[%s]" % [building_infos])
     for name in building_infos:
-        player_buildings[name] = building_infos[name]
-        emit_signal("building_info_changed", name, building_infos[name])
+        change_building_info(name, building_infos[name])
 
 
-# 初始化玩家的分数信息
-func init_score_info(score_infos: Dictionary):
-    _logger.logd("分数信息初始化[%s]" % [score_infos])
-    for name in score_infos:
-        player_scores[name] = score_infos[name]
-        emit_signal("score_info_changed", name, score_infos[name])
+# 初始化玩家的卡牌信息
+func init_card_info(card_infos: Dictionary):
+    _logger.logd("卡牌信息初始化[%s]" % [card_infos])
+    for name in card_infos:
+        change_card_info(name, card_infos[name])
+
+
+# 初始化玩家的个人信息
+func init_personal_info(personal_infos: Dictionary):
+    _logger.logd("个人信息初始化[%s]" % [personal_infos])
+    for name in personal_infos:
+        change_personal_info(name, personal_infos[name])
 
 
 # 修改指定玩家的建筑信息
@@ -244,18 +250,18 @@ func change_building_info(player_name: String, building_info: Protocol.PlayerBui
     emit_signal("building_info_changed", player_name, building_info)
 
 
-# 修改指定玩家的分数信息
-func change_score_info(player_name: String, score_info: Protocol.PlayerScoreInfo):
-    _logger.logd("玩家[%s]的分数信息改变[%s]" % [player_name, score_info])
-    player_scores[player_name] = score_info
-    emit_signal("score_info_changed", player_name, score_info)
+# 修改指定玩家的卡牌信息
+func change_card_info(player_name: String, card_info: Protocol.PlayerCardInfo):
+    _logger.logd("玩家[%s]的卡牌信息改变[%s]" % [player_name, card_info])
+    player_cards[player_name] = card_info
+    emit_signal("card_info_changed", player_name, card_info)
 
 
 # 修改玩家个人信息
-func change_personal_info(info: Protocol.PlayerPersonalInfo):
-    _logger.logd("个人信息改变[%s]" % [info])
-    personal_info = info
-    emit_signal("personal_info_changed", info)
+func change_personal_info(player_name: String, personal_info: Protocol.PlayerPersonalInfo):
+    _logger.logd("玩家[%s]个人信息改变[%s]" % [player_name, personal_info])
+    player_personals[player_name] = personal_info
+    emit_signal("personal_info_changed", player_name, personal_info)
 
 
 # 修改强盗位置

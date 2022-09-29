@@ -89,7 +89,7 @@ class DevCardEqualZeroCondition:
         _name = player_name
 
     func is_meet_condition() -> bool:
-        return len(PlayingNet.get_server().player_scores[_name].dev_cards) == 0
+        return len(PlayingNet.get_server().player_cards[_name].dev_cards) == 0
 
 
 # 骰子数为7

@@ -117,19 +117,19 @@ remotesync func change_bank_info(data):
     get_client().change_bank_info(Protocol.deserialize(data))
 
 
-# 通知客户端个人信息
-remotesync func change_personal_info(data):
-    get_client().change_personal_info(Protocol.deserialize(data))
-
-
 # 通知客户端初始化建筑信息
 remotesync func init_building_info(data):
     get_client().init_building_info(Protocol.deserialize(data))
 
 
-# 通知客户端初始化分数信息
-remotesync func init_score_info(data):
-    get_client().init_score_info(Protocol.deserialize(data))
+# 通知客户端初始化卡牌信息
+remotesync func init_card_info(data):
+    get_client().init_card_info(Protocol.deserialize(data))
+
+
+# 通知客户端初始化个人信息
+remotesync func init_personal_info(data):
+    get_client().init_personal_info(Protocol.deserialize(data))
 
 
 # 通知客户端修改指定玩家建筑信息
@@ -137,9 +137,14 @@ remotesync func change_building_info(player_name: String, data):
     get_client().change_building_info(player_name, Protocol.deserialize(data))
 
 
-# 通知客户端修改指定玩家分数信息
-remotesync func change_score_info(player_name: String, data):
-    get_client().change_score_info(player_name, Protocol.deserialize(data))
+# 通知客户端修改指定玩家卡牌信息
+remotesync func change_card_info(player_name: String, data):
+    get_client().change_card_info(player_name, Protocol.deserialize(data))
+
+
+# 通知客户端个人信息
+remotesync func change_personal_info(player_name: String, data):
+    get_client().change_personal_info(player_name, Protocol.deserialize(data))
 
 
 # 通知客户端更新骰子

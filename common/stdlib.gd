@@ -148,3 +148,42 @@ class SimpleState:
         exit()
         other.enter()
         return other
+
+
+# 常用函数
+
+# 合并数值字典
+static func num_dict_merge(dict_a: Dictionary, dict_b: Dictionary):
+    for k in dict_b:
+        num_dict_add(dict_a, k, dict_b[k])
+
+
+# 数值字典默认累加
+static func num_dict_add(dict: Dictionary, key, value):
+    if key in dict:
+        dict[key] += value
+    else:
+        dict[key] = value
+
+
+# 字典默认获取值
+static func dict_get(dict: Dictionary, key, default=null):
+    if key in dict:
+        return dict[key]
+    else:
+        return default
+
+# 求和
+static func sum(list: Array):
+    var total = 0
+    for num in list:
+        total += num
+    return total
+
+
+# 交换两个元素
+static func swap(container, idx_a, idx_b):
+    var var_a = container[idx_a]
+    var var_b = container[idx_b]
+    container[idx_a] = var_b
+    container[idx_b] = var_a

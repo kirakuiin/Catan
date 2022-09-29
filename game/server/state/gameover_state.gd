@@ -6,6 +6,7 @@ const Condition: Script = preload("res://game/server/state/conditions.gd")
 const Action: Script = preload("res://game/server/state/actions.gd")
 
 
+# TODO: 实现结束状态
 # 游戏结束
 class GameOverState:
     extends HSM.SubMachineState

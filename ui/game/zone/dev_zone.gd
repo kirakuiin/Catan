@@ -37,18 +37,18 @@ func _init_collision():
 
 
 func _init_signal():
-	_get_client().connect("score_info_changed", self, "_on_score_info_changed")
+	_get_client().connect("card_info_changed", self, "_on_card_info_changed")
 
 
 func _get_client():
 	return PlayingNet.get_client()
 
 
-func _on_score_info_changed(player_name: String, score_info: Protocol.PlayerScoreInfo):
+func _on_card_info_changed(player_name: String, card_info: Protocol.PlayerCardInfo):
 	if not _is_self(player_name):
 		return
-	for dev_type in score_info.dev_cards:
-		var num = score_info.dev_cards[dev_type]
+	for dev_type in card_info.dev_cards:
+		var num = card_info.dev_cards[dev_type]
 		_modify_pile(dev_type, num)
 	
 func _is_self(player_name: String):

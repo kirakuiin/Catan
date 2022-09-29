@@ -4,7 +4,7 @@ extends Reference
 
 var _map: Protocol.MapInfo
 var _buildings: Dictionary
-var _scores: Dictionary
+var _cards: Dictionary
 var _bank: Protocol.BankInfo
 var _size: int
 
@@ -13,10 +13,10 @@ var _num_to_corner: Dictionary
 var _robber_pos: Vector3
 
 
-func _init(map: Protocol.MapInfo, buildings: Dictionary, scores: Dictionary, catan_size: int, bank: Protocol.BankInfo):
+func _init(map: Protocol.MapInfo, buildings: Dictionary, cards: Dictionary, catan_size: int, bank: Protocol.BankInfo):
     _map = map
     _buildings = buildings
-    _scores = scores
+    _cards = cards
     _size = catan_size
     _bank = bank
     _init_num_corner()
@@ -41,8 +41,8 @@ func set_robber(robber_pos: Vector3):
 # 获得需要丢弃资源的玩家和需要丢弃的数量
 func get_discard_infos() -> Array:
     var discard_infos = {}
-    for player in _scores:
-        var total = Util.sum(_scores[player].res_cards.values())
+    for player in _cards:
+        var total = StdLib.sum(_cards[player].res_cards.values())
         if total >= 8:
             discard_infos[player] = total/2
     return discard_infos
@@ -59,24 +59,24 @@ func buy(player_name: String, type: int) -> Dictionary:
 func bank_give_res(player_name: String, res_info: Dictionary) -> Dictionary:
     var result = {}
     for res_type in res_info:
-        Util.merge_int_dict(result, {res_type: _give_res_to_player(player_name, res_type, res_info[res_type])})
+        StdLib.num_dict_merge(result, {res_type: _give_res_to_player(player_name, res_type, res_info[res_type])})
     return result
 
 
 # 垄断资源
 func monopoly_res(player_name: String, res_type: int) -> Dictionary:
     var affect = {player_name: {}}
-    for player in _scores:
+    for player in _cards:
         if player != player_name:
             var result = _monopoly_from_player(player, res_type)
             if result:
                 affect[player] = result
-                Util.merge_int_dict(affect[player_name], result)
-    Util.merge_int_dict(_scores[player_name].res_cards, affect[player_name])
+                StdLib.num_dict_merge(affect[player_name], result)
+    StdLib.num_dict_merge(_cards[player_name].res_cards, affect[player_name])
     return affect
 
 func _monopoly_from_player(player_name: String, res_type: int):
-    var cards = _scores[player_name].res_cards
+    var cards = _cards[player_name].res_cards
     var result = {}
     if res_type in cards and cards[res_type] != 0:
         result = {res_type: cards[res_type]}
@@ -86,7 +86,7 @@ func _monopoly_from_player(player_name: String, res_type: int):
 
 # 回收玩家资源
 func recycle_player_res(player_name: String, recycle_info):
-    var res_info = _scores[player_name].res_cards
+    var res_info = _cards[player_name].res_cards
     for res_type in recycle_info:
         res_info[res_type] -= recycle_info[res_type]
         _modify_capacity(res_type, recycle_info[res_type])
@@ -94,14 +94,14 @@ func recycle_player_res(player_name: String, recycle_info):
 
 # 抢劫资源
 func rob_resource(from: String, to: String) -> bool:
-    if from != to and Util.sum(_scores[to].res_cards.values()) > 0:
+    if from != to and StdLib.sum(_cards[to].res_cards.values()) > 0:
         _transmit_res_to_player(to, {_random_choice_res(to): 1,}, from)
         return true
     else:
         return false
 
 func _random_choice_res(player: String) -> int:
-    var res_cards = _scores[player].res_cards
+    var res_cards = _cards[player].res_cards
     var types = []
     for type in res_cards:
         for _i in res_cards[type]:
@@ -112,8 +112,8 @@ func _random_choice_res(player: String) -> int:
 func _transmit_res_to_player(from: String, res_info: Dictionary, to: String):
     for res_type in res_info:
         var num = res_info[res_type]
-        _scores[from].res_cards[res_type] -= num
-    Util.merge_int_dict(_scores[to].res_cards, res_info)
+        _cards[from].res_cards[res_type] -= num
+    StdLib.num_dict_merge(_cards[to].res_cards, res_info)
 
 
 # 根据点数分配资源
@@ -123,12 +123,12 @@ func dispatch_by_num(num: int) -> Dictionary:
         for player in _buildings:
             var result = {}
             if corner in _buildings[player].settlement_info:
-                Util.merge_int_dict(result, _update_building_res(player, corner, num, 1))
+                StdLib.num_dict_merge(result, _update_building_res(player, corner, num, 1))
             if corner in _buildings[player].city_info:
-                Util.merge_int_dict(result, _update_building_res(player, corner, num, 2))
+                StdLib.num_dict_merge(result, _update_building_res(player, corner, num, 2))
             if result:
                 if player in affect_player:
-                    Util.merge_int_dict(affect_player[player], result)
+                    StdLib.num_dict_merge(affect_player[player], result)
                 else:
                     affect_player[player] = result
     return affect_player
@@ -142,12 +142,12 @@ func dispatch_initial_res(player_name: String) -> Dictionary:
     # var result = {}
     # for res in res_list:
     #     var num = _give_res_to_player(player_name, res[0], 1)
-    #     Util.dict_add(result, res[0], num)
+    #     StdLib.num_dict_add(result, res[0], num)
     var res_list = [[Data.ResourceType.LUMBER, 1], [Data.ResourceType.BRICK, 1], [Data.ResourceType.WOOL, 1], [Data.ResourceType.ORE, 1], [Data.ResourceType.GRAIN, 1]]
     var result = {}
     for res in res_list:
         var num = _give_res_to_player(player_name, res[0], 8)
-        Util.dict_add(result, res[0], num)
+        StdLib.num_dict_add(result, res[0], num)
     return result
 
 
@@ -156,7 +156,7 @@ func _update_building_res(player: String, corner: Vector3, point: int, unit: int
     var result = {}
     for res_type in res:
         var num = _give_res_to_player(player, res_type, unit)
-        Util.dict_add(result, res_type, num)
+        StdLib.num_dict_add(result, res_type, num)
     return result
 
 func _find_corner_res_with_point(corner_pos: Vector3, point: int) -> Array:
@@ -191,10 +191,10 @@ func _filter_invalid_tile(hexs: Array):
 func _give_res_to_player(player: String, res_type: int, num: int) -> int:
     var avail_num = min(_bank.res_info[res_type], num)
     _modify_capacity(res_type, -avail_num)
-    if not res_type in _scores[player].res_cards:
-        _scores[player].res_cards[res_type] = avail_num
+    if not res_type in _cards[player].res_cards:
+        _cards[player].res_cards[res_type] = avail_num
     else:
-        _scores[player].res_cards[res_type] += avail_num
+        _cards[player].res_cards[res_type] += avail_num
     return avail_num
 
 func _modify_capacity(res_type: int, num: int):

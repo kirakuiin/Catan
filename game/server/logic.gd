@@ -7,6 +7,7 @@ const State: Script = preload("res://game/server/state/state.gd")
 const Dice: Script = preload("res://game/server/dice.gd")
 const ResMgr: Script = preload("res://game/server/res_mgr.gd")
 const CardMgr: Script = preload("res://game/server/card_mgr.gd")
+const VPMgr: Script = preload("res://game/server/vp_mgr.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -14,8 +15,8 @@ var order_info: Protocol.PlayerOrderInfo
 var setup_info: Protocol.CatanSetupInfo
 
 var player_buildings: Dictionary
-var player_scores: Dictionary
-var player_infos: Dictionary
+var player_cards: Dictionary
+var player_personals: Dictionary
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
 
@@ -27,6 +28,7 @@ var has_roll_dice: bool
 var _server_state: HSM.StateMachine
 var _robber_pos: Vector3
 var _res_mgr: ResMgr
+var _vp_mgr: VPMgr
 var _card_mgr: CardMgr
 var _logger: Log.Logger
 
@@ -46,6 +48,7 @@ func _ready():
     _init_robber()
     _init_state_machine()
     _init_player_state()
+    _init_mgr()
     ConnState.to_playing(order_info.order_to_name.values())
     _logger.logi("游戏服务端启动...")
 
@@ -55,20 +58,12 @@ func _init_node_setup():
     add_to_group(NetDefines.SERVER_NAME)
 
 
-func _init_player_state():
-    for name in order_info.order_to_name.values():
-        player_net_state[name] = NetDefines.PlayerNetState.NOT_READY
-    for name in order_info.order_to_name.values():
-        player_op_state[name] = NetDefines.PlayerOpStruct.new()
-
-
 func _init_player_info():
     player_buildings = {}
-    player_scores = {}
+    player_cards = {}
+    player_personals = {}
     assist_info = Protocol.AssistInfo.new()
     bank_info = Protocol.BankInfo.new(setup_info.catan_size)
-    _res_mgr = ResMgr.new(map_info, player_buildings, player_scores, setup_info.catan_size, bank_info)
-    _card_mgr = CardMgr.new(player_scores, setup_info.catan_size, bank_info)
 
 
 func _init_robber():
@@ -78,6 +73,23 @@ func _init_robber():
             canditate_pos.append(tile.cube_pos)
     canditate_pos.shuffle()
     _robber_pos = canditate_pos[0]
+
+
+func _init_state_machine():
+    _server_state = State.CatanStateMachine.new(self)
+
+
+func _init_player_state():
+    for name in order_info.order_to_name.values():
+        player_net_state[name] = NetDefines.PlayerNetState.NOT_READY
+    for name in order_info.order_to_name.values():
+        player_op_state[name] = NetDefines.PlayerOpStruct.new()
+
+
+func _init_mgr():
+    _res_mgr = ResMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size, bank_info)
+    _card_mgr = CardMgr.new(player_cards, setup_info.catan_size, bank_info)
+    _vp_mgr = VPMgr.new(player_cards, player_buildings, assist_info)
 
 
 func _process(delta):
@@ -92,17 +104,7 @@ func _process(delta):
 func _execute_result(result: HSM.UpdateResult):
     for action in result.actions:
         action.invoke()
-
-
-func _init_state_machine():
-    _server_state = State.CatanStateMachine.new(self)
     
-
-func _init_player(player_name: String):
-    player_buildings[player_name] = Protocol.PlayerBuildingInfo.new()
-    player_scores[player_name] = Protocol.PlayerScoreInfo.new()
-    player_infos[player_name] = Protocol.PlayerPersonalInfo.new()
-
 
 # Public
 
@@ -141,7 +143,7 @@ func dispatch_resource():
     var affect = _res_mgr.dispatch_by_num(dice.get_last_num())
     broadcast_bank_info()
     for player in affect.keys():
-        change_score_info(player)
+        change_card_info(player)
         broadcast_message(Message.get_res(player, affect[player]))
 
 
@@ -150,7 +152,7 @@ func initial_resource(player_name: String):
     _res_mgr.set_robber(_robber_pos)
     var result = _res_mgr.dispatch_initial_res(player_name)
     broadcast_bank_info()
-    change_score_info(player_name)
+    change_card_info(player_name)
     broadcast_message(Message.get_res(player_name, result))
 
 
@@ -171,7 +173,7 @@ func discard_resource():
 
 # 设置出卡状态
 func set_play_card(player_name: String, is_play: bool):
-    player_infos[player_name].is_played_card = is_play
+    player_personals[player_name].is_played_card = is_play
     change_personal_info(player_name)
 
 
@@ -180,7 +182,9 @@ func set_play_card(player_name: String, is_play: bool):
 
 # 全部玩家就绪
 func client_ready(player_name: String):
-    _init_player(player_name)
+    player_buildings[player_name] = Protocol.PlayerBuildingInfo.new()
+    player_cards[player_name] = Protocol.PlayerCardInfo.new()
+    player_personals[player_name] = Protocol.PlayerPersonalInfo.new()
     change_player_net_state(player_name, NetDefines.PlayerNetState.READY)
 
 
@@ -201,7 +205,7 @@ func request_place_settlement(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_SETTLEMENT)
     _res_mgr.buy(player_name, Data.OpType.SETTLEMENT)
     broadcast_bank_info()
-    change_score_info(player_name)
+    change_card_info(player_name)
 
 
 # 请求放置道路
@@ -209,7 +213,7 @@ func request_place_road(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_ROAD)
     _res_mgr.buy(player_name, Data.OpType.ROAD)
     broadcast_bank_info()
-    change_score_info(player_name)
+    change_card_info(player_name)
 
 
 # 请求升级城市
@@ -217,7 +221,7 @@ func request_upgrade_city(player_name: String):
     _res_mgr.buy(player_name, Data.OpType.CITY)
     broadcast_bank_info()
     change_player_op_state(player_name, NetDefines.PlayerOpState.UPGRADE_CITY)
-    change_score_info(player_name)
+    change_card_info(player_name)
 
 
 # 请求升级城市
@@ -256,7 +260,7 @@ func upgrade_city(player_name: String, pos: Vector3):
 func play_card(player: String, dev_type: int):
     _logger.logd("玩家[%s]打出卡牌[%d]" % [player, dev_type])
     _card_mgr.play_card(player, dev_type)
-    change_score_info(player)
+    change_card_info(player)
     broadcast_message(Message.play_card(player, dev_type))
     change_player_op_state(player, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
 
@@ -265,7 +269,7 @@ func play_card(player: String, dev_type: int):
 func discard_done(player_name: String, discard_info: Dictionary):
     _logger.logd("玩家[%s]丢弃资源[%s]" % [player_name, discard_info])
     _res_mgr.recycle_player_res(player_name, discard_info)
-    change_score_info(player_name)
+    change_card_info(player_name)
     broadcast_bank_info()
     broadcast_message(Message.discard(player_name, discard_info))
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
@@ -285,8 +289,8 @@ func rob_player_done(robber: String, robbed_player: String):
     var rob_result = _res_mgr.rob_resource(robber, robbed_player)
     if rob_result:
         broadcast_message(Message.rob_player(robber, robbed_player))
-        change_score_info(robber)
-        change_score_info(robbed_player)
+        change_card_info(robber)
+        change_card_info(robbed_player)
     change_player_net_state(robber, NetDefines.PlayerNetState.DONE)
 
 
@@ -296,7 +300,7 @@ func choose_res_done(player_name: String, res_info: Dictionary):
     var result = _res_mgr.bank_give_res(player_name, res_info)
     broadcast_message(Message.get_res(player_name, result))
     broadcast_bank_info()
-    change_score_info(player_name)
+    change_card_info(player_name)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
@@ -309,7 +313,7 @@ func choose_mono_type_done(player_name: String, type: int):
             broadcast_message(Message.get_res(player, affect[player]))
         else:
             broadcast_message(Message.lost_res(player, affect[player]))
-        change_score_info(player)
+        change_card_info(player)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 # S2C
@@ -343,7 +347,7 @@ func give_dev_card(player_name):
     var type = _card_mgr.give_card_to_player(player_name)
     _logger.logd("分配玩家[%s]发展卡[%d]" % [player_name, type])
     broadcast_bank_info()
-    change_score_info(player_name)
+    change_card_info(player_name)
     broadcast_message(Message.buy_dev_card(player_name))
 
 
@@ -352,13 +356,6 @@ func notify_free_action(player_name: String):
     _logger.logd("通知玩家[%s]自由行动" % [player_name])
     var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
     PlayingNet.rpc_id(peer_id, "into_free_action")
-
-
-# 通知玩家个人信息变化
-func change_personal_info(player_name: String):
-    _logger.logd("通知玩家[%s]个人信息改变[%s]" % [player_name, player_infos[player_name]])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
-    PlayingNet.rpc_id(peer_id, "change_personal_info", Protocol.serialize(player_infos[player_name]))
 
 
 # 广播辅助信息
@@ -379,10 +376,16 @@ func broadcast_building_info():
     PlayingNet.rpc("init_building_info", Protocol.serialize(player_buildings))
 
 
-# 广播分数信息
-func broadcast_score_info():
-    _logger.logd("广播分数信息[%s]" % player_scores)
-    PlayingNet.rpc("init_score_info", Protocol.serialize(player_scores))
+# 广播卡牌信息
+func broadcast_card_info():
+    _logger.logd("广播卡牌信息[%s]" % player_cards)
+    PlayingNet.rpc("init_card_info", Protocol.serialize(player_cards))
+
+
+# 广播卡牌信息
+func broadcast_personal_info():
+    _logger.logd("广播个人信息[%s]" % player_personals)
+    PlayingNet.rpc("init_personal_info", Protocol.serialize(player_personals))
 
 
 # 广播消息
@@ -403,10 +406,16 @@ func change_building_info(player_name: String):
     PlayingNet.rpc("change_building_info", player_name, Protocol.serialize(player_buildings[player_name]))
 
 
-# 更新玩家分数信息
-func change_score_info(player_name: String):
-    _logger.logd("更新玩家[%s]分数信息[%s]" % [player_name, player_scores[player_name]])
-    PlayingNet.rpc("change_score_info", player_name, Protocol.serialize(player_scores[player_name]))
+# 更新玩家卡牌信息
+func change_card_info(player_name: String):
+    _logger.logd("更新玩家[%s]卡牌信息[%s]" % [player_name, player_cards[player_name]])
+    PlayingNet.rpc("change_card_info", player_name, Protocol.serialize(player_cards[player_name]))
+
+
+# 更新玩家个人信息
+func change_personal_info(player_name: String):
+    _logger.logd("更新玩家[%s]个人信息改变[%s]" % [player_name, player_personals[player_name]])
+    PlayingNet.rpc("change_personal_info", player_name, Protocol.serialize(player_personals[player_name]))
 
 
 # 移动强盗

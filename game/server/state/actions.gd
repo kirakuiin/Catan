@@ -22,9 +22,14 @@ static func broadcast_bank() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_bank_info"), [])
 
 
-# 广播分数信息
-static func broadcast_scores() -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_score_info"), [])
+# 广播卡牌信息
+static func broadcast_cards() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_card_info"), [])
+
+
+# 广播个人信息
+static func broadcast_personals() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_personal_info"), [])
 
 
 # 广播强盗信息

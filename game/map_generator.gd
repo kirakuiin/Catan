@@ -130,7 +130,7 @@ func _randomize_resource(count_dict: Dictionary):
     for idx in count_dict:
         var swap_idx = count_dict.keys()[Util.randi_range(0, length)]
         if idx != Data.TileType.DESERT and swap_idx != Data.TileType.DESERT:
-            Util.swap(count_dict, idx, swap_idx)
+            StdLib.swap(count_dict, idx, swap_idx)
 
 
 func _get_random_type(count_dict: Dictionary):

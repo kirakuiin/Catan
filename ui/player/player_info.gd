@@ -31,8 +31,9 @@ func _init_format():
 
 func _init_signal():
     PlayingNet.get_client().connect("assist_info_changed", self, "_on_player_assist_changed")
-    PlayingNet.get_client().connect("score_info_changed", self, "_on_player_score_changed")
+    PlayingNet.get_client().connect("card_info_changed", self, "_on_player_card_changed")
     PlayingNet.get_client().connect("building_info_changed", self, "_on_player_building_changed")
+    PlayingNet.get_client().connect("personal_info_changed", self, "_on_player_personal_changed")
 
 
 func _get_data(type: int):
@@ -56,10 +57,14 @@ func _on_player_building_changed(name: String, building_info: Protocol.PlayerBui
         $HBox/Grid/Road.set_num(len(building_info.road_info))
 
 
-func _on_player_score_changed(name: String, score_info: Protocol.PlayerScoreInfo):
+func _on_player_card_changed(name: String, card_info: Protocol.PlayerCardInfo):
     if name == _name:
-        $HBox/Grid/VP.set_num(score_info.vic_point)
-        $HBox/Grid/Resource.set_num(Util.sum(score_info.res_cards.values()))
-        $HBox/Grid/Card.set_num(Util.sum(score_info.dev_cards.values()))
-        $HBox/Grid/LongestRoad.set_num(score_info.continue_road)
-        $HBox/Grid/BiggestArmy.set_num(score_info.army_num)
+        $HBox/Grid/Resource.set_num(StdLib.sum(card_info.res_cards.values()))
+        $HBox/Grid/Card.set_num(StdLib.sum(card_info.dev_cards.values()))
+
+
+func _on_player_personal_changed(name: String, personal_info: Protocol.PlayerPersonalInfo):
+    if name == _name:
+        $HBox/Grid/VP.set_num(personal_info.vic_point)
+        $HBox/Grid/LongestRoad.set_num(personal_info.continue_road)
+        $HBox/Grid/BiggestArmy.set_num(personal_info.army_num)

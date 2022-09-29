@@ -21,7 +21,7 @@ func init():
 
 
 func _init_signal():
-    _get_client().connect("score_info_changed", self, "_on_score_info_changed")
+    _get_client().connect("card_info_changed", self, "_on_card_info_changed")
     _get_client().connect("resource_discarded", self, "_on_resource_discarded")
 
 
@@ -29,11 +29,11 @@ func _get_client():
     return PlayingNet.get_client()
 
 
-func _on_score_info_changed(player_name: String, score_info: Protocol.PlayerScoreInfo):
+func _on_card_info_changed(player_name: String, card_info: Protocol.PlayerCardInfo):
     if not _is_self(player_name):
         return
-    for res_type in score_info.res_cards:
-        var num = score_info.res_cards[res_type]
+    for res_type in card_info.res_cards:
+        var num = card_info.res_cards[res_type]
         if num == 0:
             _del_card(res_type)
         else:
@@ -122,7 +122,7 @@ func _on_dec(button):
 
 
 func _calc_discard_diff():
-    var total = Util.sum(_discard_info.values())
+    var total = StdLib.sum(_discard_info.values())
     return _need_discard_num - total
 
 

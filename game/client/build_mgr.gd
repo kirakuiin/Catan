@@ -4,17 +4,17 @@ extends Reference
 
 var _map: Protocol.MapInfo
 var _buildings: Dictionary
-var _scores: Dictionary
+var _cards: Dictionary
 var _size: int
 var _robber_pos: Vector3
 
 var _point_info: StdLib.Set
 
 
-func _init(map: Protocol.MapInfo, buildings: Dictionary, scores: Dictionary, catan_size: int):
+func _init(map: Protocol.MapInfo, buildings: Dictionary, cards: Dictionary, catan_size: int):
     _map = map
     _buildings = buildings
-    _scores = scores
+    _cards = cards
     _size = catan_size
     _init_point_info()
 

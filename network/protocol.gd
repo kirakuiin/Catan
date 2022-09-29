@@ -15,7 +15,7 @@ static func get_cls(cls_name) -> ProtocolData:
 		"TileInfo": TileInfo,
 		"MapInfo": MapInfo,
 		"HarborInfo": HarborInfo,
-		"PlayerScoreInfo": PlayerScoreInfo,
+		"PlayerCardInfo": PlayerCardInfo,
 		"PlayerBuildingInfo": PlayerBuildingInfo,
 		"RoadInfo": RoadInfo,
 		"PlayerPersonalInfo": PlayerPersonalInfo,
@@ -223,24 +223,18 @@ class MapInfo:
 		harbor_list.append(harbor_type)
 
 
-# 玩家分数信息
-class PlayerScoreInfo:
+# 玩家卡牌信息
+class PlayerCardInfo:
 	extends ProtocolData
 
 	var res_cards: Dictionary
 	var dev_cards: Dictionary
-	var vic_point: int
-	var army_num: int
-	var continue_road: int
 
-	func _init(res: Dictionary={}, dev: Dictionary={}, vp: int=0, army :int=0, cont :int=0):
-		cls_name = "PlayerScoreInfo"
+	func _init(res: Dictionary={}, dev: Dictionary={}):
+		cls_name = "PlayerCardInfo"
 		res_cards = res
 		dev_cards = dev
-		vic_point = vp
-		army_num = army
-		continue_road = cont
-	
+
 
 # 玩家建筑信息
 class PlayerBuildingInfo:
@@ -285,10 +279,16 @@ class PlayerPersonalInfo:
 	extends ProtocolData
 	
 	var is_played_card: bool
+	var vic_point: int
+	var army_num: int
+	var continue_road: int
 
-	func _init(is_played=false):
+	func _init(is_played=false, vp: int=0, army :int=0, cont :int=0):
 		cls_name = "PlayerPersonalInfo"
 		is_played_card = is_played
+		vic_point = vp
+		army_num = army
+		continue_road = cont
 
 
 # 辅助信息

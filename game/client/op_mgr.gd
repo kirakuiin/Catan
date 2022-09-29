@@ -4,40 +4,40 @@ extends Reference
 
 
 var _buildings: Dictionary
-var _scores: Dictionary
+var _cards: Dictionary
 var _size: int
 
 
-func _init(buildings: Dictionary, scores: Dictionary, catan_size: int):
+func _init(buildings: Dictionary, cards: Dictionary, catan_size: int):
     _buildings = buildings
-    _scores = scores
+    _cards = cards
     _size = catan_size
 
 
 # 是否可以购买发展卡
 func can_buy_dev() -> bool:
-    return _is_greater_than_required(_scores[_get_name()].res_cards, _get_required(Data.OpType.DEV_CARD))
+    return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.DEV_CARD))
 
 
 # 是否升级道路
 func can_upgrade_city() -> bool:
     if len(_buildings[_get_name()].city_info) == _get_building_limit(Data.OpType.CITY):
         return false
-    return _is_greater_than_required(_scores[_get_name()].res_cards, _get_required(Data.OpType.CITY))
+    return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.CITY))
 
 
 # 是否可以放置道路
 func can_place_road() -> bool:
     if len(_buildings[_get_name()].road_info) == _get_building_limit(Data.OpType.ROAD):
         return false
-    return _is_greater_than_required(_scores[_get_name()].res_cards, _get_required(Data.OpType.ROAD))
+    return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.ROAD))
 
 
 # 是否可以放置定居点
 func can_place_settlement() -> bool:
     if len(_buildings[_get_name()].settlement_info) == _get_building_limit(Data.OpType.SETTLEMENT):
         return false
-    return _is_greater_than_required(_scores[_get_name()].res_cards, _get_required(Data.OpType.SETTLEMENT))
+    return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.SETTLEMENT))
 
 func _get_building_limit(type: int) -> int:
     return Data.NUM_DATA[_size].building.each_num[type]

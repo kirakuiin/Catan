@@ -57,7 +57,7 @@ func _notify_client_result(result: Array):
 func _array_to_dict(arr: Array) -> Dictionary:
 	var result = {}
 	for type in arr:
-		Util.dict_add(result, type, 1)
+		StdLib.num_dict_add(result, type, 1)
 	return result
 
 

@@ -40,6 +40,11 @@ master func request_buy_dev_card(player_name: String):
     get_server().request_buy_dev_card(player_name)
 
 
+# 请求打出卡牌
+master func request_play_card(player_name: String, dev_type: int):
+    get_server().play_card(player_name, dev_type)
+
+
 # 客户端放置定居点结束
 master func place_settlement_done(player_name: String, pos: Vector3):
     get_server().add_settlement(player_name, pos)
@@ -75,9 +80,14 @@ master func rob_player_done(player_name: String, robbed_player: String):
     get_server().rob_player_done(player_name, robbed_player)
 
 
-# 打出卡牌
-master func play_card(player_name: String, dev_type: int):
-    get_server().play_card(player_name, dev_type)
+# 选择资源完毕
+master func choose_res_done(player_name: String, result: Dictionary):
+    get_server().choose_res_done(player_name, result)
+
+
+# 选择垄断资源完毕
+master func choose_mono_type_done(player_name: String, result: int):
+    get_server().choose_mono_type_done(player_name, result)
 
 
 # S2C

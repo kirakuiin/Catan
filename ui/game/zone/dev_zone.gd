@@ -23,7 +23,7 @@ func get_area():
 # 打出卡牌
 func play_card(dev_type):
 	_modify_pile(dev_type, _card_dict[dev_type].get_num()-1)
-	_get_client().play_card(dev_type)
+	_get_client().request_play_card(dev_type)
 
 
 func init():

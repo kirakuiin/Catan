@@ -142,7 +142,7 @@ func dispatch_resource():
     broadcast_bank_info()
     for player in affect.keys():
         change_score_info(player)
-        broadcast_message(Message.dispatch_res(player, affect[player]))
+        broadcast_message(Message.get_res(player, affect[player]))
 
 
 # 初始化分配资源
@@ -151,7 +151,7 @@ func initial_resource(player_name: String):
     var result = _res_mgr.dispatch_initial_res(player_name)
     broadcast_bank_info()
     change_score_info(player_name)
-    broadcast_message(Message.dispatch_res(player_name, result))
+    broadcast_message(Message.get_res(player_name, result))
 
 
 # 延迟
@@ -231,16 +231,16 @@ func request_buy_dev_card(player_name: String):
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
     change_building_info(player_name)
-    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_message(Message.place_settlement(player_name))
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
 # 增加指定玩家的道路
 func add_road(player_name: String, road: Protocol.RoadInfo):
     player_buildings[player_name].road_info.append(road)
     change_building_info(player_name)
-    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_message(Message.place_road(player_name))
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
 # 增加指定玩家城市
@@ -248,26 +248,35 @@ func upgrade_city(player_name: String, pos: Vector3):
     player_buildings[player_name].city_info.append(pos)
     player_buildings[player_name].settlement_info.erase(pos)
     change_building_info(player_name)
-    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_message(Message.upgrade_city(player_name))
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
+
+
+# 打出卡牌
+func play_card(player: String, dev_type: int):
+    _logger.logd("玩家[%s]打出卡牌[%d]" % [player, dev_type])
+    _card_mgr.play_card(player, dev_type)
+    change_score_info(player)
+    broadcast_message(Message.play_card(player, dev_type))
+    change_player_op_state(player, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
 
 
 # 丢弃资源完毕
 func discard_done(player_name: String, discard_info: Dictionary):
     _logger.logd("玩家[%s]丢弃资源[%s]" % [player_name, discard_info])
     _res_mgr.recycle_player_res(player_name, discard_info)
-    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     change_score_info(player_name)
     broadcast_bank_info()
     broadcast_message(Message.discard(player_name, discard_info))
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
 # 移动强盗完毕
 func move_robber_done(player_name: String, pos: Vector3):
     _logger.logd("玩家[%s]强盗移动至%s" % [player_name, str(pos)])
     _robber_pos = pos
-    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
     broadcast_robber_pos()
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
     
 # 抢劫玩家完毕
@@ -281,14 +290,27 @@ func rob_player_done(robber: String, robbed_player: String):
     change_player_net_state(robber, NetDefines.PlayerNetState.DONE)
 
 
-# 打出卡牌
-func play_card(player: String, dev_type: int):
-    _logger.logd("玩家[%s]打出卡牌[%d]" % [player, dev_type])
-    _card_mgr.play_card(player, dev_type)
-    change_score_info(player)
-    broadcast_message(Message.play_card(player, dev_type))
-    change_player_op_state(player, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
+# 选择资源完毕
+func choose_res_done(player_name: String, res_info: Dictionary):
+    _logger.logd("玩家[%s]选择资源%s" % [player_name, res_info])
+    var result = _res_mgr.bank_give_res(player_name, res_info)
+    broadcast_message(Message.get_res(player_name, result))
+    broadcast_bank_info()
+    change_score_info(player_name)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
+
+# 选择垄断资源完毕
+func choose_mono_type_done(player_name: String, type: int):
+    _logger.logd("玩家[%s]选择资源[%s]" % [player_name, type])
+    var affect = _res_mgr.monopoly_res(player_name, type)
+    for player in affect:
+        if player == player_name:
+            broadcast_message(Message.get_res(player, affect[player]))
+        else:
+            broadcast_message(Message.lost_res(player, affect[player]))
+        change_score_info(player)
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 # S2C
 

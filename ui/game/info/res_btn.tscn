@@ -1,10 +1,48 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/icons/ore.png" type="Texture" id=1]
+[ext_resource path="res://assets/icons/wool.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/hint_circle.png" type="Texture" id=2]
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=3]
+[ext_resource path="res://ui/game/info/res_btn.gd" type="Script" id=4]
 
-[node name="ResBtn" type="TextureButton"]
-margin_right = 80.0
-margin_bottom = 80.0
+[node name="ResBtn" type="Control"]
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 180.0
+margin_bottom = 180.0
+script = ExtResource( 4 )
+
+[node name="Btn" type="TextureButton" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 80, 80 )
 texture_normal = ExtResource( 1 )
 expand = true
 stretch_mode = 5
+
+[node name="Selected" type="TextureRect" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1.0
+margin_right = -1.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="Num" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -33.0
+margin_right = 20.0
+margin_bottom = 33.0
+theme = ExtResource( 3 )
+theme_type_variation = "BigLabel"
+align = 1
+valign = 1
+
+[connection signal="button_down" from="Btn" to="." method="_on_select"]

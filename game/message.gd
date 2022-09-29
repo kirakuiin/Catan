@@ -63,10 +63,24 @@ static func buy_dev_card(player_name: String) -> Protocol.MessageInfo:
 
 
 # 得到分配资源消息
-static func dispatch_res(player_name: String, res_info: Dictionary) -> Protocol.MessageInfo:
+static func get_res(player_name: String, res_info: Dictionary) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()
     message.add_player(player_name)
-    message.add_text("收获资源: ")
+    if res_info:
+        message.add_text("得到资源: ")
+        for res_type in res_info:
+            message.add_resource(res_type)
+            message.add_text("[%d] " % res_info[res_type])
+    else:
+        message.add_text("没有得到资源.")
+    return message
+
+
+# 失去资源信息
+static func lost_res(player_name: String, res_info: Dictionary) -> Protocol.MessageInfo:
+    var message = Protocol.MessageInfo.new()
+    message.add_player(player_name)
+    message.add_text("失去资源: ")
     for res_type in res_info:
         message.add_resource(res_type)
         message.add_text("[%d] " % res_info[res_type])

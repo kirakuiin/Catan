@@ -47,7 +47,12 @@ static func color_to_str(color: Color):
 # 合并字典
 static func merge_int_dict(dict_a: Dictionary, dict_b: Dictionary):
     for k in dict_b:
-        if k in dict_a:
-            dict_a[k] += dict_b[k]
-        else:
-            dict_a[k] = dict_b[k]
+        dict_add(dict_a, k, dict_b[k])
+
+
+# 字典默认累加
+static func dict_add(dict: Dictionary, key, value):
+    if key in dict:
+        dict[key] += value
+    else:
+        dict[key] = value

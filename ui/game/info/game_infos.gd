@@ -7,6 +7,7 @@ extends Control
 const BULLET_NUM: int = 6
 const PLAY_TIME: int = 5000
 const Bullet: PackedScene = preload("res://ui/game/info/bullet_info.tscn")
+const ResPop: PackedScene = preload("res://ui/game/info/res_popup.tscn")
 
 var _bullet_track: Array
 
@@ -65,6 +66,15 @@ func _on_player_hint_showed(hint: String, is_always_show: bool):
 
 func _on_client_state_changed(state: String):
     $SingleInfo.hide()
+    _create_popup(state)
+
+func _create_popup(state: String):
+    var popup = ResPop.instance()
+    add_child(popup)
+    if state == NetDefines.ClientState.CHOOSE_MONO_TYPE:
+        popup.popup_choose_mono_type()
+    elif state == NetDefines.ClientState.CHOOSE_RES:
+        popup.popup_choose_res()
 
 
 func _on_message_received(message: Protocol.MessageInfo):

@@ -115,6 +115,13 @@ func request_buy_dev_card():
     PlayingNet.rpc("request_buy_dev_card", get_name())
 
 
+# 请求打出卡牌
+func request_play_card(dev_type: int):
+    _logger.logd("玩家[%s]打出卡牌[%d]" % [get_name(), dev_type])
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("request_play_card", get_name(), dev_type)
+
+
 # 放置定居点完毕
 func place_settlement_done(pos: Vector3):
     change_client_state(NetDefines.ClientState.IDLE)
@@ -160,11 +167,18 @@ func rob_player_done(player: String):
     PlayingNet.rpc("rob_player_done", get_name(), player)
 
 
-# 打出卡牌
-func play_card(dev_type: int):
-    _logger.logd("玩家[%s]打出卡牌[%d]" % [get_name(), dev_type])
+# 选择资源完毕
+func choose_res_done(result: Dictionary):
+    _logger.logd("玩家[%s]选择资源%s" % [get_name(), str(result)])
     change_client_state(NetDefines.ClientState.IDLE)
-    PlayingNet.rpc("play_card", get_name(), dev_type)
+    PlayingNet.rpc("choose_res_done", get_name(), result)
+
+
+# 选择垄断类型完毕
+func choose_mono_type_done(result: int):
+    _logger.logd("玩家[%s]选择垄断资源[%s]" % [get_name(), str(result)])
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("choose_mono_type_done", get_name(), result)
 
 # S2C
 

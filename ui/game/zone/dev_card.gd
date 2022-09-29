@@ -174,14 +174,15 @@ func _on_drag_started(pos):
 
 
 func _check_can_play_card() -> bool:
-	if _get_client().personal_info.is_played_card:
-		_get_client().show_hint("每回合只能打出一张牌!")
+	if _type == Data.CardType.VP:
 		return false
 	elif not _get_client().client_state in [NetDefines.ClientState.FREE_ACTION, NetDefines.ClientState.PLAY_BEFORE_DICE]:
 		return false
 	elif _get_client().client_state == NetDefines.ClientState.PLAY_BEFORE_DICE and _type != Data.CardType.KNIGHT:
+		_get_client().show_hint("此阶段只能打出骑士卡!")
 		return false
-	elif _type == Data.CardType.VP:
+	elif _get_client().personal_info.is_played_card:
+		_get_client().show_hint("每回合只能打出一张牌!")
 		return false
 	else:
 		return true

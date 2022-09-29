@@ -85,6 +85,52 @@ class Set:
         return another.is_sub(self)
 
 
+# 队列
+class Queue:
+    extends Reference
+
+    const NO_LIMIT := 0
+
+    var max_len: int
+    var _container: Array
+
+    func _init(m_len=NO_LIMIT):
+        max_len = m_len
+        _container = []
+
+    # 加入队列
+    func enqueue(elem):
+        _container.push_front(elem)
+        if max_len != NO_LIMIT and size() > max_len:
+            return dequeue()
+        else:
+            return null
+
+    # 移出队列
+    func dequeue():
+        return _container.pop_back()
+
+    # 获得队首元素
+    func front():
+        return _container[0]
+
+    # 获得全部元素
+    func values() -> Array:
+        return _container
+
+    # 清除全部
+    func clear():
+        _container.clear()
+
+    # 获得大小
+    func size():
+        return len(_container)
+    
+    # 是否满
+    func is_full() -> bool:
+        return bool(max_len) and size() == max_len
+
+
 # 简单状态
 class SimpleState:
     extends Reference

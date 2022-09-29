@@ -39,7 +39,7 @@ static func broadcast_robber() -> HSM.Action:
 
 # 修改个人信息
 static func set_play_card(player_name: String, is_play: bool) -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "set_play_card"), [player_name, is_play])
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "set_play_card_state"), [player_name, is_play])
 
 
 # 通知放置定居点

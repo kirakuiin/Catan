@@ -98,6 +98,9 @@ class Queue:
         max_len = m_len
         _container = []
 
+    func _to_string():
+        return str(_container)
+
     # 加入队列
     func enqueue(elem):
         _container.push_front(elem)
@@ -148,6 +151,38 @@ class SimpleState:
         exit()
         other.enter()
         return other
+
+
+# 稀疏矩阵
+class SparseMatrix:
+    extends Reference
+
+    var nodes: Set
+    var _graph: Dictionary
+    var _not_exist
+
+    func _init(not_exist=INF):
+        nodes = Set.new()
+        _graph = {}
+        _not_exist = not_exist
+
+    func _to_string():
+        return str(_graph)
+
+    # 添加边
+    func add_edge(from, to, distance):
+        nodes.add(from)
+        nodes.add(to)
+        if not from in _graph:
+            _graph[from] = {}
+        _graph[from][to] = distance
+
+    # 获得距离
+    func distance(from, to):
+        if from in _graph and to in _graph[from]:
+            return _graph[from][to]
+        else:
+            return _not_exist
 
 
 # 常用函数

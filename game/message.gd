@@ -88,7 +88,7 @@ static func lost_res(player_name: String, res_info: Dictionary) -> Protocol.Mess
 
 
 # 得到抢劫消息
-static func rob_player(from: String, to: String):
+static func rob_player(from: String, to: String) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()
     message.add_player(from)
     message.add_text(" 抢劫了 ")
@@ -97,10 +97,26 @@ static func rob_player(from: String, to: String):
 
 
 # 打出卡牌
-static func play_card(player: String, dev_type: int):
+static func play_card(player: String, dev_type: int) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()
     message.add_player(player)
     message.add_text(" 打出发展卡")
     message.add_development(dev_type)
     message.add_text("[%s]" % [Data.CARD_NAME[dev_type]])
+    return message
+
+
+# 获得军队成就
+static func army_archievement(player: String) -> Protocol.MessageInfo:
+    var message = Protocol.MessageInfo.new()
+    message.add_player(player)
+    message.add_text(" 获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最多军队[/rainbow]]")
+    return message
+
+
+# 获得道路成就
+static func road_archievement(player: String) -> Protocol.MessageInfo:
+    var message = Protocol.MessageInfo.new()
+    message.add_player(player)
+    message.add_text(" 获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最长连续道路[/rainbow]]")
     return message

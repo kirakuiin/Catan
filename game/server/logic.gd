@@ -88,8 +88,8 @@ func _init_player_state():
 
 func _init_mgr():
     _res_mgr = ResMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size, bank_info)
-    _card_mgr = CardMgr.new(player_cards, setup_info.catan_size, bank_info)
-    _vp_mgr = VPMgr.new(player_cards, player_buildings, assist_info)
+    _card_mgr = CardMgr.new(player_cards, player_personals, setup_info.catan_size, bank_info)
+    _vp_mgr = VPMgr.new(player_cards, player_buildings, player_personals, assist_info)
 
 
 func _process(delta):
@@ -172,10 +172,33 @@ func discard_resource():
 
 
 # 设置出卡状态
-func set_play_card(player_name: String, is_play: bool):
+func set_play_card_state(player_name: String, is_play: bool):
     player_personals[player_name].is_played_card = is_play
     change_personal_info(player_name)
 
+
+# 更新胜点信息
+func update_vp(player_name):
+    _vp_mgr.update_vp(player_name)
+    change_personal_info(player_name)
+
+
+# 更新军队成就
+func update_army_archievement(player_name, dev_type):
+    if dev_type == Data.CardType.KNIGHT:
+        var arch = _vp_mgr.update_army(player_name)
+        change_personal_info(player_name)
+        if arch.old_holder:
+            change_personal_info(arch.old_holder)
+        if arch.new_holder:
+            broadcast_assist_info()
+            broadcast_message(Message.army_archievement(arch.new_holder))
+
+
+# 更新道路成就
+func update_road_archievement(player_name):
+    #var arch = _vp_mgr.update_road(player_name)
+    pass
 
 # C2S
 
@@ -234,6 +257,7 @@ func request_buy_dev_card(player_name: String):
 # 增加指定玩家的定居点
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
+    update_vp(player_name)
     change_building_info(player_name)
     broadcast_message(Message.place_settlement(player_name))
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
@@ -243,6 +267,7 @@ func add_settlement(player_name: String, pos: Vector3):
 func add_road(player_name: String, road: Protocol.RoadInfo):
     player_buildings[player_name].road_info.append(road)
     change_building_info(player_name)
+    update_road_archievement(player_name)
     broadcast_message(Message.place_road(player_name))
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
@@ -251,18 +276,20 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
 func upgrade_city(player_name: String, pos: Vector3):
     player_buildings[player_name].city_info.append(pos)
     player_buildings[player_name].settlement_info.erase(pos)
+    update_vp(player_name)
     change_building_info(player_name)
     broadcast_message(Message.upgrade_city(player_name))
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
 # 打出卡牌
-func play_card(player: String, dev_type: int):
-    _logger.logd("玩家[%s]打出卡牌[%d]" % [player, dev_type])
-    _card_mgr.play_card(player, dev_type)
-    change_card_info(player)
-    broadcast_message(Message.play_card(player, dev_type))
-    change_player_op_state(player, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
+func play_card(player_name: String, dev_type: int):
+    _logger.logd("玩家[%s]打出卡牌[%d]" % [player_name, dev_type])
+    _card_mgr.play_card(player_name, dev_type)
+    update_army_archievement(player_name, dev_type)
+    change_card_info(player_name)
+    broadcast_message(Message.play_card(player_name, dev_type))
+    change_player_op_state(player_name, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
 
 
 # 丢弃资源完毕
@@ -346,6 +373,8 @@ func notify_upgrade_city(player_name: String):
 func give_dev_card(player_name):
     var type = _card_mgr.give_card_to_player(player_name)
     _logger.logd("分配玩家[%s]发展卡[%d]" % [player_name, type])
+    if type == Data.CardType.VP:
+        update_vp(player_name)
     broadcast_bank_info()
     change_card_info(player_name)
     broadcast_message(Message.buy_dev_card(player_name))

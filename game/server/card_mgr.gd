@@ -5,12 +5,14 @@ extends Reference
 var _cards: Dictionary
 var _size: int
 var _bank: Protocol.BankInfo
+var _personals
 
 var _card_capacity: Dictionary
 
 
-func _init(cards: Dictionary, size: int, bank: Protocol.BankInfo):
+func _init(cards: Dictionary, personals: Dictionary, size: int, bank: Protocol.BankInfo):
     _cards = cards
+    _personals = personals
     _size = size
     _bank = bank
     _card_capacity = Data.NUM_DATA[size].card.each_num.duplicate(true)
@@ -19,6 +21,8 @@ func _init(cards: Dictionary, size: int, bank: Protocol.BankInfo):
 # 打出卡牌
 func play_card(player_name: String, dev_type: int):
     _cards[player_name].dev_cards[dev_type] -= 1
+    if dev_type == Data.CardType.KNIGHT:
+        _personals[player_name].army_num += 1
 
 
 # 给予玩家一张随机卡牌

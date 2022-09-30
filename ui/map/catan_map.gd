@@ -108,7 +108,7 @@ func _create_tile_point(pos: Vector3):
 	_tile_point_map[pos] = hint
 	$Point.add_child(hint)
 	hint.set_pos(Hexlib.hex_to_pixel(_get_layout(), Hexlib.create_hex(pos)))
-	hint.set_hint_color(Color.silver)
+	hint.set_hint_color(Color.khaki)
 
 
 func _init_signal():

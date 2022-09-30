@@ -190,15 +190,31 @@ func update_army_archievement(player_name, dev_type):
         change_personal_info(player_name)
         if arch.old_holder:
             change_personal_info(arch.old_holder)
+            broadcast_message(Message.army_archievement(arch.old_holder, false))
         if arch.new_holder:
-            broadcast_assist_info()
             broadcast_message(Message.army_archievement(arch.new_holder))
+        if arch.new_holder or arch.old_holder:
+            broadcast_assist_info()
 
 
 # 更新道路成就
 func update_road_archievement(player_name):
     var arch = _vp_mgr.update_road(player_name)
+    change_personal_info(player_name)
+    if arch.old_holder:
+        change_personal_info(arch.old_holder)
+        broadcast_message(Message.road_archievement(arch.old_holder, false))
+    if arch.new_holder:
+        broadcast_message(Message.road_archievement(arch.new_holder))
+    if arch.new_holder or arch.old_holder:
+        broadcast_assist_info()
 
+
+# 更新连续道路打断
+func update_breaked_road(player_name: String, pos: Vector3):
+    var breaked_player = _vp_mgr.get_breaked_road_player(player_name, pos)
+    if breaked_player:
+        update_road_archievement(breaked_player)
 # C2S
 
 
@@ -246,7 +262,7 @@ func request_upgrade_city(player_name: String):
     change_card_info(player_name)
 
 
-# 请求升级城市
+# 请求购买卡牌
 func request_buy_dev_card(player_name: String):
     _res_mgr.buy(player_name, Data.OpType.DEV_CARD)
     broadcast_bank_info()
@@ -259,6 +275,7 @@ func add_settlement(player_name: String, pos: Vector3):
     update_vp(player_name)
     change_building_info(player_name)
     broadcast_message(Message.place_settlement(player_name))
+    update_breaked_road(player_name, pos)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
@@ -372,10 +389,10 @@ func notify_upgrade_city(player_name: String):
 func give_dev_card(player_name):
     var type = _card_mgr.give_card_to_player(player_name)
     _logger.logd("分配玩家[%s]发展卡[%d]" % [player_name, type])
+    change_card_info(player_name)
     if type == Data.CardType.VP:
         update_vp(player_name)
     broadcast_bank_info()
-    change_card_info(player_name)
     broadcast_message(Message.buy_dev_card(player_name))
 
 

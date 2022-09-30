@@ -45,7 +45,22 @@ func update_army(player_name: String) -> Archievement:
 # 更新道路成就
 func update_road(player_name: String) -> Archievement:
     var arch = Archievement.new()
-    _calc_continue_road(player_name)
+    _personals[player_name].continue_road = _calc_continue_road(player_name)
+    var new_holder = _find_new_road_holder()
+    if new_holder:
+        if not _assist.longgest_name:
+            arch.new_holder = new_holder
+        elif _assist.longgest_name != new_holder:
+            arch.old_holder = _assist.longgest_name
+            arch.new_holder = new_holder
+    else:
+        if _assist.longgest_name:
+            arch.old_holder = _assist.longgest_name
+    _assist.longgest_name = new_holder
+    if arch.new_holder:
+        update_vp(arch.new_holder)
+    if arch.old_holder:
+        update_vp(arch.old_holder)
     return arch
 
 
@@ -63,24 +78,41 @@ func update_vp(player_name: String):
     _personals[player_name].vic_point = vp
 
 
+# 获得被打断连续道路的玩家
+func get_breaked_road_player(player_name: String, pos: Vector3) -> String:
+    var appear_count = 0
+    var breaked_player = ""
+    for player in _buildings:
+        if player != player_name:
+            for road in _buildings[player].road_info:
+                if pos in road.to_tuple():
+                    appear_count += 1
+            if appear_count > 1:
+                breaked_player = player
+            if appear_count > 0:
+                break
+    return breaked_player
+
+
 # 计算最长连续道路
 func _calc_continue_road(player_name: String):
-    # TODO: 考虑放置定居点时可能截断他人道路
-    _get_all_cluster(player_name)
-
-func _get_all_cluster(player_name: String):
-    var matrix = _build_road_matrix(player_name)
+    var max_len = 0
     var all_other = _get_all_other_point(player_name)
-    var can_choose = matrix.nodes.diff(all_other)
+    for cluster in _get_all_cluster(player_name):
+        max_len = max(max_len, _find_longest_road(cluster, all_other))
+    return max_len
+
+func _get_all_cluster(player_name: String) -> Array:
+    var matrix = _build_road_matrix(player_name)
+    var can_choose = matrix.nodes.duplicate()
     var unions = []
     while not can_choose.is_empty():
-        var union = _get_union(all_other, matrix, can_choose.values()[0])
+        var union = _get_union(matrix, can_choose.values()[0])
         can_choose.diff_inplace(union)
         unions.append(union)
     var cluster = []
     for union in unions:
         cluster.append(_build_union_matrix(matrix, union))
-    Log.logd("[%s] cluster = %s" % [player_name, str(cluster)])
     return cluster
 
 func _build_road_matrix(player_name: String) -> StdLib.SparseMatrix:
@@ -97,7 +129,7 @@ func _get_all_other_point(player_name: String) -> StdLib.Set:
             result.union_inplace(_buildings[player].get_settlement_and_city())
     return result
 
-func _get_union(other_player_point: StdLib.Set, matrix: StdLib.SparseMatrix, point: Vector3) -> StdLib.Set:
+func _get_union(matrix: StdLib.SparseMatrix, point: Vector3) -> StdLib.Set:
     var union = StdLib.Set.new()
     var visited = StdLib.Set.new()
     var queue = StdLib.Queue.new()
@@ -108,7 +140,7 @@ func _get_union(other_player_point: StdLib.Set, matrix: StdLib.SparseMatrix, poi
         visited.add(begin)
         for end in matrix.get_adjacency_nodes(begin):
             union.add(end)
-            if not other_player_point.contains(end) and not visited.contains(end):
+            if not visited.contains(end):
                 queue.enqueue(end)
     return union
 
@@ -121,12 +153,39 @@ func _build_union_matrix(matrix: StdLib.SparseMatrix, union: StdLib.Set) -> StdL
                 result.add_edge(end, node, 1)
     return result
 
-func _dfs(node, matrix: StdLib.SparseMatrix, length: int, visited: StdLib.Set, max_array: Array):
+func _find_longest_road(matrix: StdLib.SparseMatrix, all_other: StdLib.Set) -> int:
+    var max_array = [0]
+    var visited = StdLib.Set.new()
+    for node in matrix.nodes.values():
+        _dfs(node, matrix, 0, visited, all_other, max_array)
+    return max_array[0]
+
+func _dfs(node, matrix: StdLib.SparseMatrix, length: int, visited: StdLib.Set, all_other: StdLib.Set, max_array: Array):
     for end in matrix.get_adjacency_nodes(node):
         if visited.contains([node, end]):
             continue
+        if all_other.contains(end):  # 被截断的路径无法继续遍历, 因此直接跳过
+            max_array[0] = max(max_array[0], length+1)
+            continue
         visited.add([node, end])
         visited.add([end, node])
-        _dfs(end, matrix, length+1, visited, max_array)
+        _dfs(end, matrix, length+1, visited, all_other, max_array)
         visited.discard([node, end])
         visited.discard([end, node])
+    max_array[0] = max(max_array[0], length)
+
+
+func _find_new_road_holder() -> String:
+    var holder = _assist.longgest_name
+    var max_len = _personals[holder].continue_road if holder else 0
+    for player in _personals:
+        var length = _personals[player].continue_road
+        if length > max_len:
+            holder = player
+            max_len = length
+    if max_len < 5:
+        holder = ""
+    return holder
+
+
+        

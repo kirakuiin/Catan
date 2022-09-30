@@ -51,6 +51,10 @@ class Set:
     # 移除元素
     func discard(elem):
         _set.erase(elem)
+       
+    # 复制
+    func duplicate() -> Set:
+        return Set.new(values())
 
     # 并集
     func union(another: Set) -> Set:

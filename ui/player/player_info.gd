@@ -65,6 +65,14 @@ func _on_player_card_changed(name: String, card_info: Protocol.PlayerCardInfo):
 
 func _on_player_personal_changed(name: String, personal_info: Protocol.PlayerPersonalInfo):
     if name == _name:
-        $HBox/Grid/VP.set_num(personal_info.vic_point)
         $HBox/Grid/LongestRoad.set_num(personal_info.continue_road)
         $HBox/Grid/BiggestArmy.set_num(personal_info.army_num)
+        var vp = personal_info.vic_point
+        if _name != _get_client().get_name():
+            vp -= StdLib.dict_get(_get_client().player_cards[_name].dev_cards, Data.CardType.VP, 0) 
+        $HBox/Grid/VP.set_num(vp)
+
+
+func _get_client():
+    return PlayingNet.get_client()
+        

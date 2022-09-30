@@ -106,17 +106,23 @@ static func play_card(player: String, dev_type: int) -> Protocol.MessageInfo:
     return message
 
 
-# 获得军队成就
-static func army_archievement(player: String) -> Protocol.MessageInfo:
+# 军队成就
+static func army_archievement(player: String, is_get: bool=true) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()
     message.add_player(player)
-    message.add_text(" 获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最多军队[/rainbow]]")
+    if is_get:
+        message.add_text(" 获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最多军队[/rainbow]]")
+    else:
+        message.add_text(" 丢失[shake rate=10 level=30][color=silver]成就[/color][/shake] [[color=grey][tornado radius=5 freq=3]最多军队[/tornado][/color]]")
     return message
 
 
-# 获得道路成就
-static func road_archievement(player: String) -> Protocol.MessageInfo:
+# 道路成就
+static func road_archievement(player: String, is_get: bool=true) -> Protocol.MessageInfo:
     var message = Protocol.MessageInfo.new()
     message.add_player(player)
-    message.add_text(" 获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最长连续道路[/rainbow]]")
+    if is_get:
+        message.add_text(" 获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最长连续道路[/rainbow]]")
+    else:
+        message.add_text(" 丢失[shake rate=10 level=30][color=silver]成就[/color][/shake] [[color=grey][tornado radius=5 freq=3]最长连续道路[/tornado][/color]]")
     return message

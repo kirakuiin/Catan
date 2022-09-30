@@ -69,6 +69,7 @@ class Logger:
     var is_save_file: bool = false
     var is_show_time: bool = false
     var is_show_track: bool = false
+    var is_enable: bool = true
 
     var _file: File
     var _type: String
@@ -84,6 +85,14 @@ class Logger:
         is_save_file = settings.get("enable_save_file", true)
         is_show_time = settings.get("is_show_time", false)
         is_show_track = settings.get("is_show_track", false)
+
+    # 启动
+    func enable():
+        is_enable = true
+
+    # 关闭
+    func disable():
+        is_enable = false
 
     # 打印信息
     func logi(msg):
@@ -106,6 +115,8 @@ class Logger:
             _output_msg("ERROR", msg)
 
     func _output_msg(head, msg):
+        if not is_enable:
+            return
         var fmt_msg = _get_fmt_msg(head, msg)
         if is_stdout:
             print(fmt_msg)

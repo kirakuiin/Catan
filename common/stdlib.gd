@@ -16,9 +16,9 @@ class Set:
             _set[elem] = 1
 
     func _to_string():
-        var content = String(_set.keys()).right(1)
+        var content = String(values()).right(1)
         content = content.left(len(content)-1)
-        return '{%s}' % content
+        return 'Set(%s)' % content
 
     # 获得全部元素
     func values() -> Array:
@@ -40,6 +40,10 @@ class Set:
     func size() -> int:
         return len(_set)
 
+    # 是否为空
+    func is_empty() -> bool:
+        return size() == 0
+
     # 增加元素
     func add(elem):
         _set[elem] = 1
@@ -57,6 +61,11 @@ class Set:
             result[elem] = 1
         return Set.new(result.keys())
 
+    # 原地并集
+    func union_inplace(another: Set):
+        for elem in another.values():
+            _set[elem] = 1
+
     # 交集
     func intersect(another: Set) -> Set:
         var result = []
@@ -65,6 +74,12 @@ class Set:
                 result.append(elem)
         return Set.new(result)
 
+    # 就地交集
+    func intersect_inplace(another: Set):
+        for elem in values():
+            if not another.contains(elem):
+                discard(elem) 
+
     # 差集
     func diff(another: Set) -> Set:
         var result = []
@@ -72,6 +87,12 @@ class Set:
             if not another.contains(elem):
                 result.append(elem)
         return Set.new(result)
+
+    # 就地差集
+    func diff_inplace(another: Set):
+        for elem in values():
+            if another.contains(elem):
+                discard(elem)
 
     # 目标是否为自己子集
     func is_sub(another: Set) -> bool:
@@ -99,7 +120,7 @@ class Queue:
         _container = []
 
     func _to_string():
-        return str(_container)
+        return "Queue(max_len=%d, %s)" % [max_len, str(_container)]
 
     # 加入队列
     func enqueue(elem):
@@ -120,6 +141,10 @@ class Queue:
     # 获得全部元素
     func values() -> Array:
         return _container
+
+    # 是否为空
+    func is_empty() -> bool:
+        return size() == 0
 
     # 清除全部
     func clear():
@@ -161,13 +186,17 @@ class SparseMatrix:
     var _graph: Dictionary
     var _not_exist
 
-    func _init(not_exist=INF):
+    func _init(not_exist=null):
         nodes = Set.new()
         _graph = {}
         _not_exist = not_exist
 
     func _to_string():
-        return str(_graph)
+        return "SparseMatrix(%s)" % str(_graph)
+
+    # 获得点的全部可达点
+    func get_adjacency_nodes(node) -> Array:
+        return _graph[node].keys()
 
     # 添加边
     func add_edge(from, to, distance):

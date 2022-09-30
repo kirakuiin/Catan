@@ -65,10 +65,23 @@ func update_vp(player_name: String):
 
 # 计算最长连续道路
 func _calc_continue_road(player_name: String):
-    pass
-    #var matrix = _build_road_matrix(player_name)
-    
+    # TODO: 考虑放置定居点时可能截断他人道路
+    _get_all_cluster(player_name)
 
+func _get_all_cluster(player_name: String):
+    var matrix = _build_road_matrix(player_name)
+    var all_other = _get_all_other_point(player_name)
+    var can_choose = matrix.nodes.diff(all_other)
+    var unions = []
+    while not can_choose.is_empty():
+        var union = _get_union(all_other, matrix, can_choose.values()[0])
+        can_choose.diff_inplace(union)
+        unions.append(union)
+    var cluster = []
+    for union in unions:
+        cluster.append(_build_union_matrix(matrix, union))
+    Log.logd("[%s] cluster = %s" % [player_name, str(cluster)])
+    return cluster
 
 func _build_road_matrix(player_name: String) -> StdLib.SparseMatrix:
     var matrix = StdLib.SparseMatrix.new(-INF)
@@ -76,3 +89,44 @@ func _build_road_matrix(player_name: String) -> StdLib.SparseMatrix:
         matrix.add_edge(road.begin_node, road.end_node, 1)
         matrix.add_edge(road.end_node, road.begin_node, 1)
     return matrix
+
+func _get_all_other_point(player_name: String) -> StdLib.Set:
+    var result = StdLib.Set.new()
+    for player in _buildings:
+        if player != player_name:
+            result.union_inplace(_buildings[player].get_settlement_and_city())
+    return result
+
+func _get_union(other_player_point: StdLib.Set, matrix: StdLib.SparseMatrix, point: Vector3) -> StdLib.Set:
+    var union = StdLib.Set.new()
+    var visited = StdLib.Set.new()
+    var queue = StdLib.Queue.new()
+    queue.enqueue(point)
+    union.add(point)
+    while not queue.is_empty():
+        var begin = queue.dequeue()
+        visited.add(begin)
+        for end in matrix.get_adjacency_nodes(begin):
+            union.add(end)
+            if not other_player_point.contains(end) and not visited.contains(end):
+                queue.enqueue(end)
+    return union
+
+func _build_union_matrix(matrix: StdLib.SparseMatrix, union: StdLib.Set) -> StdLib.SparseMatrix:
+    var result = StdLib.SparseMatrix.new()
+    for node in union.values():
+        for end in matrix.get_adjacency_nodes(node):
+            if union.contains(end):
+                result.add_edge(node, end, 1)
+                result.add_edge(end, node, 1)
+    return result
+
+func _dfs(node, matrix: StdLib.SparseMatrix, length: int, visited: StdLib.Set, max_array: Array):
+    for end in matrix.get_adjacency_nodes(node):
+        if visited.contains([node, end]):
+            continue
+        visited.add([node, end])
+        visited.add([end, node])
+        _dfs(end, matrix, length+1, visited, max_array)
+        visited.discard([node, end])
+        visited.discard([end, node])

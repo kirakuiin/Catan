@@ -197,8 +197,7 @@ func update_army_archievement(player_name, dev_type):
 
 # 更新道路成就
 func update_road_archievement(player_name):
-    #var arch = _vp_mgr.update_road(player_name)
-    pass
+    var arch = _vp_mgr.update_road(player_name)
 
 # C2S
 

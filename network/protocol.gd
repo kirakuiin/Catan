@@ -255,6 +255,16 @@ class PlayerBuildingInfo:
         settlement_info = settlements
         road_info = roads
 
+    func get_settlement_and_city() -> StdLib.Set:
+        return StdLib.Set.new(city_info + settlement_info)
+
+    func get_all_road_point() -> StdLib.Set:
+        var result = StdLib.Set.new()
+        for road in road_info:
+            result.add(road.begin_node)
+            result.add(road.end_node)
+        return result
+
 
 # 道路信息
 class RoadInfo:

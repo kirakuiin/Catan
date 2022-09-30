@@ -3,7 +3,7 @@ extends Control
 
 # 操作面板
 
-
+const BankPopup: PackedScene = preload("res://ui/game/trade/bank_popup.tscn")
 
 
 func init():
@@ -94,7 +94,9 @@ func _on_buy_dev_card():
 
 
 func _on_trade_with_bank():
-    SceneMgr.show_prompt("未实现!")
+    var bank = BankPopup.instance()
+    add_child(bank)
+    bank.popup_centered()
 
 
 func _on_trade_with_player():

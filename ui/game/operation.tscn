@@ -1,10 +1,14 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/images/clock.png" type="Texture" id=1]
 [ext_resource path="res://assets/images/done_btn_pressed.png" type="Texture" id=2]
 [ext_resource path="res://assets/images/done_btn.png" type="Texture" id=3]
 [ext_resource path="res://ui/game/operation.gd" type="Script" id=4]
 [ext_resource path="res://assets/images/done_btn_disable.png" type="Texture" id=5]
+[ext_resource path="res://assets/images/bank_disable.png" type="Texture" id=6]
+[ext_resource path="res://assets/images/trade.png" type="Texture" id=7]
+[ext_resource path="res://assets/images/trade_disable.png" type="Texture" id=8]
+[ext_resource path="res://assets/images/bank.png" type="Texture" id=9]
 [ext_resource path="res://ui/game/tips/op_button.tscn" type="PackedScene" id=14]
 
 [sub_resource type="Animation" id=1]
@@ -45,9 +49,6 @@ anchor_bottom = 1.0
 margin_right = -1520.0
 margin_bottom = -680.0
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="ClockBg" type="TextureRect" parent="."]
 anchor_right = 1.0
@@ -123,6 +124,38 @@ __meta__ = {
 }
 btn_type = 3
 
+[node name="Bank" type="TextureButton" parent="."]
+anchor_left = 0.6775
+anchor_top = 0.14
+anchor_right = 0.8775
+anchor_bottom = 0.34
+hint_tooltip = "银行"
+disabled = true
+texture_normal = ExtResource( 9 )
+texture_disabled = ExtResource( 6 )
+expand = true
+stretch_mode = 5
+flip_h = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Trade" type="TextureButton" parent="."]
+anchor_left = 0.6775
+anchor_top = 0.6375
+anchor_right = 0.8775
+anchor_bottom = 0.8375
+hint_tooltip = "交易"
+disabled = true
+texture_normal = ExtResource( 7 )
+texture_disabled = ExtResource( 8 )
+expand = true
+stretch_mode = 5
+flip_h = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )
 anims/rotate = SubResource( 2 )
@@ -132,3 +165,5 @@ anims/rotate = SubResource( 2 )
 [connection signal="button_up" from="Settlement" to="." method="_on_place_settlement"]
 [connection signal="button_up" from="City" to="." method="_on_upgrade_city"]
 [connection signal="button_up" from="DevCard" to="." method="_on_buy_dev_card"]
+[connection signal="button_up" from="Bank" to="." method="_on_trade_with_bank"]
+[connection signal="button_up" from="Trade" to="." method="_on_trade_with_player"]

@@ -94,8 +94,8 @@ func _on_buy_dev_card():
 
 
 func _on_trade_with_bank():
-    _get_client().show_hint("未实现!")
+    SceneMgr.show_prompt("未实现!")
 
 
 func _on_trade_with_player():
-    _get_client().show_hint("未实现!")
+    SceneMgr.show_prompt("未实现!")

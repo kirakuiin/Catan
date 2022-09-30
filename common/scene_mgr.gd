@@ -7,6 +7,8 @@ const PREPARE_SCENE: String = "res://ui/lobby/prepare_lobby.tscn"
 const PLAYER_SCENE: String = "res://ui/info/player_info_setting.tscn"
 const WORLD_SCENE: String = "res://ui/game/world.tscn"
 
+const Prompt: PackedScene = preload("res://ui/util/prompt.tscn")
+
 
 var _scene_stack: Array = []
 var _logger: Log.Logger
@@ -79,3 +81,11 @@ func get_scene(cls):
 		if scene is cls:
 			return scene
 	return null
+
+
+# 打开提示
+func show_prompt(text: String):
+	var prompt = Prompt.instance()
+	prompt.set_msg(text)
+	get_tree().get_root().call_deferred("add_child", prompt)
+	prompt.call_deferred("popup_centered_minsize")

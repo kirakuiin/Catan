@@ -181,6 +181,7 @@ func _on_broadcast():
 
 func _on_exit_prepare():
 	SceneMgr.goto_scene(SceneMgr.LOBBY_SCENE)
+	SceneMgr.show_prompt("服务器断开连接!")
 	GameServer.close_game()
 
 

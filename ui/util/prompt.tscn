@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/util/prompt.gd" type="Script" id=2]
+
+[node name="Prompt" type="AcceptDialog"]
+visible = true
+anchor_right = 0.466667
+anchor_bottom = 0.555556
+margin_right = -696.0
+margin_bottom = -500.0
+theme = ExtResource( 1 )
+popup_exclusive = true
+window_title = "提示"
+dialog_text = "1"
+dialog_hide_on_ok = false
+dialog_autowrap = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="confirmed" from="." to="." method="_on_confirm"]

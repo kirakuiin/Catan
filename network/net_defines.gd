@@ -36,6 +36,7 @@ class PlayerOpState:
     const UPGRADE_CITY: String="升级城市"
     const BUY_DEV_CARD: String="购买发展卡"
     const PLAY_CARD: String="打出卡牌"
+    const TRADE: String="交易"
 
 
 # 玩家操作结构

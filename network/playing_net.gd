@@ -42,7 +42,12 @@ master func request_buy_dev_card(player_name: String):
 
 # 请求打出卡牌
 master func request_play_card(player_name: String, dev_type: int):
-    get_server().play_card(player_name, dev_type)
+    get_server().request_play_card(player_name, dev_type)
+
+
+# 客户端发起交易
+master func request_trade(trade_data):
+    get_server().request_trade(Protocol.deserialize(trade_data))
 
 
 # 客户端放置定居点结束
@@ -63,11 +68,6 @@ master func upgrade_city_done(player_name: String, pos: Vector3):
 # 客户端让过
 master func pass_turn(player_name: String):
     get_server().change_player_net_state(player_name, NetDefines.PlayerNetState.PASS)
-
-
-# 客户端发起交易
-master func trade(trade_data):
-    get_server().trade(Protocol.deserialize(trade_data))
 
 
 # 丢弃完成

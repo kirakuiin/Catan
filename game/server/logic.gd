@@ -270,7 +270,7 @@ func request_buy_dev_card(player_name: String):
 
 
 # 玩家交易
-func trade(trade_info: Protocol.TradeInfo):
+func request_trade(trade_info: Protocol.TradeInfo):
     _logger.logd("[%s]同[%s]发起交易" % [trade_info.from_player, trade_info.to_player])
     _res_mgr.trade(trade_info)
     change_card_info(trade_info.from_player)
@@ -281,6 +281,7 @@ func trade(trade_info: Protocol.TradeInfo):
     broadcast_message(Message.trade(trade_info))
     broadcast_message(Message.get_res(trade_info.from_player, trade_info.get_info))
     broadcast_message(Message.get_res(trade_info.to_player, trade_info.pay_info))
+    change_player_op_state(trade_info.from_player, NetDefines.PlayerOpState.TRADE)
 
 
 # 增加指定玩家的定居点
@@ -313,7 +314,7 @@ func upgrade_city(player_name: String, pos: Vector3):
 
 
 # 打出卡牌
-func play_card(player_name: String, dev_type: int):
+func request_play_card(player_name: String, dev_type: int):
     _logger.logd("玩家[%s]打出卡牌[%d]" % [player_name, dev_type])
     _card_mgr.play_card(player_name, dev_type)
     update_army_archievement(player_name, dev_type)

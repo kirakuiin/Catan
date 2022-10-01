@@ -95,6 +95,7 @@ class PlayerTurnState:
         _machine.state_list.append(UpgradeCityState.new(self, _name))
         _machine.state_list.append(BuyDevCardState.new(self, _name))
         _machine.state_list.append(Card.PlayCardState.new(self, _name))
+        _machine.state_list.append(TradeState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
@@ -274,6 +275,7 @@ class BuildAndTradeState:
         _init_city_transition()
         _init_buy_transition()
         _init_play_transition()
+        _init_trade_transition()
 
     func _init_end_transition():
         var target = get_parent_machine().get_next_state()
@@ -304,6 +306,12 @@ class BuildAndTradeState:
         var target = get_state_in_parent(Card.PlayCardState)
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.PLAY_CARD)
         add_transition(HSM.Transition.new(target, 0, condition))
+
+    func _init_trade_transition():
+        var target = get_state_in_parent(TradeState)
+        var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.TRADE)
+        add_transition(HSM.Transition.new(target, 0, condition))
+
 
 
 # 放置定居点阶段
@@ -382,4 +390,22 @@ class BuyDevCardState:
         var target = get_state_in_parent(BuildAndTradeState)
         add_transition(HSM.Transition.new(target, 0, HSM.TrueCondition.new()))
         _entry_actions.append(Action.give_dev_card(_name))
+        _exit_actions.append(Action.reset_op_state(_name))
+
+
+# 交易阶段
+class TradeState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "TradeState[%s]" % _name
+
+    func activiate():
+        var target = get_state_in_parent(BuildAndTradeState)
+        add_transition(HSM.Transition.new(target, 0, HSM.TrueCondition.new()))
         _exit_actions.append(Action.reset_op_state(_name))

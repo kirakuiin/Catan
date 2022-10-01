@@ -50,7 +50,7 @@ func _on_cancel():
 
 func _on_confirm():
     queue_free()
-    _get_client().trade(_get_trade_info())
+    _get_client().request_trade(_get_trade_info())
 
 func _get_trade_info() -> Protocol.TradeInfo:
     var result = _trade_info.duplicate(true)

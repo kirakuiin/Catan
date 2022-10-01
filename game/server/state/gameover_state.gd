@@ -6,7 +6,6 @@ const Condition: Script = preload("res://game/server/state/conditions.gd")
 const Action: Script = preload("res://game/server/state/actions.gd")
 
 
-# TODO: 实现结束状态
 # 游戏结束
 class GameOverState:
     extends HSM.SubMachineState
@@ -23,12 +22,6 @@ class GameOverState:
         _machine.state_list.append(ExitState.new(self))
         _machine.initial_state = _machine.state_list[0]
 
-    func get_name_list(is_reverse: bool=false) -> Array:
-        var result = []
-        for order in PlayingNet.get_server().order_info.order_to_name:
-            result.append(PlayingNet.get_server().order_info.order_to_name[order])
-        return result
-
 
 # 展示分数阶段
 class ShowScoreState:
@@ -40,6 +33,11 @@ class ShowScoreState:
     func _to_string():
         return "ShowScoreState"
 
+    func activiate():
+        var condition = Condition.NotExistStateCondition.new(NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+        add_transition(HSM.Transition.new(get_state_in_parent(ExitState), 0, condition))
+        _entry_actions.append(Action.show_score_panel())
+
 
 # 退出状态
 class ExitState:
@@ -50,3 +48,6 @@ class ExitState:
 
     func _to_string():
         return "ExitState"
+
+    func activiate():
+        _entry_actions.append(Action.exit_to_prepare())

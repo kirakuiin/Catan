@@ -95,6 +95,11 @@ master func choose_mono_type_done(player_name: String, result: int):
     get_server().choose_mono_type_done(player_name, result)
 
 
+# 玩家准备退出
+master func ready_to_exit(player_name: String):
+    get_server().ready_to_exit(player_name)
+
+
 # S2C
 
 # 通知客户端放置道路
@@ -200,3 +205,13 @@ remotesync func choose_mono_type():
 # 通知客户端播放消息
 remotesync func show_message(data):
     get_client().show_message(Protocol.deserialize(data))
+
+
+# 通知客户端打开分数结算界面
+remotesync func show_score_panel(data):
+    get_client().show_score_panel(Protocol.deserialize(data))
+
+
+# 通知客户端退出到准备界面
+remotesync func exit_to_prepare():
+    get_client().exit_to_prepare()

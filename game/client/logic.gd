@@ -15,6 +15,8 @@ signal robber_pos_changed(pos)  # 强盗位置变化
 signal resource_discarded(num)  # 丢弃资源
 signal player_hint_showed(hint, always_show)  # 提示信息变化
 signal message_received(msg)  # 收到信息
+signal stat_info_received(msg)  # 收到结算消息
+signal exit_game()  # 退出游戏
 
 
 const BuildMgr: Script = preload("res://game/client/build_mgr.gd")
@@ -188,6 +190,12 @@ func choose_mono_type_done(result: int):
     change_client_state(NetDefines.ClientState.IDLE)
     PlayingNet.rpc("choose_mono_type_done", get_name(), result)
 
+
+# 准备退出游戏
+func ready_to_exit():
+    _logger.logd("玩家[%s]准备退出" % [get_name()])
+    PlayingNet.rpc("ready_to_exit", get_name())
+
 # S2C
 
 
@@ -322,3 +330,15 @@ func choose_res():
 func choose_mono_type():
     change_client_state(NetDefines.ClientState.CHOOSE_MONO_TYPE)
     show_hint("选择一种类型的资源垄断...")
+
+
+# 打开分数结算界面
+func show_score_panel(stat_info: Protocol.StatInfo):
+    _logger.logd("收到结算信息: %s" % [stat_info])
+    emit_signal("stat_info_received", stat_info)
+
+
+# 退出
+func exit_to_prepare():
+    _logger.logd("退出游戏")
+    emit_signal("exit_game")

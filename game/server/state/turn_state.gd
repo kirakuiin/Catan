@@ -6,6 +6,7 @@ extends Node
 const Condition: Script = preload("res://game/server/state/conditions.gd")
 const Action: Script = preload("res://game/server/state/actions.gd")
 const Card: Script = preload("res://game/server/state/card_state.gd")
+const GameOver: Script = preload("res://game/server/state/gameover_state.gd")
 
 
 # 大回合状态
@@ -81,7 +82,6 @@ class PlayerTurnState:
         return 'PlayerTurnState[%s]' % _name
 
     func _init_all_state():
-        # TODO: 实现分数检查
         _machine.state_list.append(PrepareState.new(self, _name))
         _machine.state_list.append(SpecialPlayCardState.new(self, _name))
         _machine.state_list.append(RollDiceState.new(self, _name))
@@ -130,6 +130,8 @@ class PrepareState:
         _init_transitions()
 
     func _init_transitions():
+        var win = Condition.WinCondtion.new(_name)
+        add_transition(HSM.Transition.new(get_state_in_parent(GameOver.GameOverState), 2, win))
         var equal_zero = Condition.DevCardEqualZeroCondition.new(_name)
         add_transition(HSM.Transition.new(get_state_in_parent(RollDiceState), 0, equal_zero))
         var not_equal = HSM.NotCondition.new(equal_zero)
@@ -276,6 +278,7 @@ class BuildAndTradeState:
         _init_buy_transition()
         _init_play_transition()
         _init_trade_transition()
+        _init_check_transition()
 
     func _init_end_transition():
         var target = get_parent_machine().get_next_state()
@@ -312,6 +315,10 @@ class BuildAndTradeState:
         var condition = Condition.PlayerOpStateCondition.new(_name, NetDefines.PlayerOpState.TRADE)
         add_transition(HSM.Transition.new(target, 0, condition))
 
+    func _init_check_transition():
+        var target = get_state_in_parent(GameOver.GameOverState)
+        var condition = Condition.WinCondtion.new(_name)
+        add_transition(HSM.Transition.new(target, 2, condition))
 
 
 # 放置定居点阶段

@@ -22,6 +22,7 @@ static func get_cls(cls_name) -> ProtocolData:
         "AssistInfo": AssistInfo,
         "BankInfo": BankInfo,
         "TradeInfo": TradeInfo,
+        "StatInfo": StatInfo,
         "MessageInfo": MessageInfo,
     }
     return map[cls_name]
@@ -367,6 +368,21 @@ class TradeInfo:
                 get_info[res_type] = num
             else:
                 pay_info[res_type] = abs(num)
+
+
+# 统计数据
+class StatInfo:
+    extends ProtocolData
+    
+    var winner_name: String
+    var dice_info: Dictionary
+    var turn_num: int
+
+    func _init(winner: String="", dice: Dictionary={}):
+        cls_name = "StatInfo"
+        winner_name = winner
+        dice_info = dice
+        turn_num = 0
 
 
 # 消息信息

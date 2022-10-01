@@ -125,3 +125,13 @@ static func dispatch_res() -> HSM.Action:
 # 通知自由行动
 static func notify_free_action(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_free_action"), [player_name])
+
+
+# 弹出结算画面
+static func show_score_panel() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_show_score_panel"), [])
+
+
+# 返回准备界面
+static func exit_to_prepare() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_exit_to_prepare"), [])

@@ -11,6 +11,9 @@ func init():
     $Operation.init()
     $ResZone.init()
     $DevZone.init()
+    # TODO: 测试使用, 测试完毕删除
+    if not GameServer.is_server():
+        $Button.hide()
 
 
 func _on_button_down():

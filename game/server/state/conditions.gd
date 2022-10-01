@@ -150,3 +150,16 @@ class PlayerOneRoadCondition:
 
     func is_meet_condition() -> bool:
         return _cond.is_meet_condition()
+
+
+# 胜利条件
+class WinCondtion:
+    extends HSM.Condition
+
+    var _name: String
+
+    func _init(player_name: String):
+        _name = player_name
+
+    func is_meet_condition() -> bool:
+        return PlayingNet.get_server().player_personals[_name].vic_point >= 10

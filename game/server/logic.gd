@@ -19,6 +19,7 @@ var player_cards: Dictionary
 var player_personals: Dictionary
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
+var stat_info: Protocol.StatInfo
 
 var player_net_state: Dictionary
 var player_op_state: Dictionary
@@ -64,6 +65,7 @@ func _init_player_info():
     player_personals = {}
     assist_info = Protocol.AssistInfo.new()
     bank_info = Protocol.BankInfo.new(setup_info.catan_size)
+    stat_info = Protocol.StatInfo.new()
 
 
 func _init_robber():
@@ -135,7 +137,17 @@ func update_turn_num():
 func roll_dice():
     broadcast_dice_info(dice.roll())
     has_roll_dice = true
+    StdLib.num_dict_add(stat_info.dice_info, dice.get_last_num(), 1)
 
+
+# 设置胜者
+func set_stat_info():
+    for player in player_personals:
+        if player_personals[player].vic_point >= 10:
+            stat_info.winner_name = player
+            break
+    stat_info.turn_num = assist_info.turn_num
+    
 
 # 分发资源
 func dispatch_resource():
@@ -215,6 +227,8 @@ func update_breaked_road(player_name: String, pos: Vector3):
     var breaked_player = _vp_mgr.get_breaked_road_player(player_name, pos)
     if breaked_player:
         update_road_archievement(breaked_player)
+
+
 # C2S
 
 
@@ -374,6 +388,13 @@ func choose_mono_type_done(player_name: String, type: int):
         change_card_info(player)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
+
+# 玩家准备退出
+func ready_to_exit(player_name: String):
+    _logger.logd("玩家[%s]准备退出" % [player_name])
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
+
+
 # S2C
 
 # 通知玩家放置定居点
@@ -458,6 +479,21 @@ func broadcast_message(message: Protocol.MessageInfo):
 func broadcast_dice_info(info: Array):
     _logger.logd("广播骰子信息[%d, %d]" % info)
     PlayingNet.rpc("change_dice", info)
+
+
+# 展示结算面板
+func broadcast_show_score_panel():
+    set_stat_info()
+    _logger.logd("通知胜利者[%s]诞生, 展示分数画面" % [stat_info.winner_name])
+    for player_name in player_personals:
+        change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+    PlayingNet.rpc("show_score_panel", Protocol.serialize(stat_info))
+
+
+# 退出到准备界面
+func broadcast_exit_to_prepare():
+    _logger.logd("通知退出到准备界面")
+    PlayingNet.rpc("exit_to_prepare")
 
 
 # 更新玩家建筑信息

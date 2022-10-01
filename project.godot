@@ -75,10 +75,11 @@ _global_script_class_icons={
 [application]
 
 config/name="Catan"
+config/description="卡坦岛局域网版"
 run/main_scene="res://main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="Catan"
-config/icon="res://icon.png"
+config/icon="res://assets/icons/hex_icon.png"
 
 [autoload]
 

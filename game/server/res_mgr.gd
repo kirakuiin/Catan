@@ -148,18 +148,17 @@ func dispatch_by_num(num: int) -> Dictionary:
 
 # 分配位置相邻的资源
 func dispatch_initial_res(player_name: String) -> Dictionary:
-    # TODO: 还原初始资源分配
-    # var corner_pos = _buildings[player_name].settlement_info[-1]
-    # var res_list = _find_corner_res(corner_pos)
-    # var result = {}
-    # for res in res_list:
-    #     var num = _give_res_to_player(player_name, res[0], 1)
-    #     StdLib.num_dict_add(result, res[0], num)
-    var res_list = [[Data.ResourceType.LUMBER, 1], [Data.ResourceType.BRICK, 1], [Data.ResourceType.WOOL, 1], [Data.ResourceType.ORE, 1], [Data.ResourceType.GRAIN, 1]]
+    var corner_pos = _buildings[player_name].settlement_info[-1]
+    var res_list = _find_corner_res(corner_pos)
     var result = {}
     for res in res_list:
-        var num = _give_res_to_player(player_name, res[0], 8)
+        var num = _give_res_to_player(player_name, res[0], 1)
         StdLib.num_dict_add(result, res[0], num)
+    # var res_list = [[Data.ResourceType.LUMBER, 1], [Data.ResourceType.BRICK, 1], [Data.ResourceType.WOOL, 1], [Data.ResourceType.ORE, 1], [Data.ResourceType.GRAIN, 1]]
+    # var result = {}
+    # for res in res_list:
+    #     var num = _give_res_to_player(player_name, res[0], 8)
+    #     StdLib.num_dict_add(result, res[0], num)
     return result
 
 

@@ -23,6 +23,7 @@ func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: 
 	_init_map(map, setup)
 	_init_overlay()
 	_client.start()
+	_init_signal()
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
@@ -41,6 +42,20 @@ func _init_map(map: Protocol.MapInfo, setup: Protocol.CatanSetupInfo):
 
 func _init_overlay():
 	$UIOverlay/Overlay.init()
+
+
+func _init_signal():
+	_client.connect("stat_info_received", self, "_on_show_stat")
+	_client.connect("exit_game", self, "_on_exit_game")
+
+
+func _on_show_stat(stat_info: Protocol.StatInfo):
+	$Score/ScorePopup.init(stat_info)
+	$Score/ScorePopup.popup_centered()
+
+
+func _on_exit_game():
+	SceneMgr.close_pop_scene()
 
 
 func _on_mouse_moved(offset: Vector2):

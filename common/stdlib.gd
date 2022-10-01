@@ -253,6 +253,14 @@ static func sum(list: Array):
     return total
 
 
+# 字典转数组
+static func dict_to_array(dict: Dictionary) -> Array:
+    var result = []
+    for key in dict:
+        result.append([key, dict[key]])
+    return result
+
+
 # 交换两个元素
 static func swap(container, idx_a, idx_b):
     var var_a = container[idx_a]

@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/game/score/dice_item.gd" type="Script" id=1]
+
+[node name="DiceItem" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1370.0
+margin_bottom = -1014.0
+rect_min_size = Vector2( 550, 66 )
+script = ExtResource( 1 )
+
+[node name="Root" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Point" type="Label" parent="Root"]
+margin_right = 439.0
+margin_bottom = 66.0
+size_flags_horizontal = 3
+theme_type_variation = "BigLabel"
+text = "2点"
+
+[node name="Num" type="Label" parent="Root"]
+margin_left = 443.0
+margin_right = 550.0
+margin_bottom = 66.0
+theme_type_variation = "BigLabel"
+text = "10次"

@@ -202,6 +202,13 @@ enum EnemyType{ROBBER, PIRATE}
 # 港口映射
 enum HarborType{LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC}
 
+const RES_TO_HARBOR = {
+    ResourceType.LUMBER: HarborType.LUMBER,
+    ResourceType.WOOL: HarborType.WOOL,
+    ResourceType.GRAIN: HarborType.GRAIN,
+    ResourceType.BRICK: HarborType.BRICK,
+    ResourceType.ORE: HarborType.ORE,
+}
 
 const HARBOR_DATA = {
     HarborType.LUMBER: "res://assets/tiles/lumber_harbor.png",
@@ -210,6 +217,15 @@ const HARBOR_DATA = {
     HarborType.WOOL: "res://assets/tiles/wool_harbor.png",
     HarborType.GRAIN: "res://assets/tiles/grain_harbor.png",
     HarborType.GENERIC: "res://assets/tiles/generic_harbor.png",
+}
+
+const HARBOR_UNIT = {
+    HarborType.LUMBER: 2,
+    HarborType.BRICK: 2,
+    HarborType.ORE: 2,
+    HarborType.WOOL: 2,
+    HarborType.GRAIN: 2,
+    HarborType.GENERIC: 3,
 }
 
 

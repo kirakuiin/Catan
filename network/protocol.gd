@@ -21,6 +21,7 @@ static func get_cls(cls_name) -> ProtocolData:
         "PlayerPersonalInfo": PlayerPersonalInfo,
         "AssistInfo": AssistInfo,
         "BankInfo": BankInfo,
+        "TradeInfo": TradeInfo,
         "MessageInfo": MessageInfo,
     }
     return map[cls_name]
@@ -204,6 +205,12 @@ class HarborInfo:
     func get_harbor_angle() -> float:
         return Hexlib.hex_relative_angle(Hexlib.create_hex(cube_pos), Hexlib.create_hex(near_pos))
 
+    func get_harbor_corner() -> Array:
+        var result = []
+        for corner in Hexlib.hex_intersect(Hexlib.create_hex(cube_pos), Hexlib.create_hex(near_pos)):
+            result.append(corner.to_vector3())
+        return result
+
 
 # 地图信息
 class MapInfo:
@@ -223,8 +230,7 @@ class MapInfo:
     func get_all_harbor_near_corner() -> Array:
         var result = []
         for harbor in harbor_list:
-            for corner in Hexlib.hex_intersect(Hexlib.create_hex(harbor.cube_pos), Hexlib.create_hex(harbor.near_pos)):
-                result.append(corner.to_vector3())
+            result.append_array(harbor.get_harbor_corner())
         return result
 
 
@@ -336,6 +342,33 @@ class BankInfo:
         avail_card = Data.NUM_DATA[catan_size].card.total_num
 
 
+# 交易信息
+class TradeInfo:
+    extends ProtocolData
+
+    const BANK = "[_$Bank$_]"
+
+    var from_player: String
+    var to_player: String
+    var get_info: Dictionary
+    var pay_info: Dictionary
+
+    func _init(from: String="", to: String=BANK, get: Dictionary={}, pay: Dictionary={}):
+        cls_name = "TradeInfo"
+        from_player = from
+        to_player = to
+        get_info = get
+        pay_info = pay
+
+    func init_by_dict(trade_info: Dictionary):
+        for res_type in trade_info:
+            var num = trade_info[res_type]
+            if num > 0:
+                get_info[res_type] = num
+            else:
+                pay_info[res_type] = abs(num)
+
+
 # 消息信息
 class MessageInfo:
     extends ProtocolData
@@ -392,7 +425,9 @@ class MessageInfo:
             TEXT:
                 result = "[valign px=10]%s[/valign]" % str(val)
             PLAYER:
-                if order_info:
+                if val == TradeInfo.BANK:
+                    result = "[valign px=10][color=silver]%s[/color][/valign]" % "银行"
+                elif order_info:
                     result = "[valign px=10][color=%s]%s[/color][/valign]" % [Util.color_to_str(Data.ORDER_DATA[order_info.get_order(val)]), val]
                 else:
                     result = "[valign px=10]%s[/valign]" % val

@@ -65,6 +65,11 @@ master func pass_turn(player_name: String):
     get_server().change_player_net_state(player_name, NetDefines.PlayerNetState.PASS)
 
 
+# 客户端发起交易
+master func trade(trade_data):
+    get_server().trade(Protocol.deserialize(trade_data))
+
+
 # 丢弃完成
 master func discard_done(player_name: String, discard_data):
     get_server().discard_done(player_name, Protocol.deserialize(discard_data))

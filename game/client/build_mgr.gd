@@ -119,6 +119,17 @@ func get_turn_available_point() -> Array:
     return avail_point.values()
 
 
+# 获得玩家全部的港口类型
+func get_all_harbor_type() -> StdLib.Set:
+    var player_corners = _buildings[_get_name()].get_settlement_and_city()
+    var result = StdLib.Set.new()
+    for harbor in _map.harbor_list:
+        for corner in harbor.get_harbor_corner():
+            if player_corners.contains(corner):
+                result.add(harbor.harbor_type)
+    return result
+
+
 # 获得可升级的点位
 func get_avail_upgrade_point() -> Array:
     var result = []

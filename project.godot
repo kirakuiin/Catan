@@ -94,6 +94,7 @@ PlayingNet="*res://network/playing_net.gd"
 
 gdscript/warnings/unused_argument=false
 gdscript/warnings/return_value_discarded=false
+gdscript/warnings/integer_division=false
 
 [display]
 

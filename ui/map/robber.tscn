@@ -9,6 +9,7 @@ margin_left = -41.0
 margin_top = -40.0
 margin_right = 39.0
 margin_bottom = 40.0
+mouse_filter = 2
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 6

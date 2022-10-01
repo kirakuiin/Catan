@@ -55,12 +55,16 @@ func buy(player_name: String, type: int) -> Dictionary:
     return res_info
 
 
-# 银行分配指定资源
-func bank_give_res(player_name: String, res_info: Dictionary) -> Dictionary:
-    var result = {}
-    for res_type in res_info:
-        StdLib.num_dict_merge(result, {res_type: _give_res_to_player(player_name, res_type, res_info[res_type])})
-    return result
+# 交易
+func trade(trade_info: Protocol.TradeInfo):
+    if trade_info.to_player == Protocol.TradeInfo.BANK:
+        _trade_with_bank(trade_info)
+    else:
+        assert (false, "未实现!")
+
+func _trade_with_bank(trade_info: Protocol.TradeInfo):
+    dispatch_player_res(trade_info.from_player, trade_info.get_info)
+    recycle_player_res(trade_info.from_player, trade_info.pay_info)
 
 
 # 垄断资源
@@ -84,8 +88,16 @@ func _monopoly_from_player(player_name: String, res_type: int):
     return result
 
 
+# 分配玩家资源
+func dispatch_player_res(player_name: String, dispatch_info: Dictionary) -> Dictionary:
+    var result = {}
+    for res_type in dispatch_info:
+        StdLib.num_dict_merge(result, {res_type: _give_res_to_player(player_name, res_type, dispatch_info[res_type])})
+    return result
+
+
 # 回收玩家资源
-func recycle_player_res(player_name: String, recycle_info):
+func recycle_player_res(player_name: String, recycle_info: Dictionary):
     var res_info = _cards[player_name].res_cards
     for res_type in recycle_info:
         res_info[res_type] -= recycle_info[res_type]

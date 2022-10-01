@@ -123,6 +123,12 @@ func request_play_card(dev_type: int):
     PlayingNet.rpc("request_play_card", get_name(), dev_type)
 
 
+# 发起交易
+func trade(trade_info: Protocol.TradeInfo):
+    _logger.logd("玩家[%s]发起交易[%s]" % [get_name(), trade_info])
+    PlayingNet.rpc("trade", Protocol.serialize(trade_info))
+
+
 # 放置定居点完毕
 func place_settlement_done(pos: Vector3):
     change_client_state(NetDefines.ClientState.IDLE)

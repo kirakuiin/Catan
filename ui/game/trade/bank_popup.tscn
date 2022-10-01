@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://ui/game/trade/bank_popup.gd" type="Script" id=1]
 [ext_resource path="res://assets/icons/bank.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://assets/images/cross.png" type="Texture" id=5]
 [ext_resource path="res://assets/images/tick.png" type="Texture" id=6]
 [ext_resource path="res://assets/images/tick_disable.png" type="Texture" id=7]
+[ext_resource path="res://assets/images/triangle.png" type="Texture" id=8]
+[ext_resource path="res://assets/images/balance.png" type="Texture" id=9]
 
 [node name="BankPopup" type="PopupDialog"]
 visible = true
@@ -25,9 +27,9 @@ expand = true
 stretch_mode = 6
 
 [node name="ItemCon" type="HBoxContainer" parent="."]
-anchor_left = 0.154286
+anchor_left = 0.182857
 anchor_top = 0.2
-anchor_right = 0.891429
+anchor_right = 0.92
 anchor_bottom = 0.8
 __meta__ = {
 "_edit_group_": true,
@@ -43,6 +45,7 @@ margin_top = 0.0
 margin_right = 100.0
 margin_bottom = 300.0
 res_type = 0
+enable_unit = true
 
 [node name="Ore" parent="ItemCon" instance=ExtResource( 3 )]
 anchor_top = 0.0
@@ -52,6 +55,7 @@ margin_left = 104.0
 margin_top = 0.0
 margin_right = 204.0
 margin_bottom = 300.0
+enable_unit = true
 
 [node name="Grain" parent="ItemCon" instance=ExtResource( 3 )]
 anchor_top = 0.0
@@ -62,6 +66,7 @@ margin_top = 0.0
 margin_right = 308.0
 margin_bottom = 300.0
 res_type = 4
+enable_unit = true
 
 [node name="Brick" parent="ItemCon" instance=ExtResource( 3 )]
 anchor_top = 0.0
@@ -72,6 +77,7 @@ margin_top = 0.0
 margin_right = 412.0
 margin_bottom = 300.0
 res_type = 1
+enable_unit = true
 
 [node name="Wool" parent="ItemCon" instance=ExtResource( 3 )]
 anchor_top = 0.0
@@ -82,11 +88,12 @@ margin_top = 0.0
 margin_right = 516.0
 margin_bottom = 300.0
 res_type = 3
+enable_unit = true
 
 [node name="TitleCon" type="HBoxContainer" parent="."]
-anchor_left = 0.154286
+anchor_left = 0.182857
 anchor_top = 0.048
-anchor_right = 0.891429
+anchor_right = 0.92
 anchor_bottom = 0.18
 __meta__ = {
 "_edit_group_": true,
@@ -148,41 +155,84 @@ align = 1
 valign = 1
 
 [node name="Get" type="Label" parent="."]
-margin_left = 8.0
-margin_top = 343.0
-margin_right = 108.0
-margin_bottom = 409.0
+anchor_left = 0.0114286
+anchor_top = 0.686
+anchor_right = 0.154286
+anchor_bottom = 0.818
 theme = ExtResource( 4 )
 theme_type_variation = "BigLabel"
 text = "得到"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Pay" type="Label" parent="."]
-margin_left = 8.0
-margin_top = 90.0
-margin_right = 108.0
-margin_bottom = 156.0
+anchor_left = 0.0114286
+anchor_top = 0.18
+anchor_right = 0.154286
+anchor_bottom = 0.312
 theme = ExtResource( 4 )
 theme_type_variation = "BigLabel"
 text = "付出"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Cancel" type="TextureButton" parent="."]
-margin_left = 212.0
-margin_top = 409.0
-margin_right = 292.0
-margin_bottom = 489.0
+anchor_left = 0.331429
+anchor_top = 0.818
+anchor_right = 0.445714
+anchor_bottom = 0.978
+margin_left = 1.52588e-05
 texture_normal = ExtResource( 5 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Confirm" type="TextureButton" parent="."]
-margin_left = 420.0
-margin_top = 409.0
-margin_right = 500.0
-margin_bottom = 489.0
+anchor_left = 0.628571
+anchor_top = 0.818
+anchor_right = 0.742857
+anchor_bottom = 0.978
+margin_left = -3.05176e-05
 texture_normal = ExtResource( 6 )
 texture_disabled = ExtResource( 7 )
 expand = true
 stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
+[node name="Balance" type="TextureRect" parent="."]
+anchor_left = 0.0771429
+anchor_top = 0.496
+anchor_right = 0.107143
+anchor_bottom = 0.532
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Pole" type="TextureRect" parent="Balance"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -53.5
+margin_top = -10.0
+margin_right = 53.5
+margin_bottom = 1.0
+rect_pivot_offset = Vector2( 53.5, 10 )
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 1
+
+[connection signal="trade_changed" from="ItemCon/Lumber" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Ore" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Grain" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Brick" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Wool" to="." method="_on_trade_changed"]
 [connection signal="button_down" from="Cancel" to="." method="_on_cancel"]
 [connection signal="button_down" from="Confirm" to="." method="_on_confirm"]

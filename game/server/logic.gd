@@ -269,6 +269,20 @@ func request_buy_dev_card(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUY_DEV_CARD)
 
 
+# 玩家交易
+func trade(trade_info: Protocol.TradeInfo):
+    _logger.logd("[%s]同[%s]发起交易" % [trade_info.from_player, trade_info.to_player])
+    _res_mgr.trade(trade_info)
+    change_card_info(trade_info.from_player)
+    if trade_info.to_player == Protocol.TradeInfo.BANK:
+        broadcast_bank_info()
+    else:
+        change_card_info(trade_info.to_player)
+    broadcast_message(Message.trade(trade_info))
+    broadcast_message(Message.get_res(trade_info.from_player, trade_info.get_info))
+    broadcast_message(Message.get_res(trade_info.to_player, trade_info.pay_info))
+
+
 # 增加指定玩家的定居点
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
@@ -340,7 +354,7 @@ func rob_player_done(robber: String, robbed_player: String):
 # 选择资源完毕
 func choose_res_done(player_name: String, res_info: Dictionary):
     _logger.logd("玩家[%s]选择资源%s" % [player_name, res_info])
-    var result = _res_mgr.bank_give_res(player_name, res_info)
+    var result = _res_mgr.dispatch_player_res(player_name, res_info)
     broadcast_message(Message.get_res(player_name, result))
     broadcast_bank_info()
     change_card_info(player_name)

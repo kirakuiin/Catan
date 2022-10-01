@@ -126,3 +126,13 @@ static func road_archievement(player: String, is_get: bool=true) -> Protocol.Mes
     else:
         message.add_text(" 丢失[shake rate=10 level=30][color=silver]成就[/color][/shake] [[color=grey][tornado radius=5 freq=3]最长连续道路[/tornado][/color]]")
     return message
+
+
+# 交易消息
+static func trade(trade_info: Protocol.TradeInfo) -> Protocol.MessageInfo:
+    var message = Protocol.MessageInfo.new()
+    message.add_player(trade_info.from_player)
+    message.add_text(" 同 ")
+    message.add_player(trade_info.to_player)
+    message.add_text(" 交易")
+    return message

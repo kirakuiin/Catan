@@ -10,7 +10,7 @@ enum LogLevel {
     ERROR=4,
 }
 
-const LOG_PATH: String = "user://%s_catan.log"
+const LOG_PATH: String = "user://%s_catan[%s].log"
 
 class LogModule:
     extends Reference
@@ -29,7 +29,7 @@ var _file: File
 
 func _ready():
     _file = File.new()
-    _file.open(LOG_PATH % PlayerConfig.get_player_name(), File.WRITE)
+    _file.open(LOG_PATH % [PlayerConfig.get_player_name(), Time.get_date_string_from_system()], File.WRITE)
     _logger_info = {LogModule.DEFAULT: Logger.new(_file, LogModule.DEFAULT)}
 
 
@@ -66,7 +66,7 @@ class Logger:
 
     var log_level: int = LogLevel.INFO
     var is_stdout: bool = true
-    var is_save_file: bool = false
+    var is_save_file: bool = true
     var is_show_time: bool = false
     var is_show_track: bool = false
     var is_enable: bool = true

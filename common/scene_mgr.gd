@@ -88,4 +88,4 @@ func show_prompt(text: String):
 	var prompt = Prompt.instance()
 	prompt.set_msg(text)
 	get_tree().get_root().call_deferred("add_child", prompt)
-	prompt.call_deferred("popup_centered")
+	prompt.call_deferred("popup_centered", Vector2(200, 200))

@@ -73,7 +73,7 @@ func _custom_sort(a: Protocol.PlayerInfo, b: Protocol.PlayerInfo) -> bool:
 func _init_signal():
 	PlayerInfoMgr.connect("player_added", self, "_on_player_added")
 	PlayerInfoMgr.connect("player_removed", self, "_on_player_removed")
-	GameServer.connect("server_disconnected", self, "_on_exit_prepare")
+	GameServer.connect("server_disconnected", self, "_on_server_disconnected")
 	ConnState.connect("state_changed", self, "_on_start_client_game")
 	$PlayerSeat.connect("all_player_ready", self, "_on_all_player_ready")
 
@@ -182,6 +182,11 @@ func _on_broadcast():
 func _on_exit_prepare():
 	SceneMgr.goto_scene(SceneMgr.LOBBY_SCENE)
 	GameServer.close_game()
+
+
+func _on_server_disconnected():
+	_on_exit_prepare()
+	SceneMgr.show_prompt("网络连接中断")
 
 
 func _on_all_player_ready(is_ready: bool):

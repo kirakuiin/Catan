@@ -34,7 +34,7 @@ margin_top = -32.0
 margin_right = 33.0
 rect_scale = Vector2( 0.983453, 1 )
 theme = ExtResource( 4 )
-text = "x1"
+text = "x0"
 align = 1
 valign = 1
 

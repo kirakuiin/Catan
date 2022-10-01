@@ -55,11 +55,13 @@ var origin_pos: Vector2
 
 
 var _type: int
+var _recv_turn: int
 
 var _state: StdLib.SimpleState
 var _normal: NormalState
 var _zoom: ZoomState 
 var _drag: DragState
+
 
 
 func _ready():
@@ -68,6 +70,7 @@ func _ready():
 	_zoom = ZoomState.new(self)
 	_drag = DragState.new(self)
 	_state = _normal
+	_recv_turn = _get_client().assist_info.turn_num
 
 
 # 设置卡牌类型
@@ -175,6 +178,9 @@ func _on_drag_started(pos):
 
 func _check_can_play_card() -> bool:
 	if _type == Data.CardType.VP:
+		return false
+	if _recv_turn >= _get_client().assist_info.turn_num:
+		_get_client().show_hint("购买的回合无法使用卡牌!")
 		return false
 	elif not _get_client().client_state in [NetDefines.ClientState.FREE_ACTION, NetDefines.ClientState.PLAY_BEFORE_DICE]:
 		return false

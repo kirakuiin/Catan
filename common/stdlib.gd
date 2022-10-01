@@ -140,7 +140,11 @@ class Queue:
 
     # 获得队首元素
     func front():
-        return _container[0]
+        return _container.front()
+
+    # 获得队尾元素
+    func back():
+        return _container.back()
 
     # 获得全部元素
     func values() -> Array:

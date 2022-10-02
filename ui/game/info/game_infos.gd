@@ -39,8 +39,7 @@ func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
 
 
 func _show_player_turn(player_name: String):
-    var order = _get_client().order_info.get_order(player_name)
-    var color = Data.ORDER_DATA[order]
+    var color = _get_client().get_color(player_name)
     $PlayerTurn.add_color_override("font_color", color)
     $PlayerTurn.text = "玩家[%s]行动..." % player_name
     $TurnPlayer.stop()

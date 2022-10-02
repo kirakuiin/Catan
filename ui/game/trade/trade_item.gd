@@ -8,6 +8,7 @@ signal trade_changed(res_type, num, unit)  # 交易需求变化
 
 export(Data.ResourceType) var res_type: int
 export(bool) var enable_unit: bool 
+export(bool) var check_valid: bool
 
 
 var _unit: int = 1
@@ -27,6 +28,18 @@ func set_num(num: int):
     _origin = num
     _num = num
     $Num.text = str(_num)
+
+
+# 设置初始面板
+func set_item(trade_info: Protocol.TradeInfo):
+    for type in trade_info.get_info:
+        if res_type == type:
+            for i in abs(trade_info.get_info[type]):
+                _plus_get()
+    for type in trade_info.pay_info:
+        if res_type == type:
+            for i in abs(trade_info.pay_info[type]):
+                _plus_pay()
 
 
 # 初始化单位
@@ -57,10 +70,11 @@ func _sub_pay():
 
 func _plus_get():
     var val = _get_num()
-    if val < _get_client().bank_info.res_info[res_type]:
-        $Get.text = str(val+1)
-        _num += 1
-        $Num.text = str(_num)
+    if val >= _get_client().bank_info.res_info[res_type] and check_valid:
+        return
+    $Get.text = str(val+1)
+    _num += 1
+    $Num.text = str(_num)
 
 func _get_num() -> int:
     return int($Get.text)
@@ -80,11 +94,11 @@ func _sub_get():
     $Num.text = str(_num)
 
 func _plus_pay():
-    var val = _pay_num()
-    if _num-_unit >= 0:
-        $Pay.text = str(val+_unit)
-        _num -= _unit
-        $Num.text = str(_num)
+    if _num-_unit < 0 and check_valid:
+        return
+    $Pay.text = str(_pay_num()+_unit)
+    _num -= _unit
+    $Num.text = str(_num)
 
 
 func _emit():

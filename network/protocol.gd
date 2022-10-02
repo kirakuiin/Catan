@@ -353,6 +353,7 @@ class TradeInfo:
     var to_player: String
     var get_info: Dictionary
     var pay_info: Dictionary
+    var trade_state: String
 
     func _init(from: String="", to: String=BANK, get: Dictionary={}, pay: Dictionary={}):
         cls_name = "TradeInfo"
@@ -360,14 +361,23 @@ class TradeInfo:
         to_player = to
         get_info = get
         pay_info = pay
-
+        trade_state = NetDefines.TradeState.NEGOTIATE
+        
     func init_by_dict(trade_info: Dictionary):
         for res_type in trade_info:
             var num = trade_info[res_type]
             if num > 0:
                 get_info[res_type] = num
-            else:
+            elif num < 0:
                 pay_info[res_type] = abs(num)
+
+    func flip():
+        var tmp = from_player
+        from_player = to_player
+        to_player = tmp
+        tmp = get_info
+        get_info = pay_info
+        pay_info = tmp
 
 
 # 统计数据

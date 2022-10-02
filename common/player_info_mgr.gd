@@ -46,6 +46,10 @@ func get_info(name: String) -> Protocol.PlayerInfo:
     return _info_dict[name]
 
 
+func get_peer(name: String) -> int:
+    return get_info(name).peer_id
+
+
 func reset():
     _info_dict = {}
 

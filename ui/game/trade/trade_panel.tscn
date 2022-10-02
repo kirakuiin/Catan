@@ -1,0 +1,205 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=1]
+[ext_resource path="res://assets/images/trade.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/trade_disable.png" type="Texture" id=3]
+[ext_resource path="res://ui/game/trade/trade_item.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/images/tick.png" type="Texture" id=5]
+[ext_resource path="res://assets/images/triangle.png" type="Texture" id=6]
+[ext_resource path="res://assets/images/balance.png" type="Texture" id=7]
+[ext_resource path="res://assets/images/cross.png" type="Texture" id=8]
+[ext_resource path="res://assets/icons/trade.png" type="Texture" id=9]
+[ext_resource path="res://ui/game/trade/trade_panel.gd" type="Script" id=10]
+[ext_resource path="res://assets/images/tick_disable.png" type="Texture" id=11]
+
+[node name="TradePanel" type="Control"]
+margin_left = 104.0
+margin_right = 804.0
+margin_bottom = 500.0
+rect_min_size = Vector2( 700, 500 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 10 )
+
+[node name="TradeBg" type="TextureRect" parent="."]
+modulate = Color( 1, 1, 1, 0.0980392 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 6
+
+[node name="ItemCon" type="HBoxContainer" parent="."]
+anchor_left = 0.205714
+anchor_top = 0.2
+anchor_right = 0.942857
+anchor_bottom = 0.8
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="Lumber" parent="ItemCon" instance=ExtResource( 4 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 100.0
+margin_bottom = 300.0
+res_type = 0
+
+[node name="Ore" parent="ItemCon" instance=ExtResource( 4 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 104.0
+margin_right = 204.0
+margin_bottom = 300.0
+
+[node name="Grain" parent="ItemCon" instance=ExtResource( 4 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 208.0
+margin_right = 308.0
+margin_bottom = 300.0
+res_type = 4
+
+[node name="Brick" parent="ItemCon" instance=ExtResource( 4 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 312.0
+margin_right = 412.0
+margin_bottom = 300.0
+res_type = 1
+
+[node name="Wool" parent="ItemCon" instance=ExtResource( 4 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 416.0
+margin_right = 516.0
+margin_bottom = 300.0
+res_type = 3
+
+[node name="Get" type="Label" parent="."]
+anchor_left = 0.0228571
+anchor_top = 0.686
+anchor_right = 0.165715
+anchor_bottom = 0.818
+theme = ExtResource( 1 )
+theme_type_variation = "BigLabel"
+text = "得到"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Pay" type="Label" parent="."]
+anchor_left = 0.0228571
+anchor_top = 0.18
+anchor_right = 0.165715
+anchor_bottom = 0.312
+theme = ExtResource( 1 )
+theme_type_variation = "BigLabel"
+text = "付出"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Cancel" type="TextureButton" parent="."]
+anchor_left = 0.373062
+anchor_top = 0.818
+anchor_right = 0.487347
+anchor_bottom = 0.978
+texture_normal = ExtResource( 8 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Negotiate" type="TextureButton" parent="."]
+anchor_left = 0.671429
+anchor_top = 0.816
+anchor_right = 0.785715
+anchor_bottom = 0.976
+disabled = true
+texture_normal = ExtResource( 2 )
+texture_disabled = ExtResource( 3 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Confirm" type="TextureButton" parent="."]
+visible = false
+anchor_left = 0.671429
+anchor_top = 0.816
+anchor_right = 0.785715
+anchor_bottom = 0.976
+margin_left = -3.05176e-05
+disabled = true
+texture_normal = ExtResource( 5 )
+texture_disabled = ExtResource( 11 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Title" type="Label" parent="."]
+anchor_right = 1.0
+margin_left = -4.0
+margin_right = -4.0
+margin_bottom = 66.0
+theme_type_variation = "BigLabel"
+text = "交易报价"
+valign = 1
+
+[node name="TradeName" type="Label" parent="Title"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -32.0
+align = 2
+valign = 1
+
+[node name="Balance" type="TextureRect" parent="."]
+anchor_left = 0.0771429
+anchor_top = 0.496
+anchor_right = 0.107143
+anchor_bottom = 0.532
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Pole" type="TextureRect" parent="Balance"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -53.5
+margin_top = -10.0
+margin_right = 53.5
+margin_bottom = 1.0
+rect_pivot_offset = Vector2( 53.5, 10 )
+texture = ExtResource( 7 )
+expand = true
+stretch_mode = 1
+
+[connection signal="trade_changed" from="ItemCon/Lumber" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Ore" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Grain" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Brick" to="." method="_on_trade_changed"]
+[connection signal="trade_changed" from="ItemCon/Wool" to="." method="_on_trade_changed"]
+[connection signal="button_down" from="Cancel" to="." method="_on_cancel"]
+[connection signal="button_down" from="Negotiate" to="." method="_on_negotiate"]
+[connection signal="button_down" from="Confirm" to="." method="_on_confirm"]

@@ -9,7 +9,7 @@ const DiceItem: PackedScene = preload("res://ui/game/score/dice_item.tscn")
 # 初始化窗口
 func init(stat_info: Protocol.StatInfo):
     $WinnerCon/Name.text = stat_info.winner_name
-    $WinnerCon/Name.modulate = Data.ORDER_DATA[_get_client().order_info.get_order(stat_info.winner_name)]
+    $WinnerCon/Name.modulate = _get_client().get_color(stat_info.winner_name)
     $VCon/TurnCon/Num.text = str(stat_info.turn_num)
     for item in _generate_dice_item(stat_info.dice_info):
         $VCon/DiceCon/DiceScroll/DiceItems.add_child(item)

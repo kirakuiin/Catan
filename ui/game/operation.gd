@@ -4,6 +4,8 @@ extends Control
 # 操作面板
 
 const BankPopup: PackedScene = preload("res://ui/game/trade/bank_popup.tscn")
+const TraderPopup: PackedScene = preload("res://ui/game/trade/trader_popup.tscn")
+const TradedPopup: PackedScene = preload("res://ui/game/trade/traded_popup.tscn")
 
 
 func init():
@@ -18,13 +20,28 @@ func _init_anim():
 func _init_signal():
     _get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
     _get_client().connect("client_state_changed", self, "_on_client_state_changed")
+    _get_client().trade_mgr.connect("trade_price_received", self, "_on_trade_price_received")
 
 
 func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
+    _clear_popup()
     if assist_info.player_turn_name == $"/root/PlayerInfoMgr".get_self_info().player_name:
         $AnimationPlayer.play()
     else:
         $AnimationPlayer.stop(false)
+
+
+func _on_trade_price_received(trade_info: Protocol.TradeInfo):
+    if not _get_client().is_on_turn():
+        _clear_popup()
+        var trade = TradedPopup.instance()
+        $PopupRoot.add_child(trade)
+        trade.popup_centered()
+        trade.init(trade_info)
+
+func _clear_popup():
+    for child in $PopupRoot.get_children():
+        child.queue_free()
 
 
 func _on_client_state_changed(state):
@@ -66,7 +83,7 @@ func _on_check_bank(state):
 
 
 func _on_check_trade(state):
-    $Trade.disabled = not _is_free(state)
+    $Trade.disabled = not (_is_free(state) and _get_client().is_have_res())
 
 
 func _get_client():
@@ -95,9 +112,13 @@ func _on_buy_dev_card():
 
 func _on_trade_with_bank():
     var bank = BankPopup.instance()
-    add_child(bank)
+    $PopupRoot.add_child(bank)
     bank.popup_centered()
 
 
 func _on_trade_with_player():
-    SceneMgr.show_prompt("未实现!")
+    var trade = TraderPopup.instance()
+    $PopupRoot.add_child(trade)
+    trade.popup_centered()
+
+

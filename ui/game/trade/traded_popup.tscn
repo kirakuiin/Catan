@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/game/trade/trade_panel.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ui/game/trade/traded_popup.gd" type="Script" id=2]
+
+[node name="TradedPopup" type="PopupDialog"]
+visible = true
+margin_right = 700.0
+margin_bottom = 500.0
+rect_min_size = Vector2( 700, 370 )
+popup_exclusive = true
+script = ExtResource( 2 )
+
+[node name="TradePanel" parent="." instance=ExtResource( 1 )]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 0.0
+margin_right = 0.0
+margin_bottom = 0.0
+
+[connection signal="trade_canceled" from="TradePanel" to="." method="_on_trade_canceled"]
+[connection signal="trade_confirmed" from="TradePanel" to="." method="_on_trade_confirmed"]

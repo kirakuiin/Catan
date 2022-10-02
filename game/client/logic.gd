@@ -21,6 +21,8 @@ signal exit_game()  # 退出游戏
 
 const BuildMgr: Script = preload("res://game/client/build_mgr.gd")
 const OpMgr: Script = preload("res://game/client/op_mgr.gd")
+const TradeMgr: Script = preload("res://game/client/trade_mgr.gd")
+const TradeNet: Script = preload("res://game/client/trade_net.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -36,7 +38,9 @@ var player_personals: Dictionary
 var client_state: String  # 客户端状态
 var build_mgr: BuildMgr
 var op_mgr: OpMgr
+var trade_mgr: TradeMgr
 
+var _trade_net: TradeNet
 var _logger: Log.Logger
 
 
@@ -44,6 +48,7 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
     order_info = order
     setup_info = setup
     map_info = map
+    _init_trade_net()
     _init_local_info()
 
 func _init_local_info():
@@ -55,6 +60,13 @@ func _init_local_info():
     player_personals = {}
     build_mgr = BuildMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size)
     op_mgr = OpMgr.new(player_buildings, player_cards, setup_info.catan_size)
+    trade_mgr = TradeMgr.new(_trade_net)
+    
+
+func _init_trade_net():
+    _trade_net = TradeNet.new()
+    _trade_net.name = NetDefines.TRADE_CENTER
+    add_child(_trade_net)
 
 
 func _ready():
@@ -78,6 +90,21 @@ func start():
 # 获得玩家名称
 func get_name() -> String:
     return PlayerInfoMgr.get_self_info().player_name
+
+
+# 是否处于回合中
+func is_on_turn() -> bool:
+    return get_name() == assist_info.player_turn_name
+
+
+# 是否持有资源
+func is_have_res() -> bool:
+    return StdLib.sum(player_cards[get_name()].res_cards.values()) > 0
+
+
+# 获得玩家颜色
+func get_color(player_name: String) -> Color:
+    return Data.ORDER_DATA[order_info.get_order(player_name)]
 
 
 # 设置客户端状态

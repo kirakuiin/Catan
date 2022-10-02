@@ -293,7 +293,7 @@ func request_trade(trade_info: Protocol.TradeInfo):
     else:
         change_card_info(trade_info.to_player)
     broadcast_message(Message.trade(trade_info))
-    broadcast_message(Message.get_res(trade_info.from_player, trade_info.get_info))
+    broadcast_message(Message.get_res(trade_info.from_player, trade_info.get_peer))
     broadcast_message(Message.get_res(trade_info.to_player, trade_info.pay_info))
     change_player_op_state(trade_info.from_player, NetDefines.PlayerOpState.TRADE)
 
@@ -401,7 +401,7 @@ func ready_to_exit(player_name: String):
 func notify_place_settlement(player_name: String, is_setup: bool):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置定居点" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "place_settlement", is_setup)
 
 
@@ -409,7 +409,7 @@ func notify_place_settlement(player_name: String, is_setup: bool):
 func notify_place_road(player_name: String, is_setup: bool):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置道路" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "place_road", is_setup)
 
 
@@ -417,7 +417,7 @@ func notify_place_road(player_name: String, is_setup: bool):
 func notify_upgrade_city(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]升级城市" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "upgrade_city")
 
 
@@ -435,7 +435,7 @@ func give_dev_card(player_name):
 # 通知玩家自由行动
 func notify_free_action(player_name: String):
     _logger.logd("通知玩家[%s]自由行动" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "into_free_action")
 
 
@@ -518,7 +518,7 @@ func change_personal_info(player_name: String):
 func notify_move_robber(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]移动强盗..." % player_name)
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "move_robber")
 
 
@@ -532,7 +532,7 @@ func broadcast_robber_pos():
 func notify_rob_player(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]抢劫玩家..." % player_name)
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "rob_player")
 
 
@@ -540,7 +540,7 @@ func notify_rob_player(player_name: String):
 func notify_discard_res(player_name: String, num: int):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知[%s]丢弃[%d]资源" % [player_name, num])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "discard_resource", num)
 
    
@@ -548,7 +548,7 @@ func notify_discard_res(player_name: String, num: int):
 func notify_special_play(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知[%s]特殊出牌" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "special_play")
 
 
@@ -556,7 +556,7 @@ func notify_special_play(player_name: String):
 func notify_choose_res(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知[%s]选择获得的资源" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "choose_res")
 
 
@@ -564,5 +564,5 @@ func notify_choose_res(player_name: String):
 func notify_choose_mono_type(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知[%s]选择垄断的资源类型" % [player_name])
-    var peer_id = PlayerInfoMgr.get_info(player_name).peer_id
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "choose_mono_type")

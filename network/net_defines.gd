@@ -8,6 +8,7 @@ class_name NetDefines
 const BROADCAST_ADDR: String = "255.255.255.255"
 const SERVER_NAME: String = "CatanServer"
 const CLIENT_NAME: String = "CatanClient"
+const TRADE_CENTER: String = "TradeCenter"
 const BROAD_PORT: int = 12345
 const GAME_PORT: int = 32323
 const MAX_PEER: int = 5
@@ -68,3 +69,12 @@ class ClientState:
     const ROB_PLAYER: String="抢劫玩家"
     const CHOOSE_RES: String="选择获得资源"
     const CHOOSE_MONO_TYPE: String="选择垄断类型"
+
+
+# 交易状态枚举
+class TradeState:
+    extends Reference
+
+    const NEGOTIATE: String="协商"
+    const AGREE: String="同意"
+    const REFUSE: String="拒绝"

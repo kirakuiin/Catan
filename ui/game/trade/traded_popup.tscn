@@ -4,7 +4,6 @@
 [ext_resource path="res://ui/game/trade/traded_popup.gd" type="Script" id=2]
 
 [node name="TradedPopup" type="PopupDialog"]
-visible = true
 margin_right = 700.0
 margin_bottom = 500.0
 rect_min_size = Vector2( 700, 370 )
@@ -20,3 +19,4 @@ margin_bottom = 0.0
 
 [connection signal="trade_canceled" from="TradePanel" to="." method="_on_trade_canceled"]
 [connection signal="trade_confirmed" from="TradePanel" to="." method="_on_trade_confirmed"]
+[connection signal="trade_negotiated" from="TradePanel" to="." method="_on_trade_negotiated"]

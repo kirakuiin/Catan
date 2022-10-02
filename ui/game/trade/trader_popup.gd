@@ -24,7 +24,7 @@ func _on_trade_price_received(trade_info: Protocol.TradeInfo):
 
 
 func _on_tag_switched(trade_info: Protocol.TradeInfo):
-    pass
+    $HBox/TradePanel.init_with_trade_info(trade_info)
 
 
 func _on_trade_canceled():
@@ -32,7 +32,15 @@ func _on_trade_canceled():
 
 
 func _on_trade_confirmed(trade_info: Protocol.TradeInfo):
-	_get_mgr().broadcast_trade_price(trade_info)
+    _get_client().request_trade(trade_info)
+    queue_free()
+
+
+func _on_trade_negotiated(trade_info: Protocol.TradeInfo):
+    for child in $HBox/PlayerBg/Players.get_children():
+        child.queue_free()
+    $HBox/TradePanel.reset_name()
+    _get_mgr().broadcast_trade_price(trade_info)
 
 
 func _get_client():

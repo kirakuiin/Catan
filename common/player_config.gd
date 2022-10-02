@@ -7,7 +7,7 @@ const PLAYER_SECTION: String = "Player"
 
 
 var _config = ConfigFile.new()
-onready var _name = str(rand_range(10000, 20000) as int)
+onready var _name = str(rand_range(10000, 20000) as int)  # 测试使用
 
 
 func _init():
@@ -26,9 +26,8 @@ func save_icon_id(icon_id: int):
 
 
 func get_player_name() -> String:
-    return _name
-    # TODO: 还原
-    #return _config.get_value(PLAYER_SECTION, "player_name", str(rand_range(10000, 20000) as int))
+    # return _name
+    return _config.get_value(PLAYER_SECTION, "player_name", str(rand_range(10000, 20000) as int))
 
 
 func get_icon_id() -> int:

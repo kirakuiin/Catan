@@ -15,17 +15,23 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 toggle_mode = true
 
-[node name="Color" type="ColorRect" parent="."]
-modulate = Color( 1, 1, 1, 0.392157 )
-anchor_right = 1.0
+[node name="Image" type="TextureRect" parent="."]
+anchor_left = 0.28
+anchor_right = 0.88
 anchor_bottom = 1.0
 mouse_filter = 2
-
-[node name="Image" type="TextureRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
 expand = true
 stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[connection signal="button_down" from="Button" to="." method="_on_switch_tag"]
+[node name="Color" type="ColorRect" parent="."]
+anchor_right = 0.16
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [connection signal="toggled" from="Button" to="." method="_on_switch_tag"]

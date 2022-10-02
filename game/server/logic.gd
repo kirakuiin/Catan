@@ -293,7 +293,7 @@ func request_trade(trade_info: Protocol.TradeInfo):
     else:
         change_card_info(trade_info.to_player)
     broadcast_message(Message.trade(trade_info))
-    broadcast_message(Message.get_res(trade_info.from_player, trade_info.get_peer))
+    broadcast_message(Message.get_res(trade_info.from_player, trade_info.get_info))
     broadcast_message(Message.get_res(trade_info.to_player, trade_info.pay_info))
     change_player_op_state(trade_info.from_player, NetDefines.PlayerOpState.TRADE)
 

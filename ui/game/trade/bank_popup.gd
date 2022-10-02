@@ -75,7 +75,10 @@ func _on_trade_changed(res_type: int, num: int, unit: int):
     _trade_unit[res_type] = unit
     var total = StdLib.sum(_trade_info.values())
     _set_balance(total)
-    $Confirm.disabled = total != 0
+    var abs_total = 0
+    for val in _trade_info.values():
+        abs_total += abs(val)
+    $Confirm.disabled = (total != 0 or abs_total == 0)
 
 
 func _set_balance(num: int):

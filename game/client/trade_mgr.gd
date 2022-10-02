@@ -24,6 +24,13 @@ func broadcast_trade_price(trade_info: Protocol.TradeInfo):
             _net.rpc_id(player_info.peer_id, "send_trade_price", Protocol.serialize(trade_info))
 
 
+# 回复交易报价
+func response_trade_price(trade_info: Protocol.TradeInfo):
+    _logger.logd("玩家[%s]回复交易报价 %s" % [trade_info.from_player, trade_info])
+    var peer_id = PlayerInfoMgr.get_peer(trade_info.to_player)
+    _net.rpc_id(peer_id, "send_trade_price", Protocol.serialize(trade_info))
+
+
 # 收到报价
 func receive_trade_price(trade_info: Protocol.TradeInfo):
     _logger.logd("玩家[%s]收到来自[%s]的交易报价: %s" % [trade_info.to_player, trade_info.from_player, trade_info])

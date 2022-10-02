@@ -37,11 +37,10 @@ __meta__ = {
 }
 
 [node name="Lumber" parent="ItemCon" instance=ExtResource( 3 )]
+anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 0.0
-margin_top = 0.0
 margin_right = 100.0
 margin_bottom = 300.0
 res_type = 0
@@ -49,22 +48,22 @@ enable_unit = true
 check_valid = true
 
 [node name="Ore" parent="ItemCon" instance=ExtResource( 3 )]
+anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 104.0
-margin_top = 0.0
 margin_right = 204.0
 margin_bottom = 300.0
 enable_unit = true
 check_valid = true
 
 [node name="Grain" parent="ItemCon" instance=ExtResource( 3 )]
+anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 208.0
-margin_top = 0.0
 margin_right = 308.0
 margin_bottom = 300.0
 res_type = 4
@@ -72,11 +71,11 @@ enable_unit = true
 check_valid = true
 
 [node name="Brick" parent="ItemCon" instance=ExtResource( 3 )]
+anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 312.0
-margin_top = 0.0
 margin_right = 412.0
 margin_bottom = 300.0
 res_type = 1
@@ -84,11 +83,11 @@ enable_unit = true
 check_valid = true
 
 [node name="Wool" parent="ItemCon" instance=ExtResource( 3 )]
+anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 416.0
-margin_top = 0.0
 margin_right = 516.0
 margin_bottom = 300.0
 res_type = 3
@@ -202,6 +201,7 @@ anchor_top = 0.818
 anchor_right = 0.742857
 anchor_bottom = 0.978
 margin_left = -3.05176e-05
+disabled = true
 texture_normal = ExtResource( 6 )
 texture_disabled = ExtResource( 7 )
 expand = true

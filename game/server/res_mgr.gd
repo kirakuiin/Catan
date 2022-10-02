@@ -60,11 +60,17 @@ func trade(trade_info: Protocol.TradeInfo):
     if trade_info.to_player == Protocol.TradeInfo.BANK:
         _trade_with_bank(trade_info)
     else:
-        assert (false, "未实现!")
+        _trade_with_player(trade_info)
 
 func _trade_with_bank(trade_info: Protocol.TradeInfo):
     dispatch_player_res(trade_info.from_player, trade_info.get_info)
     recycle_player_res(trade_info.from_player, trade_info.pay_info)
+
+func _trade_with_player(trade_info: Protocol.TradeInfo):
+    StdLib.num_dict_merge(_cards[trade_info.from_player].res_cards, trade_info.get_info)
+    StdLib.num_dict_merge(_cards[trade_info.from_player].res_cards, trade_info.pay_info, false)
+    StdLib.num_dict_merge(_cards[trade_info.to_player].res_cards, trade_info.pay_info)
+    StdLib.num_dict_merge(_cards[trade_info.to_player].res_cards, trade_info.get_info, false)
 
 
 # 垄断资源

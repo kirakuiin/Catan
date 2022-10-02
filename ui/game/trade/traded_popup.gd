@@ -13,7 +13,15 @@ func _on_trade_canceled():
 
 
 func _on_trade_confirmed(trade_info: Protocol.TradeInfo):
-    pass
+    trade_info.trade_state = NetDefines.TradeState.AGREE
+    _get_mgr().response_trade_price(trade_info)
+    queue_free()
+
+
+func _on_trade_negotiated(trade_info: Protocol.TradeInfo):
+    trade_info.trade_state = NetDefines.TradeState.NEGOTIATE
+    _get_mgr().response_trade_price(trade_info)
+    queue_free()
 
 
 func _get_client():

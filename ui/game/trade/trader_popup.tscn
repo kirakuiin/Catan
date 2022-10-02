@@ -20,15 +20,16 @@ margin_right = 100.0
 margin_bottom = 500.0
 rect_min_size = Vector2( 100, 0 )
 size_flags_horizontal = 3
-color = Color( 0.705882, 0.705882, 0.705882, 0.705882 )
+color = Color( 0.101961, 0.105882, 0.0980392, 0.94902 )
 
 [node name="Players" type="VBoxContainer" parent="HBox/PlayerBg"]
-margin_left = -808.0
-margin_right = -708.0
-margin_bottom = 500.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 rect_min_size = Vector2( 100, 0 )
+custom_constants/separation = 20
 
 [node name="TradePanel" parent="HBox" instance=ExtResource( 1 )]
 
 [connection signal="trade_canceled" from="HBox/TradePanel" to="." method="_on_trade_canceled"]
 [connection signal="trade_confirmed" from="HBox/TradePanel" to="." method="_on_trade_confirmed"]
+[connection signal="trade_negotiated" from="HBox/TradePanel" to="." method="_on_trade_negotiated"]

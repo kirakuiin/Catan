@@ -225,9 +225,12 @@ class SparseMatrix:
 # 常用函数
 
 # 合并数值字典
-static func num_dict_merge(dict_a: Dictionary, dict_b: Dictionary):
+static func num_dict_merge(dict_a: Dictionary, dict_b: Dictionary, is_add: bool=true):
     for k in dict_b:
-        num_dict_add(dict_a, k, dict_b[k])
+        if is_add:
+            num_dict_add(dict_a, k, dict_b[k])
+        else:
+            num_dict_add(dict_a, k, -dict_b[k])
 
 
 # 数值字典默认累加

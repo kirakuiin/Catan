@@ -32,6 +32,7 @@ func set_num(num: int):
 
 # 设置初始面板
 func set_item(trade_info: Protocol.TradeInfo):
+    _reset()
     for type in trade_info.get_info:
         if res_type == type:
             for i in abs(trade_info.get_info[type]):
@@ -40,6 +41,12 @@ func set_item(trade_info: Protocol.TradeInfo):
         if res_type == type:
             for i in abs(trade_info.pay_info[type]):
                 _plus_pay()
+
+func _reset():
+    set_num(_origin)
+    $Get.text = "0"
+    $Pay.text = "0"
+
 
 
 # 初始化单位

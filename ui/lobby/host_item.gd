@@ -25,8 +25,10 @@ func set_num(cur_num: int, max_num: int) -> void:
 func set_state(state: int) -> void:
     if state == Data.HostState.PLAYING:
         $InfoContainer/StateLabel.text = '游戏中'
+        $InfoContainer/StateLabel.modulate = Color.red
     elif state == Data.HostState.PREPARE:
         $InfoContainer/StateLabel.text = '准备中'
+        $InfoContainer/StateLabel.modulate = Color.green
 
 
 func set_group(group: ButtonGroup):

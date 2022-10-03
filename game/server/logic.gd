@@ -64,7 +64,7 @@ func _init_player_info():
     player_personals = {}
     assist_info = Protocol.AssistInfo.new()
     bank_info = Protocol.BankInfo.new(setup_info.catan_size)
-    stat_info = Protocol.StatInfo.new()
+    stat_info = Protocol.StatInfo.new(OS.get_unix_time())
 
 
 func _init_robber():
@@ -88,9 +88,9 @@ func _init_player_state():
 
 
 func _init_mgr():
-    _res_mgr = ResMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size, bank_info)
+    _res_mgr = ResMgr.new(map_info, player_buildings, player_cards, setup_info, bank_info)
     _card_mgr = CardMgr.new(player_cards, player_personals, setup_info.catan_size, bank_info)
-    _vp_mgr = VPMgr.new(player_cards, player_buildings, player_personals, assist_info)
+    _vp_mgr = VPMgr.new(setup_info, player_cards, player_buildings, player_personals, assist_info)
 
 
 func _process(delta):
@@ -146,6 +146,7 @@ func set_stat_info():
             stat_info.winner_name = player
             break
     stat_info.turn_num = assist_info.turn_num
+    stat_info.total_time = OS.get_unix_time()-stat_info.total_time
     
 
 # 分发资源

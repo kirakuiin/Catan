@@ -3,13 +3,15 @@ extends Reference
 # 胜点管理器
 
 
+var _setup: Protocol.CatanSetupInfo
 var _cards: Dictionary
 var _buildings: Dictionary
 var _personals: Dictionary
 var _assist: Protocol.AssistInfo
 
 
-func _init(cards: Dictionary, buildings: Dictionary, personals: Dictionary, assist_info: Protocol.AssistInfo):
+func _init(setup: Protocol.CatanSetupInfo, cards: Dictionary, buildings: Dictionary, personals: Dictionary, assist_info: Protocol.AssistInfo):
+    _setup = setup
     _cards = cards
     _buildings = buildings
     _personals = personals
@@ -66,7 +68,7 @@ func update_road(player_name: String) -> Archievement:
 
 # 更新玩家分数
 func update_vp(player_name: String):
-    var vp := 0
+    var vp := _setup.initial_vp
     var building = _buildings[player_name]
     vp += len(building.settlement_info)
     vp += len(building.city_info)*2

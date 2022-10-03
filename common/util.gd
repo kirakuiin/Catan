@@ -26,3 +26,11 @@ static func get_windows_size() -> Vector2:
 static func color_to_str(color: Color):
     var colors = PoolByteArray([color.a8, color.r8, color.g8, color.b8])
     return "#"+colors.hex_encode()
+
+
+# 秒转时间字符串
+static func time_convert(time_in_sec: int, fmt: String="%02d时:%02d分:%02d秒") -> String:
+    var seconds = time_in_sec%60
+    var minutes = (time_in_sec/60)%60
+    var hours = (time_in_sec/60)/60
+    return fmt % [hours, minutes, seconds]

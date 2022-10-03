@@ -38,12 +38,19 @@ func _input(event):
 func _init_option():
 	for index in Data.MAPSIZE_DATA:
 		var desc = "%s-%s人" % [Data.MAPSIZE_DATA[index]-1, Data.MAPSIZE_DATA[index]]
-		$OptionContainer/PlayerNumContainer/Btn.add_item(desc, index)
+		$OptionScroll/VCon/PlayerNumContainer/Btn.add_item(desc, index)
 	for index in Data.SWITCH_DATA:
-		$OptionContainer/FogContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$OptionContainer/RandResourceContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$OptionContainer/RandSeatContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$OptionContainer/RandLandContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$OptionScroll/VCon/FogContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$OptionScroll/VCon/RandResourceContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$OptionScroll/VCon/RandSeatContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$OptionScroll/VCon/RandLandContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+	if GameServer.is_server():
+		_init_special_option()
+	else:
+		$SpecialOptionScroll.hide()
+
+func _init_special_option():
+	$SpecialOptionScroll.show()
 
 
 func _init_player_list():
@@ -74,7 +81,7 @@ func _init_signal():
 	PlayerInfoMgr.connect("player_added", self, "_on_player_added")
 	PlayerInfoMgr.connect("player_removed", self, "_on_player_removed")
 	GameServer.connect("server_disconnected", self, "_on_server_disconnected")
-	ConnState.connect("state_changed", self, "_on_start_client_game")
+	ConnState.connect("state_changed", self, "_on_conn_state_changed")
 	$PlayerSeat.connect("all_player_ready", self, "_on_all_player_ready")
 
 
@@ -107,11 +114,11 @@ puppet func recv_catan_setup_info(net_data):
 
 func _reset_catan_setup():
 	var info = _catan_setup_info
-	$OptionContainer/PlayerNumContainer/Btn.select(int(info.catan_size!=Data.CatanSize.SMALL))
-	$OptionContainer/FogContainer/Btn.select(int(info.is_enable_fog))
-	$OptionContainer/RandResourceContainer/Btn.select(int(info.is_random_resource))
-	$OptionContainer/RandSeatContainer/Btn.select(int(info.is_random_order))
-	$OptionContainer/RandLandContainer/Btn.select(int(info.is_random_land))
+	$OptionScroll/VCon/PlayerNumContainer/Btn.select(int(info.catan_size!=Data.CatanSize.SMALL))
+	$OptionScroll/VCon/FogContainer/Btn.select(int(info.is_enable_fog))
+	$OptionScroll/VCon/RandResourceContainer/Btn.select(int(info.is_random_resource))
+	$OptionScroll/VCon/RandSeatContainer/Btn.select(int(info.is_random_order))
+	$OptionScroll/VCon/RandLandContainer/Btn.select(int(info.is_random_land))
 
 
 func _on_change_num(index):
@@ -220,9 +227,10 @@ remote func start_game(order_data, setup_data, map_data):
 	scene.init(order_info, setup_info, map_info)
 
 
-func _on_start_client_game(state):
+func _on_conn_state_changed(state):
 	if state == Data.HostState.PLAYING:
 		rpc("start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+	_host_info.host_state = state
 
 
 func _generate_map():
@@ -242,3 +250,11 @@ func _on_preview_map():
 	_generate_map()
 	$CatanMap.show_preview(_map_info, _catan_setup_info.is_enable_fog)
 	$CatanMap.show()
+
+
+func _on_vp_value_changed(value: float):
+	_catan_setup_info.initial_vp = int(value)
+
+
+func _on_res_value_changed(value: float):
+	_catan_setup_info.initial_res = int(value)

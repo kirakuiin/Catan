@@ -10,10 +10,12 @@ const UPGRADE_DONE: AudioStream = preload("res://assets/audios/upgrade_finished.
 const KNIGHT_MOVE: AudioStream = preload("res://assets/audios/knight_move.wav")
 const PLACE_ROAD: AudioStream = preload("res://assets/audios/place_road.wav")
 const PLAYER_ROBBED: AudioStream = preload("res://assets/audios/player_robbed.wav")
+const FAN_FARE: AudioStream = preload("res://assets/audios/fanfare.mp3")
 
 
 func init():
     PlayingNet.get_client().connect("notification_received", self, "_on_notification_received")
+    PlayingNet.get_client().connect("stat_info_received", self, "_on_stat_info_received")
 
 
 func _on_notification_received(noti_info: Protocol.NotificationInfo):
@@ -31,3 +33,7 @@ func _on_notification_received(noti_info: Protocol.NotificationInfo):
         Audio.play_once(self, PLAYER_ROBBED)
     elif noti_info.notify_type == NetDefines.NotificationType.PLAY_CARD:
         Audio.play_once(self, PLAY_CARD)
+
+
+func _on_stat_info_received(stat_info: Protocol.StatInfo):
+    Audio.play_once(self, FAN_FARE)

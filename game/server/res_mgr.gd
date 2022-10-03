@@ -6,18 +6,18 @@ var _map: Protocol.MapInfo
 var _buildings: Dictionary
 var _cards: Dictionary
 var _bank: Protocol.BankInfo
-var _size: int
+var _setup: Protocol.CatanSetupInfo
 
 var _num_to_res: Dictionary
 var _num_to_corner: Dictionary
 var _robber_pos: Vector3
 
 
-func _init(map: Protocol.MapInfo, buildings: Dictionary, cards: Dictionary, catan_size: int, bank: Protocol.BankInfo):
+func _init(map: Protocol.MapInfo, buildings: Dictionary, cards: Dictionary, setup: Protocol.CatanSetupInfo, bank: Protocol.BankInfo):
     _map = map
     _buildings = buildings
     _cards = cards
-    _size = catan_size
+    _setup = setup
     _bank = bank
     _init_num_corner()
 
@@ -156,15 +156,19 @@ func dispatch_by_num(num: int) -> Dictionary:
 func dispatch_initial_res(player_name: String) -> Dictionary:
     var corner_pos = _buildings[player_name].settlement_info[-1]
     var res_list = _find_corner_res(corner_pos)
-    var result = {}
+    var result = _dispatch_extra_res(player_name)
     for res in res_list:
         var num = _give_res_to_player(player_name, res[0], 1)
         StdLib.num_dict_add(result, res[0], num)
-    # var res_list = [[Data.ResourceType.LUMBER, 1], [Data.ResourceType.BRICK, 1], [Data.ResourceType.WOOL, 1], [Data.ResourceType.ORE, 1], [Data.ResourceType.GRAIN, 1]]
-    # var result = {}
-    # for res in res_list:
-    #     var num = _give_res_to_player(player_name, res[0], 8)
-    #     StdLib.num_dict_add(result, res[0], num)
+    return result
+
+func _dispatch_extra_res(player_name: String) -> Dictionary:
+    var result = {}
+    var extra_num = _setup.initial_res
+    if  extra_num > 0:
+        for type in Data.RES_DATA:
+            var num = _give_res_to_player(player_name, type, extra_num)
+            StdLib.num_dict_add(result, type, num)
     return result
 
 

@@ -142,6 +142,9 @@ class CatanSetupInfo:
     var is_random_order: bool
     var is_random_resource: bool
 
+    var initial_res: int
+    var initial_vp: int
+
     func _init(size=Data.CatanSize.SMALL, fog=false, land=false, order=false, resource=false):
         cls_name = "CatanSetupInfo"
         catan_size = size
@@ -384,12 +387,14 @@ class TradeInfo:
 class StatInfo:
     extends ProtocolData
     
+    var total_time: int
     var winner_name: String
     var dice_info: Dictionary
     var turn_num: int
 
-    func _init(winner: String="", dice: Dictionary={}):
+    func _init(time=0, winner: String="", dice: Dictionary={}):
         cls_name = "StatInfo"
+        total_time = time
         winner_name = winner
         dice_info = dice
         turn_num = 0

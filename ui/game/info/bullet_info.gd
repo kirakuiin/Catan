@@ -4,6 +4,6 @@ extends Control
 
 
 # 播放弹幕
-func play_with_msg(message: Protocol.MessageInfo):
-    $Message.bbcode_text = message.bbcode(PlayingNet.get_client().order_info)
+func play_with_msg(bbcode: String):
+    $Message.bbcode_text = bbcode
     $AnimationPlayer.play("fly")

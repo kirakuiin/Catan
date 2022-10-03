@@ -83,6 +83,12 @@ class TradeState:
 # 通告枚举
 enum NotificationType {
     NONE,
+    TRADE_RESOURCE,
+    DISCARD_RESOURCE,
+    LOST_RESOURCE,
+    GET_RESOURCE,
+    ROAD_ARCHIEVEMENT,
+    ARMY_ARCHIEVEMENT,
     PLACE_SETTLEMENT,
     PLACE_ROAD,
     UPGRADE_CITY,

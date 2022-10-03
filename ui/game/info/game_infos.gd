@@ -26,7 +26,6 @@ func _init_signal():
     _get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
     _get_client().connect("player_hint_showed", self, "_on_player_hint_showed")
     _get_client().connect("client_state_changed", self, "_on_client_state_changed")
-    _get_client().connect("message_received", self, "_on_message_received")
     _get_client().connect("notification_received", self, "_on_notification_received")
 
 
@@ -77,11 +76,13 @@ func _create_popup(state: String):
         popup.popup_choose_res()
 
 
-func _on_message_received(message: Protocol.MessageInfo):
+func _on_notification_received(noti_info: Protocol.NotificationInfo):
     var bullet = Bullet.instance()
     _init_bullet_info(bullet)
     $BulletZone.add_child(bullet)
-    bullet.play_with_msg(message)
+    var message = Message.notification_to_message(noti_info)
+    if message.has_content():
+        bullet.play_with_msg(message.bbcode())
 
 func _init_bullet_info(bullet):
     var space = $BulletZone.rect_size.y/BULLET_NUM

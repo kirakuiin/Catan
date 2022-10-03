@@ -10,12 +10,11 @@ signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal card_info_changed(player_name, card_info)  # 得分信息改变
 signal personal_info_changed(player_name, personal_info)  # 个人信息改变
 signal client_state_changed(state)  # 客户端状态改变
-signal notification_received(message)  # 服务器消息
+signal notification_received(message)  # 服务器通知
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
 signal resource_discarded(num)  # 丢弃资源
 signal player_hint_showed(hint, always_show)  # 提示信息变化
-signal message_received(msg)  # 收到信息
 signal stat_info_received(msg)  # 收到结算消息
 signal exit_game()  # 退出游戏
 
@@ -322,11 +321,6 @@ func discard_resource(num: int):
     change_client_state(NetDefines.ClientState.DISCARD_RESOURCE)
     emit_signal("resource_discarded", num)
     show_hint("请丢弃资源...")
-
-
-# 播放消息
-func show_message(message: Protocol.MessageInfo):
-    emit_signal("message_received", message)
 
 
 # 移动强盗

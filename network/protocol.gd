@@ -24,7 +24,6 @@ static func get_cls(cls_name) -> ProtocolData:
         "TradeInfo": TradeInfo,
         "StatInfo": StatInfo,
         "NotificationInfo": NotificationInfo,
-        "MessageInfo": MessageInfo,
     }
     return map[cls_name]
 
@@ -408,77 +407,4 @@ class NotificationInfo:
         notify_type = type
         notify_params = params
 
-
-# 消息信息
-class MessageInfo:
-    extends ProtocolData
-
-    const TEXT: int = 1
-    const PLAYER: int = 2
-    const RES: int = 3
-    const DEV: int = 4
-    const BUILDING: int = 5
-    const BUY_DEV: int = 6
-
-    var message_list: Array
-
-    func _init(msg_list: Array=[]):
-        cls_name = "MessageInfo"
-        message_list = msg_list
-
-    # 追加普通信息
-    func add_text(text):
-        message_list.append({TEXT: text})
-
-    # 追加玩家
-    func add_player(name: String):
-        message_list.append({PLAYER: name})
-
-    # 追加购买发展卡
-    func add_buy_dev():
-        message_list.append({BUY_DEV: 1})
-
-    # 追加资源文本
-    func add_resource(res_type: int):
-        message_list.append({RES: res_type})
-
-    # 追加建筑文本
-    func add_building(building_type: int):
-        message_list.append({BUILDING: building_type})
-
-    # 追加发展卡文本
-    func add_development(dev_type: int):
-        message_list.append({DEV: dev_type})
-
-    # 转为bbcode
-    func bbcode(order_info: PlayerOrderInfo=null) -> String:
-        var result = PoolStringArray()
-        for sub_msg in message_list:
-            var type = sub_msg.keys()[0]
-            var val = sub_msg.values()[0]
-            result.append(_parse(type, val, order_info))
-        return "".join(result)
-    
-    func _parse(type:int , val, order_info: PlayerOrderInfo=null) -> String:
-        var result = ""
-        match type:
-            TEXT:
-                result = "[valign px=10]%s[/valign]" % str(val)
-            PLAYER:
-                if val == TradeInfo.BANK:
-                    result = "[valign px=10][color=silver]%s[/color][/valign]" % "银行"
-                elif order_info:
-                    result = "[valign px=10][color=%s]%s[/color][/valign]" % [Util.color_to_str(Data.ORDER_DATA[order_info.get_order(val)]), val]
-                else:
-                    result = "[valign px=10]%s[/valign]" % val
-            RES:
-                result = "[img=50x50]%s[/img]" % Data.RES_ICON_DATA[val]
-            BUILDING:
-                result = "[img=50x50]%s[/img]" % Data.BUILDING_ICON_DATA[val]
-            DEV:
-                result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
-            BUY_DEV:
-                result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
-        return result
-            
 

@@ -27,12 +27,12 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Hexlib",
 "language": "GDScript",
-"path": "res://game/hexlib.gd"
+"path": "res://common/hexlib.gd"
 }, {
 "base": "Reference",
 "class": "Message",
 "language": "GDScript",
-"path": "res://game/message.gd"
+"path": "res://ui/game/info/message.gd"
 }, {
 "base": "Node",
 "class": "NetDefines",

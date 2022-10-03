@@ -202,11 +202,6 @@ remotesync func choose_mono_type():
     get_client().choose_mono_type()
 
 
-# 通知客户端播放消息
-remotesync func show_message(data):
-    get_client().show_message(Protocol.deserialize(data))
-
-
 # 向客户端发送通知
 remotesync func send_notification(data):
     get_client().receive_notification(Protocol.deserialize(data))

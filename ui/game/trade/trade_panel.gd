@@ -63,9 +63,6 @@ func _to_confirm_btn():
 
 func _set_btn_state():
     var is_disable = false
-    for res_type in _trade_info.get_info:
-        if _get_client().bank_info.res_info[res_type] < _trade_info.get_info[res_type]:
-            is_disable = true
     for res_type in _trade_info.pay_info:
         if StdLib.dict_get(_get_client().player_cards[_get_name()].res_cards, res_type, 0) < _trade_info.pay_info[res_type]:
             is_disable = true

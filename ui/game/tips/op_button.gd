@@ -48,7 +48,7 @@ func _get_title() -> String:
 
 
 func _get_resource() -> String:
-    var message = Protocol.MessageInfo.new()
+    var message = Message.RichMessage.new()
     for res_type in Data.OP_DATA[btn_type]:
         message.add_resource(res_type)
         message.add_text("[%d] " % Data.OP_DATA[btn_type][res_type])

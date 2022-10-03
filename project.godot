@@ -90,6 +90,8 @@ SceneMgr="*res://common/scene_mgr.gd"
 PlayerInfoMgr="*res://common/player_info_mgr.gd"
 ConnState="*res://network/conn_state.gd"
 PlayingNet="*res://network/playing_net.gd"
+Audio="*res://common/audio.gd"
+Init="*res://init.gd"
 
 [debug]
 

@@ -15,6 +15,10 @@ func _ready():
 	$Map/ViewContainer/Viewport/DragArea.connect("mouse_moved", self, "_on_mouse_moved")
 
 
+func _exit_tree():
+	Audio.play_bg()
+
+
 # 初始化世界
 func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
 	if GameServer.is_server():
@@ -24,6 +28,7 @@ func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: 
 	_init_overlay()
 	_client.start()
 	_init_signal()
+	Audio.stop_bg()
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):

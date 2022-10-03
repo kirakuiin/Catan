@@ -31,7 +31,7 @@ var _robber_pos: Vector3
 var _res_mgr: ResMgr
 var _vp_mgr: VPMgr
 var _card_mgr: CardMgr
-var _logger: Log.Logger
+onready var _logger: Log.Logger = Log.get_logger(Log.LogModule.SERVER)
 
 
 # 初始化服务器数据
@@ -43,7 +43,6 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
 
 
 func _ready():
-    _logger = Log.get_logger(Log.LogModule.SERVER)
     _init_node_setup()
     _init_player_info()
     _init_robber()

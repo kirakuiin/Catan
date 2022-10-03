@@ -41,7 +41,7 @@ var op_mgr: OpMgr
 var trade_mgr: TradeMgr
 
 var _trade_net: TradeNet
-var _logger: Log.Logger
+onready var _logger: Log.Logger = Log.get_logger(Log.LogModule.CLIENT)
 
 
 func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
@@ -70,7 +70,6 @@ func _init_trade_net():
 
 
 func _ready():
-    _logger = Log.get_logger(Log.LogModule.CLIENT)
     _init_node_setup()
     _logger.logi("游戏客户端启动...")
 

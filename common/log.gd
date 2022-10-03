@@ -22,6 +22,7 @@ class LogModule:
     const SERVER: String = "server"
     const CONN: String = "conn"
     const TRADE: String = "trade"
+    const AUDIO: String = "audio"
 
 
 var _logger_info: Dictionary

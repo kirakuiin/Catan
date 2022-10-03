@@ -117,6 +117,7 @@ anchor_left = 0.373062
 anchor_top = 0.818
 anchor_right = 0.487347
 anchor_bottom = 0.978
+hint_tooltip = "取消"
 texture_normal = ExtResource( 8 )
 expand = true
 stretch_mode = 5
@@ -129,13 +130,15 @@ anchor_left = 0.671429
 anchor_top = 0.816
 anchor_right = 0.785715
 anchor_bottom = 0.976
+hint_tooltip = "协商"
 disabled = true
 texture_normal = ExtResource( 2 )
 texture_disabled = ExtResource( 3 )
 expand = true
 stretch_mode = 5
 __meta__ = {
-"_edit_use_anchors_": true
+"_edit_use_anchors_": true,
+"_editor_description_": "协商"
 }
 
 [node name="Confirm" type="TextureButton" parent="."]
@@ -145,6 +148,7 @@ anchor_top = 0.816
 anchor_right = 0.785715
 anchor_bottom = 0.976
 margin_left = -3.05176e-05
+hint_tooltip = "确认"
 disabled = true
 texture_normal = ExtResource( 5 )
 texture_disabled = ExtResource( 11 )

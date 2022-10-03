@@ -303,6 +303,7 @@ func add_settlement(player_name: String, pos: Vector3):
     update_vp(player_name)
     change_building_info(player_name)
     broadcast_message(Message.place_settlement(player_name))
+    broadcast_notification(Notification.place_settlement())
     update_breaked_road(player_name, pos)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
@@ -313,6 +314,7 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
     change_building_info(player_name)
     update_road_archievement(player_name)
     broadcast_message(Message.place_road(player_name))
+    broadcast_notification(Notification.place_road())
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
@@ -323,6 +325,7 @@ func upgrade_city(player_name: String, pos: Vector3):
     update_vp(player_name)
     change_building_info(player_name)
     broadcast_message(Message.upgrade_city(player_name))
+    broadcast_notification(Notification.upgrade_city())
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
@@ -333,6 +336,7 @@ func request_play_card(player_name: String, dev_type: int):
     update_army_archievement(player_name, dev_type)
     change_card_info(player_name)
     broadcast_message(Message.play_card(player_name, dev_type))
+    broadcast_notification(Notification.play_card())
     change_player_op_state(player_name, NetDefines.PlayerOpState.PLAY_CARD, [dev_type])
 
 
@@ -360,6 +364,7 @@ func rob_player_done(robber: String, robbed_player: String):
     var rob_result = _res_mgr.rob_resource(robber, robbed_player)
     if rob_result:
         broadcast_message(Message.rob_player(robber, robbed_player))
+        broadcast_notification(Notification.player_robbed())
         change_card_info(robber)
         change_card_info(robbed_player)
     change_player_net_state(robber, NetDefines.PlayerNetState.DONE)
@@ -429,6 +434,7 @@ func give_dev_card(player_name):
         update_vp(player_name)
     broadcast_bank_info()
     broadcast_message(Message.buy_dev_card(player_name))
+    broadcast_notification(Notification.buy_card())
 
 
 # 通知玩家自由行动
@@ -472,6 +478,12 @@ func broadcast_personal_info():
 func broadcast_message(message: Protocol.MessageInfo):
     _logger.logd("广播消息[%s]" % message)
     PlayingNet.rpc("show_message", Protocol.serialize(message))
+
+
+# 广播通知
+func broadcast_notification(notification_info: Protocol.NotificationInfo):
+    _logger.logd("广播通知[%s]" % notification_info)
+    PlayingNet.rpc("send_notification", Protocol.serialize(notification_info))
 
 
 # 广播骰子信息
@@ -519,6 +531,7 @@ func notify_move_robber(player_name: String):
     _logger.logd("通知玩家[%s]移动强盗..." % player_name)
     var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "move_robber")
+    broadcast_notification(Notification.move_robber())
 
 
 # 更新强盗位置

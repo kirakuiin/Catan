@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/game/audio_player.gd" type="Script" id=1]
+
+[node name="AudioPlayer" type="AudioStreamPlayer"]
+bus = "Effect"
+script = ExtResource( 1 )

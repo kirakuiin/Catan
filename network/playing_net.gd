@@ -207,6 +207,11 @@ remotesync func show_message(data):
     get_client().show_message(Protocol.deserialize(data))
 
 
+# 向客户端发送通知
+remotesync func send_notification(data):
+    get_client().receive_notification(Protocol.deserialize(data))
+
+
 # 通知客户端打开分数结算界面
 remotesync func show_score_panel(data):
     get_client().show_score_panel(Protocol.deserialize(data))

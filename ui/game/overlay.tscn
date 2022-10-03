@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://ui/game/overlay.gd" type="Script" id=1]
 [ext_resource path="res://ui/game/operation.tscn" type="PackedScene" id=2]
@@ -8,12 +8,15 @@
 [ext_resource path="res://ui/game/zone/res_zone.tscn" type="PackedScene" id=6]
 [ext_resource path="res://ui/game/zone/dev_zone.tscn" type="PackedScene" id=7]
 [ext_resource path="res://ui/game/info/bank_info.tscn" type="PackedScene" id=8]
+[ext_resource path="res://ui/game/audio_player.tscn" type="PackedScene" id=9]
 
 [node name="Overlay" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 1 )
+
+[node name="AudioPlayer" parent="." instance=ExtResource( 9 )]
 
 [node name="GameInfos" parent="." instance=ExtResource( 4 )]
 

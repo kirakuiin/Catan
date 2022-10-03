@@ -2,6 +2,7 @@ extends Reference
 
 # 消息
 
+# TODO: 删除Message模块, 将此处的逻辑用Notification代替
 class_name Message
 
 

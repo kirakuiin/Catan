@@ -9,9 +9,6 @@ const PLAY_TIME: int = 5000
 const Bullet: PackedScene = preload("res://ui/game/info/bullet_info.tscn")
 const ResPop: PackedScene = preload("res://ui/game/info/res_popup.tscn")
 
-const DRAW_CARD: AudioStream = preload("res://assets/audios/draw_card.wav")
-const PLAY_CARD: AudioStream = preload("res://assets/audios/play_card.wav")
-
 var _bullet_track: Array
 
 
@@ -30,6 +27,7 @@ func _init_signal():
     _get_client().connect("player_hint_showed", self, "_on_player_hint_showed")
     _get_client().connect("client_state_changed", self, "_on_client_state_changed")
     _get_client().connect("message_received", self, "_on_message_received")
+    _get_client().connect("notification_received", self, "_on_notification_received")
 
 
 func _get_client():
@@ -84,7 +82,6 @@ func _on_message_received(message: Protocol.MessageInfo):
     _init_bullet_info(bullet)
     $BulletZone.add_child(bullet)
     bullet.play_with_msg(message)
-    _play_sound_effect(message)
 
 func _init_bullet_info(bullet):
     var space = $BulletZone.rect_size.y/BULLET_NUM
@@ -102,9 +99,3 @@ func _find_available_track():
             min_time = _bullet_track[i]
             min_track = i
     return min_track
-
-func _play_sound_effect(message: Protocol.MessageInfo):
-    if message.have_type(Protocol.MessageInfo.BUY_DEV):
-        Audio.play_once($AudioStreamPlayer, DRAW_CARD)
-    elif message.have_type(Protocol.MessageInfo.DEV):
-        Audio.play_once($AudioStreamPlayer, PLAY_CARD)

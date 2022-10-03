@@ -23,6 +23,7 @@ static func get_cls(cls_name) -> ProtocolData:
         "BankInfo": BankInfo,
         "TradeInfo": TradeInfo,
         "StatInfo": StatInfo,
+        "NotificationInfo": NotificationInfo,
         "MessageInfo": MessageInfo,
     }
     return map[cls_name]
@@ -395,6 +396,19 @@ class StatInfo:
         turn_num = 0
 
 
+# 通告
+class NotificationInfo:
+    extends ProtocolData
+
+    var notify_type: int
+    var notify_params: Dictionary
+
+    func _init(type: int=NetDefines.NotificationType.NONE, params: Dictionary={}):
+        cls_name = "NotificationInfo"
+        notify_type = type
+        notify_params = params
+
+
 # 消息信息
 class MessageInfo:
     extends ProtocolData
@@ -435,13 +449,6 @@ class MessageInfo:
     # 追加发展卡文本
     func add_development(dev_type: int):
         message_list.append({DEV: dev_type})
-
-    # 是否含有某个元素
-    func have_type(msg_type: int):
-        for dict in message_list:
-            if msg_type in dict:
-                return true
-        return false
 
     # 转为bbcode
     func bbcode(order_info: PlayerOrderInfo=null) -> String:

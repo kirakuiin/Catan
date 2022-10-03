@@ -11,10 +11,6 @@ const PointHint: PackedScene = preload("res://ui/map/point_hint.tscn")
 const LineHint: PackedScene = preload("res://ui/map/line_hint.tscn")
 const Robber: PackedScene = preload("res://ui/map/robber.tscn")
 
-const JOB_DONE = preload("res://assets/audios/job_done.wav")
-const UPGRADE_DONE = preload("res://assets/audios/upgrade_finished.wav")
-const KNIGHT_MOVE: = preload("res://assets/audios/knight_move.wav")
-
 
 var _map: Protocol.MapInfo
 var _tile_map: Dictionary = {}
@@ -202,7 +198,6 @@ func _show_move_robber_hint():
 	for point in _get_all_can_rob_tile():
 		_tile_point_map[point].show()
 		_tile_point_map[point].set_callback(funcref(self, "_on_click_tile_point"), [point])
-	_play_knight()
 
 func _get_all_can_rob_tile() -> Array:
 	var result = []
@@ -240,7 +235,6 @@ func _add_settlement_to_map(pos: Vector3, order: int):
 	settlement.set_pos(_corner_to_pos(pos))
 	settlement.set_order(order)
 	_settlement_map[pos] = settlement
-	_play_done()
 
 
 # 在地图上增加道路
@@ -257,7 +251,6 @@ func _upgrade_settlement_on_map(pos: Vector3):
 	_city_map[pos] = _settlement_map[pos]
 	_settlement_map.erase(pos)
 	_city_map[pos].upgrade_to_city()
-	_play_upgrade()
 
 
 func _on_robber_pos_changed(pos: Vector3):
@@ -270,15 +263,3 @@ func _on_robber_pos_changed(pos: Vector3):
 func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
 	if _is_enable_fog == true and assist_info.turn_num == 1:
 		set_all_point_visible(true)
-
-
-func _play_done():
-	Audio.play_once($AudioStreamPlayer, JOB_DONE)
-
-
-func _play_upgrade():
-	Audio.play_once($AudioStreamPlayer, UPGRADE_DONE)
-
-
-func _play_knight():
-	Audio.play_once($AudioStreamPlayer, KNIGHT_MOVE)

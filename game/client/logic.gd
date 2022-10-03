@@ -10,6 +10,7 @@ signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal card_info_changed(player_name, card_info)  # 得分信息改变
 signal personal_info_changed(player_name, personal_info)  # 个人信息改变
 signal client_state_changed(state)  # 客户端状态改变
+signal notification_received(message)  # 服务器消息
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
 signal resource_discarded(num)  # 丢弃资源
@@ -356,6 +357,11 @@ func choose_res():
 func choose_mono_type():
     change_client_state(NetDefines.ClientState.CHOOSE_MONO_TYPE)
     show_hint("选择一种类型的资源垄断...")
+
+
+# 收到通知
+func receive_notification(noti_info: Protocol.NotificationInfo):
+    emit_signal("notification_received", noti_info)
 
 
 # 打开分数结算界面

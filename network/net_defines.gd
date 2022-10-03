@@ -78,3 +78,16 @@ class TradeState:
     const NEGOTIATE: String="协商"
     const AGREE: String="同意"
     const REFUSE: String="拒绝"
+
+
+# 通告枚举
+enum NotificationType {
+    NONE,
+    PLACE_SETTLEMENT,
+    PLACE_ROAD,
+    UPGRADE_CITY,
+    MOVE_ROBBER,
+    PLAYER_ROBBED,
+    PLAY_CARD,
+    BUY_CARD,
+}

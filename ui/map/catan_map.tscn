@@ -96,3 +96,6 @@ mouse_filter = 2
 
 [node name="Robber" parent="Robber" instance=ExtResource( 3 )]
 visible = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Effect"

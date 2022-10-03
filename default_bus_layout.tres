@@ -1,9 +1,25 @@
-[gd_resource type="AudioBusLayout" format=2]
+[gd_resource type="AudioBusLayout" load_steps=3 format=2]
+
+[sub_resource type="AudioEffectChorus" id=2]
+resource_name = "Chorus"
+
+[sub_resource type="AudioEffectAmplify" id=3]
+resource_name = "Amplify"
 
 [resource]
 bus/1/name = "Background"
 bus/1/solo = false
 bus/1/mute = false
 bus/1/bypass_fx = false
-bus/1/volume_db = -21.8264
+bus/1/volume_db = -33.989
 bus/1/send = "Master"
+bus/1/effect/0/effect = SubResource( 2 )
+bus/1/effect/0/enabled = true
+bus/2/name = "Effect"
+bus/2/solo = false
+bus/2/mute = false
+bus/2/bypass_fx = false
+bus/2/volume_db = -11.9576
+bus/2/send = "Master"
+bus/2/effect/0/effect = SubResource( 3 )
+bus/2/effect/0/enabled = true

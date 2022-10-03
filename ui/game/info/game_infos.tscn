@@ -147,3 +147,6 @@ anims/popup = SubResource( 1 )
 [node name="HintPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 3 )
 anims/show_hint = SubResource( 5 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Effect"

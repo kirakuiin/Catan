@@ -436,6 +436,13 @@ class MessageInfo:
     func add_development(dev_type: int):
         message_list.append({DEV: dev_type})
 
+    # 是否含有某个元素
+    func have_type(msg_type: int):
+        for dict in message_list:
+            if msg_type in dict:
+                return true
+        return false
+
     # 转为bbcode
     func bbcode(order_info: PlayerOrderInfo=null) -> String:
         var result = PoolStringArray()

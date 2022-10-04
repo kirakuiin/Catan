@@ -3,7 +3,6 @@ extends PopupDialog
 
 # 调试面板
 
-
 func _ready():
     $Scroll/Grid/RandomName/Btn.pressed = PlayerConfig.is_random_name()
 

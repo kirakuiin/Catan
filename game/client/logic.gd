@@ -10,6 +10,7 @@ signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal card_info_changed(player_name, card_info)  # 得分信息改变
 signal personal_info_changed(player_name, personal_info)  # 个人信息改变
 signal client_state_changed(state)  # 客户端状态改变
+signal client_setting_changed(setting)  # 客户端设置改变
 signal notification_received(message)  # 服务器通知
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
@@ -22,7 +23,7 @@ signal exit_game()  # 退出游戏
 const BuildMgr: Script = preload("res://game/client/build_mgr.gd")
 const OpMgr: Script = preload("res://game/client/op_mgr.gd")
 const TradeMgr: Script = preload("res://game/client/trade_mgr.gd")
-const TradeNet: Script = preload("res://game/client/trade_net.gd")
+const SettingMgr: Script = preload("res://game/client/setting_mgr.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -38,9 +39,9 @@ var player_personals: Dictionary
 var client_state: String  # 客户端状态
 var build_mgr: BuildMgr
 var op_mgr: OpMgr
+var setting_mgr: SettingMgr
 var trade_mgr: TradeMgr
 
-var _trade_net: TradeNet
 onready var _logger: Log.Logger = Log.get_logger(Log.LogModule.CLIENT)
 
 
@@ -48,7 +49,7 @@ func _init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map:
     order_info = order
     setup_info = setup
     map_info = map
-    _init_trade_net()
+    _init_trade()
     _init_local_info()
 
 func _init_local_info():
@@ -60,13 +61,13 @@ func _init_local_info():
     player_personals = {}
     build_mgr = BuildMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size)
     op_mgr = OpMgr.new(player_buildings, player_cards, setup_info.catan_size)
-    trade_mgr = TradeMgr.new(_trade_net)
+    setting_mgr = SettingMgr.new()
     
 
-func _init_trade_net():
-    _trade_net = TradeNet.new()
-    _trade_net.name = NetDefines.TRADE_CENTER
-    add_child(_trade_net)
+func _init_trade():
+    trade_mgr = TradeMgr.new()
+    trade_mgr.name = NetDefines.TRADE_CENTER
+    add_child(trade_mgr)
 
 
 func _ready():
@@ -313,7 +314,10 @@ func change_robber_pos(pos: Vector3):
 
 # 自由行动阶段
 func into_free_action():
-    change_client_state(NetDefines.ClientState.FREE_ACTION)
+    if setting_mgr.is_auto_pass and not player_cards[get_name()].is_have_card():
+        pass_turn()
+    else:
+        change_client_state(NetDefines.ClientState.FREE_ACTION)
 
 
 # 丢弃资源
@@ -337,8 +341,11 @@ func rob_player():
 
 # 特殊出卡
 func special_play():
-    change_client_state(NetDefines.ClientState.PLAY_BEFORE_DICE)
-    show_hint("是否打出骑士卡?", true)
+    if setting_mgr.is_auto_pass:
+        pass_turn()
+    else:
+        change_client_state(NetDefines.ClientState.PLAY_BEFORE_DICE)
+        show_hint("是否打出骑士卡?", true)
 
 
 # 选择资源

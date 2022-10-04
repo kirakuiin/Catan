@@ -18,6 +18,9 @@ func init(trade_info: Protocol.TradeInfo, btn_group: ButtonGroup):
             $Image.texture = load("res://assets/images/tick.png")
         NetDefines.TradeState.NEGOTIATE:
             $Image.texture = load("res://assets/icons/trade.png")
+        NetDefines.TradeState.REFUSE:
+            $Image.texture = load("res://assets/images/cross.png")
+            $Button.disabled = true
 
 
 func _get_client():

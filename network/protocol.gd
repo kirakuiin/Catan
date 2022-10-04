@@ -250,6 +250,9 @@ class PlayerCardInfo:
         res_cards = res
         dev_cards = dev
 
+    func is_have_card() -> bool:
+        return StdLib.sum(res_cards.values()) + StdLib.sum(dev_cards.values()) > 0
+
 
 # 玩家建筑信息
 class PlayerBuildingInfo:

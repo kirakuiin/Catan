@@ -29,8 +29,8 @@ func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: 
 	_init_client(order, setup, map)
 	_init_map(map, setup)
 	_init_overlay()
-	_client.start()
 	_init_signal()
+	_client.start()
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):

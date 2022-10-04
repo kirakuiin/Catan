@@ -8,7 +8,9 @@ func init(trade_info: Protocol.TradeInfo):
     $TradePanel.init_with_trade_info(trade_info)
 
 
-func _on_trade_canceled():
+func _on_trade_canceled(trade_info: Protocol.TradeInfo):
+    trade_info.trade_state = NetDefines.TradeState.REFUSE
+    _get_mgr().response_trade_price(trade_info)
     queue_free()
 
 

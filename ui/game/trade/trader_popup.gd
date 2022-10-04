@@ -27,7 +27,7 @@ func _on_tag_switched(trade_info: Protocol.TradeInfo):
     $HBox/TradePanel.init_with_trade_info(trade_info)
 
 
-func _on_trade_canceled():
+func _on_trade_canceled(trade_info: Protocol.TradeInfo):
     queue_free()
 
 

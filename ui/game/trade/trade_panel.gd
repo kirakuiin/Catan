@@ -4,7 +4,7 @@ extends Control
 
 signal trade_confirmed(trade_info)  # 确认
 signal trade_negotiated(trade_info)  # 协商
-signal trade_canceled()  # 取消
+signal trade_canceled(trade_info)  # 取消
 
 
 var _trade_info: Protocol.TradeInfo
@@ -91,7 +91,7 @@ func _set_balance():
 
 
 func _on_cancel():
-    emit_signal("trade_canceled")
+    emit_signal("trade_canceled", _trade_info)
 
 
 func _on_confirm():

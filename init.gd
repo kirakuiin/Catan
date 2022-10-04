@@ -5,10 +5,12 @@ extends Node
 const DebugPopup = preload("res://ui/info/debug_popup.tscn")
 
 
+var _is_open_debug: bool=false
+
+
 func _ready():
     #TODO: 音量设置
     #TODO: 游戏中返回主界面
-    #TODO: 交易拒绝提示
     #TODO: 玩家列表支持按分数排序
     Log.logi("游戏开始初始化.")
     _init_game_setting()
@@ -34,7 +36,13 @@ func _init_audio_setting():
 
 
 func _input(event):
-    if Input.is_action_just_pressed("open_debug"):
+    if Input.is_action_just_pressed("open_debug") and not _is_open_debug:
+        _is_open_debug = true
         var popup = DebugPopup.instance()
         get_tree().get_root().add_child(popup)
+        popup.connect("popup_hide", self, "_on_debug_close")
         popup.popup_centered()
+
+
+func _on_debug_close():
+    _is_open_debug = false

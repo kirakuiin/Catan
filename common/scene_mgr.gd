@@ -29,7 +29,7 @@ func _deferred_goto_scene(path):
 	_close_all_pop()
 	var s = ResourceLoader.load(path)
 	var current_scene = s.instance()
-	get_tree().get_root().add_child(current_scene)
+	scene_root().add_child(current_scene)
 	get_tree().set_current_scene(current_scene)
 	_scene_stack.append(current_scene)
 
@@ -87,5 +87,10 @@ func get_scene(cls):
 func show_prompt(text: String):
 	var prompt = Prompt.instance()
 	prompt.set_msg(text)
-	get_tree().get_root().call_deferred("add_child", prompt)
+	scene_root().call_deferred("add_child", prompt)
 	prompt.call_deferred("popup_centered", Vector2(200, 200))
+
+
+# 返回根节点
+func scene_root():
+	return get_tree().get_root()

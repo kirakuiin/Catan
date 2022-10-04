@@ -27,7 +27,7 @@ func save_icon_id(icon_id: int):
 
 
 func get_player_name() -> String:
-    if _is_random_name():
+    if is_random_name():
         return _rand_name
     else:
         return _config.get_value(PLAYER_SECTION, "player_name", _rand_name)
@@ -37,5 +37,10 @@ func get_icon_id() -> int:
     return _config.get_value(PLAYER_SECTION, "player_avatar", 1)
 
 
-func _is_random_name() -> bool:
+func is_random_name() -> bool:
     return _config.get_value(DEBUG_SECTION, "random_name", false)
+
+
+func save_random_name(is_random: bool):
+    _config.set_value(DEBUG_SECTION, "random_name", is_random)
+    _config.save(CONFIG_PATH)

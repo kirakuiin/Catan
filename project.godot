@@ -129,6 +129,14 @@ theme/custom="res://assets/theme/game_theme.tres"
 timers/tooltip_delay_sec=0.1
 common/snap_controls_to_pixels=false
 
+[input]
+
+open_debug={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777244,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+
 [network]
 
 limits/debugger_stdout/max_chars_per_second=20480

@@ -43,8 +43,8 @@ static func broadcast(data) -> PacketPeerUDP:
 func host_game():
     peer = NetworkedMultiplayerENet.new()
     peer.create_server(NetDefines.GAME_PORT, NetDefines.MAX_PEER)
-    emit_signal("network_started", get_peer_id())
     get_tree().set_network_peer(peer)
+    emit_signal("network_started", get_peer_id())
     client_ids = []
     _logger.logd("创建主机")
 
@@ -53,8 +53,8 @@ func host_game():
 func join_game(ip: String):
     peer = NetworkedMultiplayerENet.new()
     peer.create_client(ip, NetDefines.GAME_PORT)
-    emit_signal("network_started", get_peer_id())
     get_tree().set_network_peer(peer)
+    emit_signal("network_started", get_peer_id())
     _logger.logd("加入主机 ip=[%s]" % ip)
 
 
@@ -137,4 +137,5 @@ func _on_server_disconnected():
 func _on_connected_fail():
     get_tree().set_network_peer(null)
     emit_signal("connection_failed")
+    SceneMgr.show_prompt("连接服务器失败")
     _logger.logw("连接服务器失败")

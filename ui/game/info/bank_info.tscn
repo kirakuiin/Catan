@@ -56,14 +56,9 @@ expand = true
 stretch_mode = 6
 
 [node name="Label" type="RichTextLabel" parent="Box/Lumber"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.9
 mouse_filter = 2
 theme = ExtResource( 3 )
 theme_type_variation = "BigRichLabel"
@@ -71,6 +66,9 @@ bbcode_enabled = true
 bbcode_text = "11"
 text = "11"
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Wool" type="TextureRect" parent="Box"]
 margin_left = 84.0
@@ -82,14 +80,9 @@ expand = true
 stretch_mode = 6
 
 [node name="Label" type="RichTextLabel" parent="Box/Wool"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.9
 mouse_filter = 2
 theme = ExtResource( 3 )
 theme_type_variation = "BigRichLabel"
@@ -97,6 +90,9 @@ bbcode_enabled = true
 bbcode_text = "11"
 text = "11"
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Brick" type="TextureRect" parent="Box"]
 margin_left = 168.0
@@ -108,14 +104,9 @@ expand = true
 stretch_mode = 6
 
 [node name="Label" type="RichTextLabel" parent="Box/Brick"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.9
 mouse_filter = 2
 theme = ExtResource( 3 )
 theme_type_variation = "BigRichLabel"
@@ -123,6 +114,9 @@ bbcode_enabled = true
 bbcode_text = "11"
 text = "11"
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Ore" type="TextureRect" parent="Box"]
 margin_left = 252.0
@@ -134,14 +128,9 @@ expand = true
 stretch_mode = 6
 
 [node name="Label" type="RichTextLabel" parent="Box/Ore"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.9
 mouse_filter = 2
 theme = ExtResource( 3 )
 theme_type_variation = "BigRichLabel"
@@ -149,6 +138,9 @@ bbcode_enabled = true
 bbcode_text = "11"
 text = "11"
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Grain" type="TextureRect" parent="Box"]
 margin_left = 336.0
@@ -160,14 +152,9 @@ expand = true
 stretch_mode = 6
 
 [node name="Label" type="RichTextLabel" parent="Box/Grain"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.9
 mouse_filter = 2
 theme = ExtResource( 3 )
 theme_type_variation = "BigRichLabel"
@@ -175,6 +162,9 @@ bbcode_enabled = true
 bbcode_text = "11"
 text = "11"
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Dev" type="TextureRect" parent="."]
 anchor_left = 0.866667

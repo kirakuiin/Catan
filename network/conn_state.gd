@@ -35,7 +35,7 @@ func to_playing(player_names: Array):
 
 
 # 是否接受连接
-func is_accept_connection(player_info: Protocol.PlayerInfo) -> bool:
+func is_accept_connection(player_info: Protocol.PlayerInfo) -> Protocol.ServerResponseInfo:
     return game_state.is_accept_connection(player_info)
 
 
@@ -51,8 +51,8 @@ class InnerStateInterface:
     var max_conn: int = 3
     var cur_conn: int = 0
 
-    func is_accept_connection(player_info: Protocol.PlayerInfo) -> bool:
-        return true
+    func is_accept_connection(player_info: Protocol.PlayerInfo) -> Protocol.ServerResponseInfo:
+        return Protocol.ServerResponseInfo.new()
 
     func get_state() -> int:
         return 0
@@ -62,8 +62,12 @@ class InnerStateInterface:
 class PrepareState:
     extends InnerStateInterface
 
-    func is_accept_connection(player_info: Protocol.PlayerInfo) -> bool:
-        return cur_conn < max_conn
+    func is_accept_connection(player_info: Protocol.PlayerInfo) -> Protocol.ServerResponseInfo:
+        var result = Protocol.ServerResponseInfo.new()
+        if cur_conn >= max_conn:
+            result.is_success = false
+            result.res_reason = "游戏人数已满!"
+        return result
 
     func get_state() -> int:
         return Data.HostState.PREPARE
@@ -78,8 +82,12 @@ class PlayingState:
     func _init(player_names: Array):
         _player_names = player_names
 
-    func is_accept_connection(player_info: Protocol.PlayerInfo) -> bool:
-        return player_info.player_name in _player_names
+    func is_accept_connection(player_info: Protocol.PlayerInfo) -> Protocol.ServerResponseInfo:
+        var result = Protocol.ServerResponseInfo.new()
+        if not player_info.player_name in _player_names:
+            result.is_success = false
+            result.res_reason = "您不是此局游戏的初始玩家, 无法加入进行中的游戏!"
+        return result
 
     func get_state() -> int:
         return Data.HostState.PLAYING

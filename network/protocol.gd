@@ -9,6 +9,7 @@ class_name Protocol
 static func get_cls(cls_name) -> ProtocolData:
     var map = {
         "HostInfo": HostInfo,
+        "ServerResponseInfo": ServerResponseInfo,
         "PlayerInfo": PlayerInfo,
         "CatanSetupInfo": CatanSetupInfo,
         "PlayerOrderInfo": PlayerOrderInfo,
@@ -110,6 +111,19 @@ class HostInfo:
         max_player_num = max_num
         host_state = state
         icon_id = icon
+
+
+# 服务器回复信息
+class ServerResponseInfo:
+    extends ProtocolData
+
+    var is_success: bool
+    var res_reason: String
+
+    func _init(success: bool=true, reason: String=""):
+        cls_name = "ServerResponseInfo"
+        is_success = success
+        res_reason = reason
 
 
 # 玩家信息

@@ -73,10 +73,15 @@ __meta__ = {
 }
 
 [node name="Option" parent="." instance=ExtResource( 11 )]
-margin_left = 1832.0
-margin_top = 568.0
-margin_right = -8.0
-margin_bottom = -312.0
+anchor_left = 0.954167
+anchor_top = 0.525926
+anchor_right = 0.995833
+anchor_bottom = 0.711111
+margin_right = 0.0
+margin_bottom = 0.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="SettingBtn" type="TextureButton" parent="."]
 anchor_left = 1.0

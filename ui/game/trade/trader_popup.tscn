@@ -26,7 +26,7 @@ color = Color( 0.101961, 0.105882, 0.0980392, 0.94902 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 100, 0 )
-custom_constants/separation = 20
+custom_constants/separation = 15
 
 [node name="TradePanel" parent="HBox" instance=ExtResource( 1 )]
 

@@ -84,6 +84,7 @@ func _on_connection_failed():
 
 
 func _on_network_started(peer_id: int):
+    reset()
     add_player_info(Protocol.create_player_info_by_id(peer_id))
 
 

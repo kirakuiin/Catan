@@ -43,9 +43,9 @@ static func broadcast(data) -> PacketPeerUDP:
 func host_game():
     peer = NetworkedMultiplayerENet.new()
     peer.create_server(NetDefines.GAME_PORT, NetDefines.MAX_PEER)
+    emit_signal("network_started", get_peer_id())
     get_tree().set_network_peer(peer)
     client_ids = []
-    emit_signal("network_started", get_peer_id())
     _logger.logd("创建主机")
 
 
@@ -53,8 +53,8 @@ func host_game():
 func join_game(ip: String):
     peer = NetworkedMultiplayerENet.new()
     peer.create_client(ip, NetDefines.GAME_PORT)
-    get_tree().set_network_peer(peer)
     emit_signal("network_started", get_peer_id())
+    get_tree().set_network_peer(peer)
     _logger.logd("加入主机 ip=[%s]" % ip)
 
 
@@ -90,14 +90,21 @@ puppet func server_accept():
     _logger.logd("服务端同意连接")
 
 
+puppet func server_refuse(data):
+    var response = Protocol.deserialize(data)
+    SceneMgr.show_prompt(response.res_reason)
+
+
 # 检查客户端信息
 master func check_player_info(net_data):
     var player_info = Protocol.deserialize(net_data) as Protocol.PlayerInfo
-    if ConnState.is_accept_connection(player_info):
+    var response = ConnState.is_accept_connection(player_info)
+    if response.is_success:
         client_ids.append(player_info.peer_id)
         emit_signal("client_connected", player_info)
         rpc_id(player_info.peer_id, "server_accept")
     else:
+        rpc_id(player_info.peer_id, "server_refuse", Protocol.serialize(response))
         peer.disconnect_peer(player_info.peer_id)
 
 

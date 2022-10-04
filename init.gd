@@ -9,6 +9,8 @@ var _is_open_debug: bool=false
 
 
 func _ready():
+    #TODO: 支持地图缩放
+    #TODO: 断线重连
     #TODO: 玩家列表支持按分数排序
     Log.logi("游戏开始初始化.")
     _init_game_setting()

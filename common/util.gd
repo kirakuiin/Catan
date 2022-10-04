@@ -28,6 +28,14 @@ static func color_to_str(color: Color):
     return "#"+colors.hex_encode()
 
 
+# 音量转为db
+static func volume_to_db(volume: int) -> float:
+    if volume <= 0:
+        return ProjectSettings.get_setting("audio/channel_disable_threshold_db")-1
+    else:
+        return 10*log(volume/100.0)/log(10)
+
+
 # 秒转时间字符串
 static func time_convert(time_in_sec: int, fmt: String="%02d时:%02d分:%02d秒") -> String:
     var seconds = time_in_sec%60

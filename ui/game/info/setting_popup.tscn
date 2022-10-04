@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/info/audio_setting.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ui/game/info/setting_popup.gd" type="Script" id=2]
+
+[node name="PopupDialog" type="PopupDialog"]
+visible = true
+margin_right = 400.0
+margin_bottom = 700.0
+script = ExtResource( 2 )
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="VBox"]
+margin_right = 400.0
+margin_bottom = 66.0
+theme_type_variation = "BigLabel"
+custom_colors/font_color = Color( 0.764706, 0.2, 0.2, 1 )
+text = "设置"
+align = 1
+valign = 1
+
+[node name="Bg" type="ColorRect" parent="VBox"]
+margin_top = 70.0
+margin_right = 400.0
+margin_bottom = 620.0
+rect_min_size = Vector2( 400, 550 )
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/Bg"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="AudioSetting" parent="VBox/Bg/Scroll" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 400.0
+margin_bottom = 300.0
+
+[node name="Quit" type="Button" parent="VBox"]
+margin_top = 624.0
+margin_right = 400.0
+margin_bottom = 700.0
+size_flags_vertical = 3
+text = "退出到大厅"
+
+[connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
+[connection signal="button_down" from="VBox/Quit" to="." method="_on_quit_to_lobby"]

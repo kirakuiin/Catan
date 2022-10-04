@@ -57,12 +57,16 @@ func _init_signal():
 
 
 func _on_show_stat(stat_info: Protocol.StatInfo):
-	$Score/ScorePopup.init(stat_info)
-	$Score/ScorePopup.popup_centered()
+	$Popup/ScorePopup.init(stat_info)
+	$Popup/ScorePopup.popup_centered()
 
 
 func _on_exit_game():
 	SceneMgr.close_pop_scene()
+
+
+func _on_show_setting():
+	$Popup/SettingPopup.popup_centered()
 
 
 func _on_mouse_moved(offset: Vector2):

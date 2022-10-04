@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/info/audio_setting.gd" type="Script" id=1]
+
+[node name="AudioSetting" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1520.0
+margin_bottom = -780.0
+rect_min_size = Vector2( 400, 300 )
+script = ExtResource( 1 )
+
+[node name="VCon" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="VCon"]
+margin_right = 400.0
+margin_bottom = 66.0
+theme_type_variation = "BigLabel"
+custom_colors/font_color = Color( 0.521569, 0.764706, 0.2, 1 )
+text = "音量设置"
+align = 1
+valign = 1
+
+[node name="Master" type="HBoxContainer" parent="VCon"]
+margin_top = 86.0
+margin_right = 400.0
+margin_bottom = 118.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="VCon/Master"]
+margin_right = 103.0
+margin_bottom = 32.0
+custom_colors/font_color = Color( 0.521569, 0.764706, 0.2, 1 )
+text = "主要音量:"
+
+[node name="HSlider" type="HSlider" parent="VCon/Master"]
+margin_left = 123.0
+margin_right = 400.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+value = 50.0
+rounded = true
+
+[node name="Bg" type="HBoxContainer" parent="VCon"]
+margin_top = 138.0
+margin_right = 400.0
+margin_bottom = 170.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="VCon/Bg"]
+margin_right = 103.0
+margin_bottom = 32.0
+custom_colors/font_color = Color( 0.521569, 0.764706, 0.2, 1 )
+text = "背景音量:"
+
+[node name="HSlider" type="HSlider" parent="VCon/Bg"]
+margin_left = 123.0
+margin_right = 400.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+value = 50.0
+rounded = true
+
+[node name="Effect" type="HBoxContainer" parent="VCon"]
+margin_top = 190.0
+margin_right = 400.0
+margin_bottom = 222.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="VCon/Effect"]
+margin_right = 103.0
+margin_bottom = 32.0
+custom_colors/font_color = Color( 0.521569, 0.764706, 0.2, 1 )
+text = "音效音量:"
+
+[node name="HSlider" type="HSlider" parent="VCon/Effect"]
+margin_left = 123.0
+margin_right = 400.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+value = 50.0
+rounded = true
+
+[connection signal="value_changed" from="VCon/Master/HSlider" to="." method="_on_master_changed"]
+[connection signal="value_changed" from="VCon/Bg/HSlider" to="." method="_on_bg_changed"]
+[connection signal="value_changed" from="VCon/Effect/HSlider" to="." method="_on_effect_changed"]

@@ -3,6 +3,9 @@ extends Control
 
 # 世界ui覆盖层
 
+signal show_setting  # 展示设置界面
+
+
 func init():
     $PlayerInfos.init()
     $GameInfos.init()
@@ -13,14 +16,7 @@ func init():
     $DevZone.init()
     $AudioPlayer.init()
     $Option.init()
-    # TODO: 测试使用, 测试完毕删除
-    if not GameServer.is_server():
-        $QuitBtn.hide()
-
-
-func _on_button_down():
-    SceneMgr.close_pop_scene()
 
 
 func _on_open_setting():
-    SceneMgr.show_prompt("未实现!")
+    emit_signal("show_setting")

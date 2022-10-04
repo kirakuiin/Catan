@@ -34,6 +34,7 @@ func _init_signal():
     PlayingNet.get_client().connect("card_info_changed", self, "_on_player_card_changed")
     PlayingNet.get_client().connect("building_info_changed", self, "_on_player_building_changed")
     PlayingNet.get_client().connect("personal_info_changed", self, "_on_player_personal_changed")
+    PlayerInfoMgr.connect("player_removed", self, "_on_player_removed")
 
 
 func _get_data(type: int):
@@ -73,6 +74,10 @@ func _on_player_personal_changed(name: String, personal_info: Protocol.PlayerPer
         $HBox/Grid/VP.set_num(vp)
 
 
+func _on_player_removed(player_info):
+    if player_info.player_name == _name:
+        $HBox/PlayerIcon.modulate = Color(0.3, 0.3, 0.3)
+
+
 func _get_client():
     return PlayingNet.get_client()
-        

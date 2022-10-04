@@ -78,13 +78,6 @@ margin_top = 568.0
 margin_right = -8.0
 margin_bottom = -312.0
 
-[node name="QuitBtn" type="Button" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -104.0
-margin_right = 400.001
-text = "返回"
-
 [node name="SettingBtn" type="TextureButton" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -95,5 +88,4 @@ texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
 
-[connection signal="button_down" from="QuitBtn" to="." method="_on_button_down"]
 [connection signal="button_down" from="SettingBtn" to="." method="_on_open_setting"]

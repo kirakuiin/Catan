@@ -89,7 +89,7 @@ config/icon="res://assets/icons/hex_icon.png"
 
 [autoload]
 
-PlayerConfig="*res://common/player_config.gd"
+GameConfig="*res://common/game_config.gd"
 Log="*res://common/log.gd"
 GameServer="*res://network/game_server.gd"
 SceneMgr="*res://common/scene_mgr.gd"

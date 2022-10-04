@@ -14,12 +14,12 @@ func _ready():
 
 
 func _init_player_name():
-    var name = PlayerConfig.get_player_name()
+    var name = GameConfig.get_player_name()
     $Panel/VBoxContainer/NameContainer/NameEdit.text = name
 
 
 func _init_avatar():
-    var icon = Data.ICON_DATA[PlayerConfig.get_icon_id()]
+    var icon = Data.ICON_DATA[GameConfig.get_icon_id()]
     $Panel/VBoxContainer/IconContainer/PlayerAvatar.set_icon(icon)
 
 
@@ -42,8 +42,8 @@ func _on_change_icon(id):
 func _on_confirm_avatar(icon_id: int):
     $IconSelectScroll.hide()
     $Panel/VBoxContainer/IconContainer/PlayerAvatar.set_icon(Data.ICON_DATA[icon_id])
-    PlayerConfig.save_icon_id(icon_id)
+    GameConfig.save_icon_id(icon_id)
 
 
 func _on_name_changed(new_text):
-    PlayerConfig.save_player_name(new_text)
+    GameConfig.save_player_name(new_text)

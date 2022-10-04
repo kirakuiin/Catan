@@ -129,7 +129,7 @@ class PlayerInfo:
 
 # 创建玩家数据
 static func create_player_info_by_id(peer_id: int) -> PlayerInfo:
-    return PlayerInfo.new(PlayerConfig.get_player_name(), peer_id, PlayerConfig.get_icon_id())
+    return PlayerInfo.new(GameConfig.get_player_name(), peer_id, GameConfig.get_icon_id())
 
 
 # 卡坦岛设置信息

@@ -14,8 +14,8 @@ var _order_info: Protocol.PlayerOrderInfo
 
 
 func _init():
-	_host_info = Protocol.HostInfo.new(PlayerConfig.get_player_name(),
-			PlayerConfig.get_icon_id(), 1, Data.CatanSize.SMALL, Data.HostState.PREPARE)
+	_host_info = Protocol.HostInfo.new(GameConfig.get_player_name(),
+			GameConfig.get_icon_id(), 1, Data.CatanSize.SMALL, Data.HostState.PREPARE)
 	_catan_setup_info = Protocol.CatanSetupInfo.new(Data.CatanSize.SMALL)
 
 

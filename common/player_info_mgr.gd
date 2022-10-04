@@ -35,7 +35,7 @@ func remove_player_by_id(id: int):
 
 
 func get_self_info() -> Protocol.PlayerInfo:
-    return _info_dict[PlayerConfig.get_player_name()]
+    return _info_dict[GameConfig.get_player_name()]
 
 
 func get_all_info() -> Array:

@@ -42,29 +42,56 @@ text = "卡坦岛"
 align = 1
 valign = 1
 
-[node name="StartGameBtn" type="Button" parent="."]
-anchor_left = 0.1
-anchor_top = 0.533333
-anchor_right = 0.233333
-anchor_bottom = 0.592593
+[node name="VCon" type="VBoxContainer" parent="."]
+margin_left = 216.0
+margin_top = 536.0
+margin_right = 516.0
+margin_bottom = 936.0
+custom_constants/separation = 50
+
+[node name="StartGameBtn" type="Button" parent="VCon"]
+margin_right = 300.0
+margin_bottom = 62.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "开始游戏"
 
-[node name="CharacterBtn" type="Button" parent="."]
-anchor_left = 0.1
-anchor_top = 0.651852
-anchor_right = 0.233333
-anchor_bottom = 0.711111
+[node name="CharacterBtn" type="Button" parent="VCon"]
+margin_top = 112.0
+margin_right = 300.0
+margin_bottom = 175.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource( 1 )
 text = "角色信息"
 
-[node name="ExitBtn" type="Button" parent="."]
-anchor_left = 0.1
-anchor_top = 0.77037
-anchor_right = 0.233333
-anchor_bottom = 0.82963
-margin_bottom = 6.10352e-05
+[node name="SettingBtn" type="Button" parent="VCon"]
+margin_top = 225.0
+margin_right = 300.0
+margin_bottom = 287.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "游戏设置"
+
+[node name="ExitBtn" type="Button" parent="VCon"]
+margin_top = 337.0
+margin_right = 300.0
+margin_bottom = 400.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "退出游戏"
 
-[connection signal="button_down" from="StartGameBtn" to="." method="_on_start_game"]
-[connection signal="button_down" from="CharacterBtn" to="." method="_on_edit_character_info"]
-[connection signal="button_down" from="ExitBtn" to="." method="_on_exit_game"]
+[node name="Version" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -309.0
+margin_top = -66.0
+theme_type_variation = "BigLabel"
+text = "版本号: 0.0.9"
+
+[connection signal="button_down" from="VCon/StartGameBtn" to="." method="_on_start_game"]
+[connection signal="button_down" from="VCon/CharacterBtn" to="." method="_on_edit_character_info"]
+[connection signal="button_down" from="VCon/SettingBtn" to="." method="_on_edit_setting"]
+[connection signal="button_down" from="VCon/ExitBtn" to="." method="_on_exit_game"]

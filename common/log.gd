@@ -31,7 +31,7 @@ var _file: File
 
 func _ready():
     _file = File.new()
-    _file.open(LOG_PATH % [PlayerConfig.get_player_name(), Time.get_date_string_from_system()], File.WRITE)
+    _file.open(LOG_PATH % [GameConfig.get_player_name(), Time.get_date_string_from_system()], File.WRITE)
     _logger_info = {LogModule.DEFAULT: Logger.new(_file, LogModule.DEFAULT)}
 
 

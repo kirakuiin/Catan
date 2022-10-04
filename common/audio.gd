@@ -23,6 +23,13 @@ static func play_once(player: AudioStreamPlayer, stream: AudioStream):
 func _ready():
     _audio_player.bus = "Background"
     add_child(_audio_player)
+    _init_db()
+
+
+func _init_db():
+    set_master_volume(GameConfig.get_master_volume())
+    set_bg_volume(GameConfig.get_bg_volume())
+    set_effect_volume(GameConfig.get_effect_volume())
 
 
 # 播放背景音乐
@@ -42,3 +49,18 @@ func play_game_bg():
 # 停止播放背景音乐
 func stop_bg():
     _audio_player.stop()
+
+
+# 设置背景音量
+func set_bg_volume(volume: int):
+    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Background"), linear2db(volume/100.0))
+
+
+# 设置音效音量
+func set_effect_volume(volume: int):
+    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Effect"), linear2db(volume/100.0))
+
+
+# 设置主音量
+func set_master_volume(volume: int):
+    AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear2db(volume/100.0))

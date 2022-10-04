@@ -9,8 +9,6 @@ var _is_open_debug: bool=false
 
 
 func _ready():
-    #TODO: 音量设置
-    #TODO: 游戏中返回主界面
     #TODO: 玩家列表支持按分数排序
     Log.logi("游戏开始初始化.")
     _init_game_setting()

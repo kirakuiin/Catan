@@ -7,12 +7,15 @@ extends Node2D
 const Client: Script = preload("res://game/client/logic.gd")
 const Server: Script = preload("res://game/server/logic.gd")
 
+const ZOOM_UNIT := Vector2(0.05, 0.05)
+const ZOOM_MAX := 0.65
+const ZOOM_MIN := 1.45
+
 var _client: Client
 var _server: Server
 
 
 func _ready():
-	$Map/ViewContainer/Viewport/DragArea.connect("mouse_moved", self, "_on_mouse_moved")
 	Audio.play_game_bg()
 
 
@@ -72,6 +75,19 @@ func _on_show_setting():
 func _on_mouse_moved(offset: Vector2):
 	var camera = $Map/ViewContainer/Viewport/Camera
 	camera.offset -= offset
-	var diff = $Map/ViewContainer/Viewport/CatanMap.get_map_size()-$Map/ViewContainer.rect_size
+	var diff = $Map/ViewContainer/Viewport/CatanMap.get_map_size()-$Map/ViewContainer.rect_size*camera.zoom
 	camera.offset.x = max(min(diff.x/2, camera.offset.x), -diff.x/2)
 	camera.offset.y = max(min(diff.y/2, camera.offset.y), -diff.y/2)
+
+
+func _on_wheel_up():
+	var camera = $Map/ViewContainer/Viewport/Camera
+	if camera.zoom.x >= ZOOM_MAX:
+		camera.zoom -= ZOOM_UNIT
+
+
+
+func _on_wheel_down():
+	var camera = $Map/ViewContainer/Viewport/Camera
+	if camera.zoom.x <= ZOOM_MIN:
+		camera.zoom += ZOOM_UNIT

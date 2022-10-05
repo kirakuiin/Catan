@@ -28,6 +28,7 @@ gui_snap_controls_to_pixels = false
 
 [node name="DragArea" type="Node2D" parent="Map/ViewContainer/Viewport"]
 script = ExtResource( 4 )
+is_enable_wheel = true
 
 [node name="CatanMap" parent="Map/ViewContainer/Viewport" instance=ExtResource( 2 )]
 mouse_filter = 2
@@ -36,7 +37,7 @@ __meta__ = {
 }
 
 [node name="Camera" type="Camera2D" parent="Map/ViewContainer/Viewport"]
-anchor_mode = 0
+position = Vector2( 960, 540 )
 current = true
 
 [node name="UIOverlay" type="CanvasLayer" parent="."]
@@ -52,4 +53,7 @@ visible = false
 [node name="ScorePopup" parent="Popup" instance=ExtResource( 5 )]
 visible = false
 
+[connection signal="mouse_moved" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_mouse_moved"]
+[connection signal="wheel_down" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_wheel_down"]
+[connection signal="wheel_up" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_wheel_up"]
 [connection signal="show_setting" from="UIOverlay/Overlay" to="." method="_on_show_setting"]

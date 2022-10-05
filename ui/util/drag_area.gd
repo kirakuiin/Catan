@@ -9,11 +9,15 @@ class_name DragArea
 signal drag_started(pos) # Vector2
 signal mouse_moved(relative) # Vector2
 signal drag_ended(pos) # Vector2
+signal wheel_up()
+signal wheel_down()
 
+
+export(int, "无", "左键", "右键", "中键") var button_type = BUTTON_RIGHT  # 触发按键类型
+export(bool) var is_enable_wheel = false
 
 var _dragging : bool = false
 var _area: Rect2 = Rect2(Vector2(), Vector2())
-export(int, "无", "左键", "右键", "中键") var button_type = BUTTON_RIGHT  # 触发按键类型
 
 
 # 设置生效区域
@@ -38,6 +42,11 @@ func _handle_mouse_button(event: InputEventMouseButton):
             if _dragging:
                 _dragging = false
                 emit_signal("drag_ended", event.position)
+    if is_enable_wheel:
+        if event.button_index == BUTTON_WHEEL_UP and event.is_pressed():
+            emit_signal("wheel_up")
+        elif event.button_index == BUTTON_WHEEL_DOWN and event.is_pressed():
+            emit_signal("wheel_down")
 
 
 func _handle_mouse_motion(event: InputEventMouseMotion):

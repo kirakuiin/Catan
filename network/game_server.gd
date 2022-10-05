@@ -44,9 +44,9 @@ func host_game():
     peer = NetworkedMultiplayerENet.new()
     peer.create_server(NetDefines.GAME_PORT, NetDefines.MAX_PEER)
     get_tree().set_network_peer(peer)
-    emit_signal("network_started", get_peer_id())
-    client_ids = []
     _logger.logd("创建主机")
+    client_ids = []
+    emit_signal("network_started", get_peer_id())
 
 
 # 加入主机
@@ -54,8 +54,8 @@ func join_game(ip: String):
     peer = NetworkedMultiplayerENet.new()
     peer.create_client(ip, NetDefines.GAME_PORT)
     get_tree().set_network_peer(peer)
-    emit_signal("network_started", get_peer_id())
     _logger.logd("加入主机 ip=[%s]" % ip)
+    emit_signal("network_started", get_peer_id())
 
 
 # 关闭连接

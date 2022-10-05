@@ -20,11 +20,12 @@ func _ready():
 
 
 func add_player_info(player_info: Protocol.PlayerInfo):
-    _info_dict[player_info.player_name] = player_info
     if not player_info.player_name in _info_dict:
         _info_dict[player_info.player_name] = player_info
         emit_signal("player_added", player_info)
         _logger.logd("玩家[%s]加入" % player_info.player_name)
+    else:
+        _info_dict[player_info.player_name] = player_info
 
 
 func remove_player_by_id(id: int):

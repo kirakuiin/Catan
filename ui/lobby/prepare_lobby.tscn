@@ -18,13 +18,21 @@ script = ExtResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="OptionScroll" type="ScrollContainer" parent="."]
-margin_left = 1336.0
-margin_top = 192.0
-margin_right = 1836.0
-margin_bottom = 692.0
+[node name="Option" type="VBoxContainer" parent="."]
+anchor_left = 0.695833
+anchor_top = 0.177778
+anchor_right = 0.95625
+anchor_bottom = 0.737037
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
-[node name="VCon" type="VBoxContainer" parent="OptionScroll"]
+[node name="OptionScroll" type="ScrollContainer" parent="Option"]
+margin_right = 500.0
+margin_bottom = 400.0
+rect_min_size = Vector2( 500, 400 )
+
+[node name="VCon" type="VBoxContainer" parent="Option/OptionScroll"]
 margin_right = 500.0
 margin_bottom = 372.0
 size_flags_horizontal = 3
@@ -35,18 +43,18 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="OptionLabel" type="Label" parent="OptionScroll/VCon"]
+[node name="OptionLabel" type="Label" parent="Option/OptionScroll/VCon"]
 margin_right = 500.0
 margin_bottom = 32.0
 text = "参数设置"
 align = 1
 
-[node name="PlayerNumContainer" type="HBoxContainer" parent="OptionScroll/VCon"]
+[node name="PlayerNumContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
 margin_top = 62.0
 margin_right = 500.0
 margin_bottom = 100.0
 
-[node name="Label" type="Label" parent="OptionScroll/VCon/PlayerNumContainer"]
+[node name="Label" type="Label" parent="Option/OptionScroll/VCon/PlayerNumContainer"]
 margin_top = 3.0
 margin_right = 165.0
 margin_bottom = 35.0
@@ -56,7 +64,7 @@ size_flags_horizontal = 3
 text = "玩家人数: "
 align = 1
 
-[node name="Btn" type="OptionButton" parent="OptionScroll/VCon/PlayerNumContainer"]
+[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/PlayerNumContainer"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 38.0
@@ -65,12 +73,12 @@ size_flags_stretch_ratio = 2.0
 text = "选择人数"
 align = 1
 
-[node name="FogContainer" type="HBoxContainer" parent="OptionScroll/VCon"]
+[node name="FogContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
 margin_top = 130.0
 margin_right = 500.0
 margin_bottom = 168.0
 
-[node name="Label" type="Label" parent="OptionScroll/VCon/FogContainer"]
+[node name="Label" type="Label" parent="Option/OptionScroll/VCon/FogContainer"]
 margin_top = 3.0
 margin_right = 165.0
 margin_bottom = 35.0
@@ -80,7 +88,7 @@ size_flags_horizontal = 3
 text = "地图迷雾: "
 align = 1
 
-[node name="Btn" type="OptionButton" parent="OptionScroll/VCon/FogContainer"]
+[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/FogContainer"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 38.0
@@ -89,12 +97,12 @@ size_flags_stretch_ratio = 2.0
 text = "关闭"
 align = 1
 
-[node name="RandResourceContainer" type="HBoxContainer" parent="OptionScroll/VCon"]
+[node name="RandResourceContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
 margin_top = 198.0
 margin_right = 500.0
 margin_bottom = 236.0
 
-[node name="Label" type="Label" parent="OptionScroll/VCon/RandResourceContainer"]
+[node name="Label" type="Label" parent="Option/OptionScroll/VCon/RandResourceContainer"]
 margin_top = 3.0
 margin_right = 165.0
 margin_bottom = 35.0
@@ -104,7 +112,7 @@ size_flags_horizontal = 3
 text = "随机资源:"
 align = 1
 
-[node name="Btn" type="OptionButton" parent="OptionScroll/VCon/RandResourceContainer"]
+[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/RandResourceContainer"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 38.0
@@ -113,12 +121,12 @@ size_flags_stretch_ratio = 2.0
 text = "关闭"
 align = 1
 
-[node name="RandSeatContainer" type="HBoxContainer" parent="OptionScroll/VCon"]
+[node name="RandSeatContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
 margin_top = 266.0
 margin_right = 500.0
 margin_bottom = 304.0
 
-[node name="Label" type="Label" parent="OptionScroll/VCon/RandSeatContainer"]
+[node name="Label" type="Label" parent="Option/OptionScroll/VCon/RandSeatContainer"]
 margin_top = 3.0
 margin_right = 165.0
 margin_bottom = 35.0
@@ -128,7 +136,7 @@ size_flags_horizontal = 3
 text = "随机顺序:"
 align = 1
 
-[node name="Btn" type="OptionButton" parent="OptionScroll/VCon/RandSeatContainer"]
+[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/RandSeatContainer"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 38.0
@@ -137,12 +145,12 @@ size_flags_stretch_ratio = 2.0
 text = "关闭"
 align = 1
 
-[node name="RandLandContainer" type="HBoxContainer" parent="OptionScroll/VCon"]
+[node name="RandLandContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
 margin_top = 334.0
 margin_right = 500.0
 margin_bottom = 372.0
 
-[node name="Label" type="Label" parent="OptionScroll/VCon/RandLandContainer"]
+[node name="Label" type="Label" parent="Option/OptionScroll/VCon/RandLandContainer"]
 margin_top = 3.0
 margin_right = 165.0
 margin_bottom = 35.0
@@ -152,7 +160,7 @@ size_flags_horizontal = 3
 text = "随机地形:"
 align = 1
 
-[node name="Btn" type="OptionButton" parent="OptionScroll/VCon/RandLandContainer"]
+[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/RandLandContainer"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 38.0
@@ -161,13 +169,13 @@ size_flags_stretch_ratio = 2.0
 text = "关闭"
 align = 1
 
-[node name="SpecialOptionScroll" type="ScrollContainer" parent="."]
-margin_left = 1336.0
-margin_top = 616.0
-margin_right = 1836.0
-margin_bottom = 792.0
+[node name="SpecialOptionScroll" type="ScrollContainer" parent="Option"]
+margin_top = 404.0
+margin_right = 500.0
+margin_bottom = 604.0
+rect_min_size = Vector2( 500, 200 )
 
-[node name="VCon" type="VBoxContainer" parent="SpecialOptionScroll"]
+[node name="VCon" type="VBoxContainer" parent="Option/SpecialOptionScroll"]
 margin_right = 500.0
 margin_bottom = 156.0
 size_flags_horizontal = 3
@@ -178,19 +186,19 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="OptionLabel" type="Label" parent="SpecialOptionScroll/VCon"]
+[node name="OptionLabel" type="Label" parent="Option/SpecialOptionScroll/VCon"]
 modulate = Color( 0.992157, 0.839216, 0.00392157, 1 )
 margin_right = 500.0
 margin_bottom = 32.0
 text = "特殊参数"
 align = 1
 
-[node name="InitialRes" type="HBoxContainer" parent="SpecialOptionScroll/VCon"]
+[node name="InitialRes" type="HBoxContainer" parent="Option/SpecialOptionScroll/VCon"]
 margin_top = 52.0
 margin_right = 500.0
 margin_bottom = 94.0
 
-[node name="Label" type="Label" parent="SpecialOptionScroll/VCon/InitialRes"]
+[node name="Label" type="Label" parent="Option/SpecialOptionScroll/VCon/InitialRes"]
 margin_top = 5.0
 margin_right = 165.0
 margin_bottom = 37.0
@@ -200,7 +208,7 @@ size_flags_horizontal = 3
 text = "初始资源:"
 align = 1
 
-[node name="Edit" type="SpinBox" parent="SpecialOptionScroll/VCon/InitialRes"]
+[node name="Edit" type="SpinBox" parent="Option/SpecialOptionScroll/VCon/InitialRes"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 42.0
@@ -209,18 +217,18 @@ size_flags_stretch_ratio = 2.0
 max_value = 10.0
 align = 1
 
-[node name="Overlay" type="Control" parent="SpecialOptionScroll/VCon/InitialRes/Edit"]
+[node name="Overlay" type="Control" parent="Option/SpecialOptionScroll/VCon/InitialRes/Edit"]
 anchor_left = 0.28852
 anchor_top = 0.0238095
 anchor_right = 0.675227
 anchor_bottom = 0.97619
 
-[node name="InitialVP" type="HBoxContainer" parent="SpecialOptionScroll/VCon"]
+[node name="InitialVP" type="HBoxContainer" parent="Option/SpecialOptionScroll/VCon"]
 margin_top = 114.0
 margin_right = 500.0
 margin_bottom = 156.0
 
-[node name="Label" type="Label" parent="SpecialOptionScroll/VCon/InitialVP"]
+[node name="Label" type="Label" parent="Option/SpecialOptionScroll/VCon/InitialVP"]
 margin_top = 5.0
 margin_right = 165.0
 margin_bottom = 37.0
@@ -230,7 +238,7 @@ size_flags_horizontal = 3
 text = "初始胜点:"
 align = 1
 
-[node name="Edit" type="SpinBox" parent="SpecialOptionScroll/VCon/InitialVP"]
+[node name="Edit" type="SpinBox" parent="Option/SpecialOptionScroll/VCon/InitialVP"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 42.0
@@ -240,7 +248,7 @@ max_value = 10.0
 rounded = true
 align = 1
 
-[node name="Overlay" type="Control" parent="SpecialOptionScroll/VCon/InitialVP/Edit"]
+[node name="Overlay" type="Control" parent="Option/SpecialOptionScroll/VCon/InitialVP/Edit"]
 anchor_left = 0.287009
 anchor_top = 0.0238095
 anchor_right = 0.673716
@@ -333,13 +341,13 @@ anchor_bottom = 1.0
 margin_right = 0.0
 margin_bottom = 0.0
 
-[connection signal="item_selected" from="OptionScroll/VCon/PlayerNumContainer/Btn" to="." method="_on_change_num"]
-[connection signal="item_selected" from="OptionScroll/VCon/FogContainer/Btn" to="." method="_on_change_fog"]
-[connection signal="item_selected" from="OptionScroll/VCon/RandResourceContainer/Btn" to="." method="_on_change_resource"]
-[connection signal="item_selected" from="OptionScroll/VCon/RandSeatContainer/Btn" to="." method="_on_change_order"]
-[connection signal="item_selected" from="OptionScroll/VCon/RandLandContainer/Btn" to="." method="_on_change_land"]
-[connection signal="value_changed" from="SpecialOptionScroll/VCon/InitialRes/Edit" to="." method="_on_res_value_changed"]
-[connection signal="value_changed" from="SpecialOptionScroll/VCon/InitialVP/Edit" to="." method="_on_vp_value_changed"]
+[connection signal="item_selected" from="Option/OptionScroll/VCon/PlayerNumContainer/Btn" to="." method="_on_change_num"]
+[connection signal="item_selected" from="Option/OptionScroll/VCon/FogContainer/Btn" to="." method="_on_change_fog"]
+[connection signal="item_selected" from="Option/OptionScroll/VCon/RandResourceContainer/Btn" to="." method="_on_change_resource"]
+[connection signal="item_selected" from="Option/OptionScroll/VCon/RandSeatContainer/Btn" to="." method="_on_change_order"]
+[connection signal="item_selected" from="Option/OptionScroll/VCon/RandLandContainer/Btn" to="." method="_on_change_land"]
+[connection signal="value_changed" from="Option/SpecialOptionScroll/VCon/InitialRes/Edit" to="." method="_on_res_value_changed"]
+[connection signal="value_changed" from="Option/SpecialOptionScroll/VCon/InitialVP/Edit" to="." method="_on_vp_value_changed"]
 [connection signal="button_down" from="ExitButton" to="." method="_on_exit_prepare"]
 [connection signal="button_down" from="StartBtn" to="." method="_on_start_game"]
 [connection signal="timeout" from="BroadcastTimer" to="." method="_on_broadcast"]

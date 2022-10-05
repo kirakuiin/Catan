@@ -22,7 +22,7 @@ func _ready():
 
 # 返回顺序信息
 func get_order_info():
-    return _order_info
+    return Protocol.copy(_order_info)
 
 
 func _init_seat():

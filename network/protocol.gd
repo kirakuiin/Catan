@@ -47,7 +47,10 @@ class ProtocolData:
         var result = {}
         for property in get_property_list():
             if is_export(property.name):
-                result[property.name] = get(property.name)
+                var val = get(property.name)
+                if val is Dictionary or val is Array:
+                    val = val.duplicate(true)
+                result[property.name] = val
         return result
 
     # 加载数据到类中
@@ -77,7 +80,7 @@ static func serialize(datas):
 
 
 # 反序列化数据
-static func deserialize(net_data):
+static func deserialize(net_data) -> ProtocolData:
     var result = net_data
     if net_data is Dictionary:
         result = {}
@@ -92,6 +95,11 @@ static func deserialize(net_data):
         for data in net_data:
             result.append(deserialize(data))
     return result
+
+
+# 复制数据
+static func copy(val: ProtocolData) -> ProtocolData:
+    return deserialize(serialize(val))
 
 
 # 主机信息

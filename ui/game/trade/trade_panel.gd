@@ -21,8 +21,7 @@ func reset_name():
 
 # 使用交易数据初始化
 func init_with_trade_info(trade_info: Protocol.TradeInfo):
-    _trade_info = Protocol.TradeInfo.new()
-    _trade_info.load_var(trade_info.to_var())
+    _trade_info = Protocol.copy(trade_info)
     $Title/TradeName.text = trade_info.from_player
     $Title/TradeName.modulate = _get_client().get_color(trade_info.from_player)
     _trade_info.flip()

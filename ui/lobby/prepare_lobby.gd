@@ -24,9 +24,9 @@ func _ready():
 	_init_player_list()
 	_init_signal()
 	_init_broadcast()
-	_init_catan_setup()
 	_init_btn()
 	_generate_map()
+	_init_catan_setup()
 
 
 func _input(event):
@@ -38,19 +38,19 @@ func _input(event):
 func _init_option():
 	for index in Data.MAPSIZE_DATA:
 		var desc = "%s-%s人" % [Data.MAPSIZE_DATA[index]-1, Data.MAPSIZE_DATA[index]]
-		$OptionScroll/VCon/PlayerNumContainer/Btn.add_item(desc, index)
+		$Option/OptionScroll/VCon/PlayerNumContainer/Btn.add_item(desc, index)
 	for index in Data.SWITCH_DATA:
-		$OptionScroll/VCon/FogContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$OptionScroll/VCon/RandResourceContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$OptionScroll/VCon/RandSeatContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$OptionScroll/VCon/RandLandContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$Option/OptionScroll/VCon/FogContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$Option/OptionScroll/VCon/RandResourceContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$Option/OptionScroll/VCon/RandSeatContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+		$Option/OptionScroll/VCon/RandLandContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
 	if GameServer.is_server():
 		_init_special_option()
 	else:
-		$SpecialOptionScroll.hide()
+		$Option/SpecialOptionScroll.hide()
 
 func _init_special_option():
-	$SpecialOptionScroll.show()
+	$Option/SpecialOptionScroll.show()
 
 
 func _init_player_list():
@@ -81,8 +81,9 @@ func _init_signal():
 	PlayerInfoMgr.connect("player_added", self, "_on_player_added")
 	PlayerInfoMgr.connect("player_removed", self, "_on_player_removed")
 	GameServer.connect("server_disconnected", self, "_on_server_disconnected")
-	ConnState.connect("state_changed", self, "_on_conn_state_changed")
-	$PlayerSeat.connect("all_player_ready", self, "_on_all_player_ready")
+	if GameServer.is_server():
+		ConnState.connect("state_changed", self, "_on_conn_state_changed")
+		$PlayerSeat.connect("all_player_ready", self, "_on_all_player_ready")
 
 
 func _init_broadcast():
@@ -105,6 +106,8 @@ func _init_catan_setup():
 master func send_catan_init_info(peer_id: int):
 	rpc_id(peer_id, "recv_catan_setup_info", Protocol.serialize(_catan_setup_info))
 	rpc_id(peer_id, "recv_map_info", Protocol.serialize(_map_info))
+	rpc_id(peer_id, "recv_host_info", Protocol.serialize(_host_info))
+	rpc_id(peer_id, "recv_done")
 
 
 puppet func recv_catan_setup_info(net_data):
@@ -112,13 +115,28 @@ puppet func recv_catan_setup_info(net_data):
 	_reset_catan_setup()
 
 
+puppet func recv_host_info(net_data):
+	_host_info = Protocol.deserialize(net_data)
+
+
+puppet func recv_done():
+	if _host_info.host_state == Data.HostState.PLAYING:
+		rpc("reconnect", Protocol.serialize(PlayerInfoMgr.get_self_info()))
+
+
+master func reconnect(net_data):
+	var player_info = Protocol.deserialize(net_data)
+	Log.get_logger(Log.LogModule.CONN).logi("玩家[%s]请求重连." % player_info.player_name)
+	rpc_id(player_info.peer_id, "start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+
+
 func _reset_catan_setup():
 	var info = _catan_setup_info
-	$OptionScroll/VCon/PlayerNumContainer/Btn.select(int(info.catan_size!=Data.CatanSize.SMALL))
-	$OptionScroll/VCon/FogContainer/Btn.select(int(info.is_enable_fog))
-	$OptionScroll/VCon/RandResourceContainer/Btn.select(int(info.is_random_resource))
-	$OptionScroll/VCon/RandSeatContainer/Btn.select(int(info.is_random_order))
-	$OptionScroll/VCon/RandLandContainer/Btn.select(int(info.is_random_land))
+	$Option/OptionScroll/VCon/PlayerNumContainer/Btn.select(int(info.catan_size!=Data.CatanSize.SMALL))
+	$Option/OptionScroll/VCon/FogContainer/Btn.select(int(info.is_enable_fog))
+	$Option/OptionScroll/VCon/RandResourceContainer/Btn.select(int(info.is_random_resource))
+	$Option/OptionScroll/VCon/RandSeatContainer/Btn.select(int(info.is_random_order))
+	$Option/OptionScroll/VCon/RandLandContainer/Btn.select(int(info.is_random_land))
 
 
 func _on_change_num(index):

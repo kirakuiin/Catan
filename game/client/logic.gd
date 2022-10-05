@@ -10,7 +10,6 @@ signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal card_info_changed(player_name, card_info)  # 得分信息改变
 signal personal_info_changed(player_name, personal_info)  # 个人信息改变
 signal client_state_changed(state)  # 客户端状态改变
-signal client_setting_changed(setting)  # 客户端设置改变
 signal notification_received(message)  # 服务器通知
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化

@@ -63,6 +63,7 @@ func _init_signal():
 
 
 func _on_show_stat(stat_info: Protocol.StatInfo):
+	$Map/ViewContainer/Viewport/DragArea.set_enable(false)
 	$Popup/ScorePopup.init(stat_info)
 	$Popup/ScorePopup.popup_centered()
 

@@ -15,6 +15,7 @@ signal wheel_down()
 
 export(int, "无", "左键", "右键", "中键") var button_type = BUTTON_RIGHT  # 触发按键类型
 export(bool) var is_enable_wheel = false
+export(bool) var is_enable = true
 
 var _dragging : bool = false
 var _area: Rect2 = Rect2(Vector2(), Vector2())
@@ -25,7 +26,14 @@ func set_enable_rect(rect: Rect2):
     _area = rect
 
 
+# 设置是否启动
+func set_enable(enable: bool):
+    is_enable = enable
+
+
 func _input(event):
+    if not is_enable:
+        return
     if event is InputEventMouseButton:
         _handle_mouse_button(event)
     elif event is InputEventMouseMotion:

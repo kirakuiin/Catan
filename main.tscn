@@ -89,7 +89,8 @@ anchor_bottom = 1.0
 margin_left = -309.0
 margin_top = -66.0
 theme_type_variation = "BigLabel"
-text = "版本号: 0.0.9"
+text = "版本号: 1.0"
+align = 1
 
 [connection signal="button_down" from="VCon/StartGameBtn" to="." method="_on_start_game"]
 [connection signal="button_down" from="VCon/CharacterBtn" to="." method="_on_edit_character_info"]

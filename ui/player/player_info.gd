@@ -42,6 +42,30 @@ func _get_data(type: int):
     return Data.NUM_DATA[_size].building.each_num[type]
 
 
+func get_order_num() -> int:
+    return _order
+
+
+func get_vp_num() -> int:
+    return _get_client().player_personals[_name].vic_point-_get_vp_card_num(_name)
+
+
+func get_res_num() -> int:
+    return StdLib.sum(_get_client().player_cards[_name].res_cards.values())
+
+
+func get_dev_num() -> int:
+    return StdLib.sum(_get_client().player_cards[_name].dev_cards.values())
+
+
+func get_city_num() -> int:
+    return len(_get_client().player_buildings[_name].city_info)
+
+
+func get_settlement_num() -> int:
+    return len(_get_client().player_buildings[_name].settlement_info)
+
+
 # TODO: 更加明显的回合提示
 func _on_player_assist_changed(assist_info: Protocol.AssistInfo):
     if assist_info.player_turn_name == _name:
@@ -71,8 +95,11 @@ func _on_player_personal_changed(name: String, personal_info: Protocol.PlayerPer
         $HBox/Grid/BiggestArmy.set_num(personal_info.army_num)
         var vp = personal_info.vic_point
         if _name != _get_client().get_name():
-            vp -= StdLib.dict_get(_get_client().player_cards[_name].dev_cards, Data.CardType.VP, 0) 
+            vp -= _get_vp_card_num(_name)
         $HBox/Grid/VP.set_num(vp)
+
+func _get_vp_card_num(player_name):
+    return StdLib.dict_get(_get_client().player_cards[player_name].dev_cards, Data.CardType.VP, 0)
 
 
 func _on_player_removed(player_info):

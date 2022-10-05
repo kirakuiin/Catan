@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://ui/game/player_infos.gd" type="Script" id=1]
+[ext_resource path="res://assets/icons/trophy.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/left_arrow.png" type="Texture" id=3]
+[ext_resource path="res://assets/icons/resource.png" type="Texture" id=4]
+[ext_resource path="res://assets/icons/development.png" type="Texture" id=5]
+[ext_resource path="res://assets/icons/city.png" type="Texture" id=6]
+[ext_resource path="res://assets/icons/settlement.png" type="Texture" id=7]
+[ext_resource path="res://ui/game/player_infos_group.tres" type="ButtonGroup" id=8]
 
 [node name="PlayerInfos" type="Control"]
 anchor_right = 1.0
@@ -9,10 +16,137 @@ margin_right = -1520.0
 margin_bottom = -280.0
 script = ExtResource( 1 )
 
-[node name="PlayerList" type="VBoxContainer" parent="."]
+[node name="VCon" type="VBoxContainer" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Option" type="HBoxContainer" parent="VCon"]
+margin_right = 400.0
+margin_bottom = 50.0
+
+[node name="Order" type="ColorRect" parent="VCon/Option"]
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+color = Color( 0.25098, 0.870588, 0.811765, 1 )
+
+[node name="Btn" type="TextureButton" parent="VCon/Option/Order"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_min_size = Vector2( 50, 50 )
+rect_rotation = -90.0
+rect_pivot_offset = Vector2( 25, 25 )
+hint_tooltip = "以出手顺序排序"
+toggle_mode = true
+pressed = true
+group = ExtResource( 8 )
+texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 5
+
+[node name="Res" type="ColorRect" parent="VCon/Option"]
+margin_left = 54.0
+margin_right = 104.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+color = Color( 0.521569, 0.764706, 0.2, 0 )
+
+[node name="Btn" type="TextureButton" parent="VCon/Option/Res"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 50, 50 )
+hint_tooltip = "以资源卡数量排序"
+toggle_mode = true
+group = ExtResource( 8 )
+texture_normal = ExtResource( 4 )
+expand = true
+stretch_mode = 5
+
+[node name="Dev" type="ColorRect" parent="VCon/Option"]
+margin_left = 108.0
+margin_right = 158.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+color = Color( 0.521569, 0.764706, 0.2, 0 )
+
+[node name="Btn" type="TextureButton" parent="VCon/Option/Dev"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 50, 50 )
+hint_tooltip = "以发展卡数量排序"
+toggle_mode = true
+group = ExtResource( 8 )
+texture_normal = ExtResource( 5 )
+expand = true
+stretch_mode = 5
+
+[node name="Settlement" type="ColorRect" parent="VCon/Option"]
+margin_left = 162.0
+margin_right = 212.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+color = Color( 0.521569, 0.764706, 0.2, 0 )
+
+[node name="Btn" type="TextureButton" parent="VCon/Option/Settlement"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 50, 50 )
+hint_tooltip = "以定居点数量排序"
+toggle_mode = true
+group = ExtResource( 8 )
+texture_normal = ExtResource( 7 )
+expand = true
+stretch_mode = 5
+
+[node name="City" type="ColorRect" parent="VCon/Option"]
+margin_left = 216.0
+margin_right = 266.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+color = Color( 0.521569, 0.764706, 0.2, 0 )
+
+[node name="Btn" type="TextureButton" parent="VCon/Option/City"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 50, 50 )
+hint_tooltip = "以城市数量排序"
+toggle_mode = true
+group = ExtResource( 8 )
+texture_normal = ExtResource( 6 )
+expand = true
+stretch_mode = 5
+
+[node name="VP" type="ColorRect" parent="VCon/Option"]
+margin_left = 270.0
+margin_right = 320.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+color = Color( 0.521569, 0.764706, 0.2, 0 )
+
+[node name="Btn" type="TextureButton" parent="VCon/Option/VP"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 50, 50 )
+hint_tooltip = "以胜点排序"
+toggle_mode = true
+group = ExtResource( 8 )
+texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 5
+
+[node name="PlayerList" type="VBoxContainer" parent="VCon"]
+margin_top = 54.0
+margin_right = 400.0
+margin_bottom = 854.0
+rect_min_size = Vector2( 400, 800 )
 custom_constants/separation = 2
 __meta__ = {
 "_edit_use_anchors_": true
 }
+
+[connection signal="toggled" from="VCon/Option/Order/Btn" to="." method="_on_order_toggled"]
+[connection signal="toggled" from="VCon/Option/Res/Btn" to="." method="_on_res_toggled"]
+[connection signal="toggled" from="VCon/Option/Dev/Btn" to="." method="_on_dev_toggled"]
+[connection signal="toggled" from="VCon/Option/Settlement/Btn" to="." method="_on_settlement_toggled"]
+[connection signal="toggled" from="VCon/Option/City/Btn" to="." method="_on_city_toggled"]
+[connection signal="toggled" from="VCon/Option/VP/Btn" to="." method="_on_vp_toggled"]

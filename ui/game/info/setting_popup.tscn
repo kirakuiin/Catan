@@ -4,7 +4,6 @@
 [ext_resource path="res://ui/game/info/setting_popup.gd" type="Script" id=2]
 
 [node name="PopupDialog" type="PopupDialog"]
-visible = true
 margin_right = 400.0
 margin_bottom = 700.0
 script = ExtResource( 2 )
@@ -49,5 +48,4 @@ margin_bottom = 700.0
 size_flags_vertical = 3
 text = "退出到大厅"
 
-[connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
 [connection signal="button_down" from="VBox/Quit" to="." method="_on_quit_to_lobby"]

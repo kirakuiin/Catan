@@ -8,13 +8,18 @@ class NotExistStateCondition:
     extends HSM.Condition
 
     var _state: String
+    var _check: bool
 
-    func _init(state: String):
+    func _init(state: String, check_offline: bool=true):
         _state = state
+        _check = check_offline
 
     func is_meet_condition() -> bool:
-        for state in PlayingNet.get_server().player_net_state.values():
-            if state == _state:
+        var states = PlayingNet.get_server().player_net_state
+        for name in states:
+            if not _check and not PlayerInfoMgr.has_player(name):
+                continue
+            if states[name] == _state:
                 return false
         return true
 

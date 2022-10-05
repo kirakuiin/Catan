@@ -127,7 +127,7 @@ puppet func recv_done():
 master func reconnect(net_data):
 	var player_info = Protocol.deserialize(net_data)
 	Log.get_logger(Log.LogModule.CONN).logi("玩家[%s]请求重连." % player_info.player_name)
-	rpc_id(player_info.peer_id, "start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+	rpc_id(player_info.peer_id, "start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info), true)
 
 
 func _reset_catan_setup():
@@ -225,7 +225,7 @@ func _on_start_game():
 	_order_info = $PlayerSeat.get_order_info()
 	if _catan_setup_info.is_random_order:
 		_randomize_order(_order_info)
-	start_game(Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+	start_game(Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info), false)
 
 
 func _randomize_order(order_info: Protocol.PlayerOrderInfo):
@@ -237,17 +237,17 @@ func _randomize_order(order_info: Protocol.PlayerOrderInfo):
 		order_info.order_to_name[orders[idx]] = names[idx]
 
 
-remote func start_game(order_data, setup_data, map_data):
+remote func start_game(order_data, setup_data, map_data, is_reconnect: bool):
 	var scene = SceneMgr.pop_scene(SceneMgr.WORLD_SCENE)
 	var order_info = Protocol.deserialize(order_data)
 	var setup_info = Protocol.deserialize(setup_data)
 	var map_info = Protocol.deserialize(map_data)
-	scene.init(order_info, setup_info, map_info)
+	scene.init(order_info, setup_info, map_info, is_reconnect)
 
 
 func _on_conn_state_changed(state):
 	if state == Data.HostState.PLAYING:
-		rpc("start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info))
+		rpc("start_game", Protocol.serialize(_order_info), Protocol.serialize(_catan_setup_info), Protocol.serialize(_map_info), false)
 	_host_info.host_state = state
 
 

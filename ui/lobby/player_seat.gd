@@ -107,3 +107,4 @@ func _on_player_removed(player_info: Protocol.PlayerInfo):
     var order = _order_info.get_order(player_info.player_name)
     if _order_info.order_to_name.erase(order):
         _reset_seat()
+        emit_signal("all_player_ready", false)

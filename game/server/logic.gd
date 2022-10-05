@@ -19,6 +19,7 @@ var player_cards: Dictionary
 var player_personals: Dictionary
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
+var robber_pos: Vector3
 var stat_info: Protocol.StatInfo
 
 var player_net_state: Dictionary
@@ -27,7 +28,6 @@ var dice: Dice
 var has_roll_dice: bool
 
 var _server_state: HSM.StateMachine
-var _robber_pos: Vector3
 var _res_mgr: ResMgr
 var _vp_mgr: VPMgr
 var _card_mgr: CardMgr
@@ -73,7 +73,7 @@ func _init_robber():
         if tile.tile_type == Data.TileType.DESERT:
             canditate_pos.append(tile.cube_pos)
     canditate_pos.shuffle()
-    _robber_pos = canditate_pos[0]
+    robber_pos = canditate_pos[0]
 
 
 func _init_state_machine():
@@ -151,7 +151,7 @@ func set_stat_info():
 
 # 分发资源
 func dispatch_resource():
-    _res_mgr.set_robber(_robber_pos)
+    _res_mgr.set_robber(robber_pos)
     var affect = _res_mgr.dispatch_by_num(dice.get_last_num())
     broadcast_bank_info()
     for player in affect.keys():
@@ -161,7 +161,7 @@ func dispatch_resource():
 
 # 初始化分配资源
 func initial_resource(player_name: String):
-    _res_mgr.set_robber(_robber_pos)
+    _res_mgr.set_robber(robber_pos)
     var result = _res_mgr.dispatch_initial_res(player_name)
     broadcast_bank_info()
     change_card_info(player_name)
@@ -178,9 +178,9 @@ func delay(second: float):
 
 # 丢弃资源
 func discard_resource():
-    var discard_infos = _res_mgr.get_discard_infos()
-    for player in discard_infos:
-        notify_discard_res(player, discard_infos[player])
+    var discard_players = _res_mgr.get_discard_players()
+    for player in discard_players:
+        notify_discard_res(player)
 
 
 # 设置出卡状态
@@ -238,6 +238,12 @@ func client_ready(player_name: String):
     player_cards[player_name] = Protocol.PlayerCardInfo.new()
     player_personals[player_name] = Protocol.PlayerPersonalInfo.new()
     change_player_net_state(player_name, NetDefines.PlayerNetState.READY)
+
+
+# 玩家重连
+func client_reconnect(player_name: String):
+    _logger.logd("收到玩家[%s]的重连请求, 开始初始化.." % player_name)
+    send_reconnect_info(player_name)
 
 
 # 玩家网络状态改变
@@ -350,7 +356,7 @@ func discard_done(player_name: String, discard_info: Dictionary):
 # 移动强盗完毕
 func move_robber_done(player_name: String, pos: Vector3):
     _logger.logd("玩家[%s]强盗移动至%s" % [player_name, str(pos)])
-    _robber_pos = pos
+    robber_pos = pos
     broadcast_robber_pos()
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
@@ -396,6 +402,20 @@ func ready_to_exit(player_name: String):
 
 
 # S2C
+
+# 发送重连数据
+func send_reconnect_info(player_name: String):
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
+    PlayingNet.rpc_id(peer_id, "init_building_info", Protocol.serialize(player_buildings))
+    PlayingNet.rpc_id(peer_id, "init_card_info", Protocol.serialize(player_cards))
+    PlayingNet.rpc_id(peer_id, "init_personal_info", Protocol.serialize(player_personals))
+    PlayingNet.rpc_id(peer_id, "change_bank_info", Protocol.serialize(bank_info))
+    PlayingNet.rpc_id(peer_id, "change_assist_info", Protocol.serialize(assist_info))
+    PlayingNet.rpc_id(peer_id, "change_robber_pos", robber_pos)
+    PlayingNet.rpc_id(peer_id, "change_dice", dice.get_last_roll())
+    PlayingNet.rpc_id(peer_id, "send_reconnect_data_done")
+    _logger.logd("发送重连数据到玩家[%s]完毕!" % [player_name])
+
 
 # 通知玩家放置定居点
 func notify_place_settlement(player_name: String, is_setup: bool):
@@ -525,8 +545,8 @@ func notify_move_robber(player_name: String):
 
 # 更新强盗位置
 func broadcast_robber_pos():
-    _logger.logd("更新强盗位置[%s]" % str(_robber_pos))
-    PlayingNet.rpc("change_robber_pos", _robber_pos)
+    _logger.logd("更新强盗位置[%s]" % str(robber_pos))
+    PlayingNet.rpc("change_robber_pos", robber_pos)
 
 
 # 通知抢劫玩家
@@ -538,11 +558,11 @@ func notify_rob_player(player_name: String):
 
 
 # 通知丢弃资源
-func notify_discard_res(player_name: String, num: int):
+func notify_discard_res(player_name: String):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
-    _logger.logd("通知[%s]丢弃[%d]资源" % [player_name, num])
+    _logger.logd("通知[%s]丢弃资源" % [player_name])
     var peer_id = PlayerInfoMgr.get_peer(player_name)
-    PlayingNet.rpc_id(peer_id, "discard_resource", num)
+    PlayingNet.rpc_id(peer_id, "discard_resource")
 
    
 # 通知特殊出卡

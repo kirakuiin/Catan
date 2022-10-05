@@ -26,14 +26,17 @@ func _exit_tree():
 
 
 # 初始化世界
-func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
+func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo, is_reconnect: bool):
 	if GameServer.is_server():
 		_init_server(order, setup, map)
 	_init_client(order, setup, map)
 	_init_map(map, setup)
 	_init_overlay()
 	_init_signal()
-	_client.start()
+	if is_reconnect:
+		_client.reconnect()
+	else:
+		_client.start()
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):

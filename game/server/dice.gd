@@ -24,3 +24,8 @@ func roll() -> Array:
 # 返回上次投掷的结果
 func get_last_num() -> int:
     return _last_result[0] + _last_result[1]
+
+
+# 返回上次投掷的表示
+func get_last_roll() -> Array:
+    return _last_result

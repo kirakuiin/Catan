@@ -38,14 +38,14 @@ func set_robber(robber_pos: Vector3):
     _robber_pos = robber_pos
 
 
-# 获得需要丢弃资源的玩家和需要丢弃的数量
-func get_discard_infos() -> Array:
-    var discard_infos = {}
+# 获得需要丢弃资源的玩家
+func get_discard_players() -> Array:
+    var discard_players = []
     for player in _cards:
         var total = StdLib.sum(_cards[player].res_cards.values())
         if total >= 8:
-            discard_infos[player] = total/2
-    return discard_infos
+            discard_players.append(player)
+    return discard_players
 
 
 # 购买行为

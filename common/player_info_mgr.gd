@@ -52,6 +52,10 @@ func get_peer(name: String) -> int:
     return get_info(name).peer_id
 
 
+func has_player(name: String) -> bool:
+    return name in _info_dict
+
+
 func reset():
     _info_dict = {}
 

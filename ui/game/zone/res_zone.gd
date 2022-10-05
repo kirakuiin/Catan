@@ -22,7 +22,7 @@ func init():
 
 func _init_signal():
     _get_client().connect("card_info_changed", self, "_on_card_info_changed")
-    _get_client().connect("resource_discarded", self, "_on_resource_discarded")
+    _get_client().connect("client_state_changed", self, "_on_client_state_changed")
 
 
 func _get_client():
@@ -88,10 +88,12 @@ func _place_card_by_idx(card, idx: int):
     card.z_index = idx
     
 
-func _on_resource_discarded(num: int):
-    _init_discard(num)
-    for card in _card_dict.values():
-        card.enable(funcref(self, "_on_inc"), funcref(self, "_on_dec"))
+func _on_client_state_changed(state: String):
+    if state == NetDefines.ClientState.DISCARD_RESOURCE:
+        var total_num = StdLib.sum(_get_client().player_cards[_get_client().get_name()].res_cards.values())/2
+        _init_discard(total_num)
+        for card in _card_dict.values():
+            card.enable(funcref(self, "_on_inc"), funcref(self, "_on_dec"))
 
 func _init_discard(num: int):
     _need_discard_num = num

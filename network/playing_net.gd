@@ -20,6 +20,11 @@ master func client_ready(player_name: String):
     get_server().client_ready(player_name)
 
 
+# 客户端请求重连
+master func client_reconnect(player_name: String):
+    get_server().client_reconnect(player_name)
+
+
 # 请求放置定居点
 master func request_place_settlement(player_name: String):
     get_server().request_place_settlement(player_name)
@@ -173,8 +178,8 @@ remotesync func into_free_action():
 
 
 # 通知客户端丢弃资源
-remotesync func discard_resource(num: int):
-    get_client().discard_resource(num)
+remotesync func discard_resource():
+    get_client().discard_resource()
 
 
 # 通知客户端丢弃资源
@@ -215,3 +220,8 @@ remotesync func show_score_panel(data):
 # 通知客户端退出到准备界面
 remotesync func exit_to_prepare():
     get_client().exit_to_prepare()
+
+
+# 通知客户端发送重连数据结束
+remotesync func send_reconnect_data_done():
+    get_client().reconnect_done()

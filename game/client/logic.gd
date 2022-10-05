@@ -13,7 +13,6 @@ signal client_state_changed(state)  # 客户端状态改变
 signal notification_received(message)  # 服务器通知
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
-signal resource_discarded(num)  # 丢弃资源
 signal player_hint_showed(hint, always_show)  # 提示信息变化
 signal stat_info_received(msg)  # 收到结算消息
 signal exit_game()  # 退出游戏
@@ -23,6 +22,7 @@ const BuildMgr: Script = preload("res://game/client/build_mgr.gd")
 const OpMgr: Script = preload("res://game/client/op_mgr.gd")
 const TradeMgr: Script = preload("res://game/client/trade_mgr.gd")
 const SettingMgr: Script = preload("res://game/client/setting_mgr.gd")
+const StateMgr: Script = preload("res://game/client/state_mgr.gd")
 
 
 var map_info: Protocol.MapInfo
@@ -36,10 +36,12 @@ var player_cards: Dictionary
 var player_personals: Dictionary
 
 var client_state: String  # 客户端状态
+
 var build_mgr: BuildMgr
 var op_mgr: OpMgr
 var setting_mgr: SettingMgr
 var trade_mgr: TradeMgr
+var state_mgr: StateMgr
 
 onready var _logger: Log.Logger = Log.get_logger(Log.LogModule.CLIENT)
 
@@ -61,8 +63,8 @@ func _init_local_info():
     build_mgr = BuildMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size)
     op_mgr = OpMgr.new(player_buildings, player_cards, setup_info.catan_size)
     setting_mgr = SettingMgr.new()
+    state_mgr = StateMgr.new(get_name())
     
-
 func _init_trade():
     trade_mgr = TradeMgr.new()
     trade_mgr.name = NetDefines.TRADE_CENTER
@@ -71,7 +73,6 @@ func _init_trade():
 
 func _ready():
     _init_node_setup()
-    _logger.logi("游戏客户端启动...")
 
 
 func _init_node_setup():
@@ -83,7 +84,14 @@ func _init_node_setup():
 
 # 启动客户端
 func start():
+    _logger.logi("游戏客户端启动...")
     PlayingNet.rpc("client_ready", get_name())
+
+
+# 执行重连过程
+func reconnect():
+    _logger.logi("游戏客户端执行重连...")
+    PlayingNet.rpc("client_reconnect", get_name())
 
 
 # 获得玩家名称
@@ -109,6 +117,7 @@ func get_color(player_name: String) -> Color:
 # 设置客户端状态
 func change_client_state(state: String):
     client_state = state
+    state_mgr.save_client_state(state)
     _logger.logd("客户端状态变为 '%s'" % [state])
     emit_signal("client_state_changed", client_state)
 
@@ -320,9 +329,8 @@ func into_free_action():
 
 
 # 丢弃资源
-func discard_resource(num: int):
+func discard_resource():
     change_client_state(NetDefines.ClientState.DISCARD_RESOURCE)
-    emit_signal("resource_discarded", num)
     show_hint("请丢弃资源...")
 
 
@@ -374,3 +382,9 @@ func show_score_panel(stat_info: Protocol.StatInfo):
 func exit_to_prepare():
     _logger.logd("退出游戏")
     emit_signal("exit_game")
+
+
+# 重连结束
+func reconnect_done():
+    _logger.logd("接收重连数据完毕!")
+    change_client_state(state_mgr.get_client_state())

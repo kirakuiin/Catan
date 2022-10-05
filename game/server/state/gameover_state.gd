@@ -34,7 +34,7 @@ class ShowScoreState:
         return "ShowScoreState"
 
     func activiate():
-        var condition = Condition.NotExistStateCondition.new(NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+        var condition = Condition.NotExistStateCondition.new(NetDefines.PlayerNetState.WAIT_FOR_RESPONE, false)
         add_transition(HSM.Transition.new(get_state_in_parent(ExitState), 0, condition))
         _entry_actions.append(Action.show_score_panel())
 

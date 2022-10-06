@@ -204,7 +204,10 @@ class SparseMatrix:
 
     # 获得点的全部可达点
     func get_adjacency_nodes(node) -> Array:
-        return _graph[node].keys()
+        if node in _graph:
+            return _graph[node].keys()
+        else:
+            return []
 
     # 添加边
     func add_edge(from, to, distance):

@@ -164,14 +164,10 @@ func _check_point(tiles: Array) -> bool:
     return low_count == 3 or high_count == 3
     
 
-# TODO: 平衡的点数分布
 func _add_point(map: Protocol.MapInfo) -> Protocol.MapInfo:
-    var point_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size]["point"].duplicate(true)
-    var grids = map.grid_map.values()
-    grids.shuffle()
-    for tile in grids:
-        if tile.tile_type != Data.TileType.DESERT:
-            tile.point_type = _get_random_type(point_data.each_num)
+    var point_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size].point.each_num.duplicate(true)
+    var filler = PointFiller.new(map, point_data)
+    filler.fill_point()
     return map
 
 
@@ -257,3 +253,84 @@ func _get_harbor_near_pos(map: Protocol.MapInfo, ocean_pos: Vector3) -> Vector3:
     var neighbor_list := _get_all_neighbor(map, ocean_hex, false)
     var rand_hex = neighbor_list[Util.randi_range(0, len(neighbor_list))]
     return rand_hex.to_vector3()
+
+
+# 点数填充器
+class PointFiller:
+    extends Reference
+    const ORIGIN: Vector3 = Vector3(0, 0, 0)
+
+    var _map: Protocol.MapInfo
+    var _count: Dictionary
+    var _graph: StdLib.SparseMatrix
+    var _order: Array
+
+    func _init(map: Protocol.MapInfo, count: Dictionary):
+        _map = map
+        _count = count
+        _order = count.keys()
+        _graph = StdLib.SparseMatrix.new()
+        _build_graph()
+
+    func _build_graph():
+        var queue = StdLib.Queue.new()
+        var has_parent = StdLib.Set.new()
+        var visited = StdLib.Set.new()
+        queue.enqueue(ORIGIN)
+        has_parent.add(ORIGIN)
+        while not queue.is_empty():
+            var node = queue.dequeue()
+            visited.add(node)
+            for neighbor in _get_neighbors(node):
+                if not visited.contains(neighbor):
+                    queue.enqueue(neighbor)
+                if not has_parent.contains(neighbor):
+                    _graph.add_edge(node, neighbor, 1)
+                    has_parent.add(neighbor)
+            
+    func _get_neighbors(pos: Vector3) -> Array:
+        var neighbors = Hexlib.get_hex_adjacency_hex(Hexlib.create_hex(pos))
+        var result = []
+        for neighbor in neighbors:
+            var vec_pos = neighbor.to_vector3()
+            if vec_pos in _map.grid_map:
+                result.append(vec_pos)
+        return result
+
+    # 填充点位
+    func fill_point():
+        _dfs(ORIGIN)
+
+    func _dfs(pos: Vector3):
+        if not _is_desert(pos):
+            if not _set_point_in_enough(pos, false):
+                _set_point_in_enough(pos, true)
+        for neighbor in _graph.get_adjacency_nodes(pos):
+            _dfs(neighbor)
+
+    func _set_point_in_enough(pos: Vector3, is_strict: bool) -> bool:
+        _order.shuffle()
+        for point in _order:
+            if _count[point] > 0 and (is_strict or _check_point(pos, point)):
+                _set_point_type(pos, point)
+                return true
+        return false
+
+    func _is_desert(pos: Vector3):
+        return _map.grid_map[pos].tile_type == Data.TileType.DESERT
+
+    func _set_point_type(pos: Vector3, point_type: int):
+        _map.grid_map[pos].point_type = point_type
+        _count[point_type] -= 1
+
+    func _check_point(pos: Vector3, point_type: int) -> bool:
+        var neighbors = _get_neighbors(pos)
+        if point_type in Data.SMALL_POINT:
+            for vec_pos in neighbors:
+                if _map.grid_map[vec_pos].point_type in Data.SMALL_POINT:
+                    return false
+        if point_type in Data.BIG_POINT:
+            for vec_pos in neighbors:
+                if _map.grid_map[vec_pos].point_type in Data.BIG_POINT:
+                    return false
+        return true

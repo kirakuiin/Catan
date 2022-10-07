@@ -2,7 +2,8 @@ extends Node
 
 # Catan地图生成器
 
-const RETRY_TIME: int = 10
+const RETRY_TIME: int = 50
+const ORIGIN: Vector3 = Vector3(0, 0, 0)
 
 var _setup_info: Protocol.CatanSetupInfo
 
@@ -34,7 +35,7 @@ func _generate_hex_grid() -> Protocol.MapInfo:
 
 static func _generate_big_grid():
     var map := Protocol.MapInfo.new()
-    for vec in [Vector3(0, 0, 0), Vector3(1, -1, 0), Vector3(0, -1, 1), Vector3(-1, 0, 1)]:
+    for vec in [ORIGIN, Vector3(1, -1, 0), Vector3(0, -1, 1), Vector3(-1, 0, 1)]:
         var center = Hexlib.create_hex(vec)
         for tile in _generate_small_grid(center).grid_map.values():
             map.add_tile(tile)
@@ -51,7 +52,7 @@ static func _generate_small_grid(center: Hexlib.Hex = Hexlib.Hex.new(0, 0, 0)):
 
 func _generate_random_grid() -> Protocol.MapInfo:
     var map := Protocol.MapInfo.new()
-    map.add_tile(Protocol.TileInfo.new(Vector3(0, 0, 0)))
+    map.add_tile(Protocol.TileInfo.new(ORIGIN))
     for _i in range(Data.NUM_DATA[_setup_info.catan_size]["tile"].total_num-1):
         var hex = _generate_new_hex(map)
         map.add_tile(Protocol.TileInfo.new(hex.to_vector3()))
@@ -64,19 +65,22 @@ func _generate_new_hex(map: Protocol.MapInfo) -> Hexlib.Hex:
     var hex: Hexlib.Hex
     for i in range(len(pos_list)):
         hex = map.grid_map[pos_list[i]].to_hex()
-        var neighbor_num = len(_get_all_neighbor(map, hex))
+        var neighbor_num = len(_get_all_neighbor(map, pos_list[i]))
         if neighbor_num < 6:
             hex = _get_rand_unused_hex(map, hex)
             break
     return hex
 
 
-func _get_all_neighbor(map: Protocol.MapInfo, hex: Hexlib.Hex, have_ocean=true) -> Array:
+func _get_all_neighbor(map: Protocol.MapInfo, pos: Vector3, have_ocean: bool=true, to_vec: bool=false) -> Array:
     var neighbors = []
-    for neighbor in Hexlib.get_hex_adjacency_hex(hex):
-        var pos = neighbor.to_vector3()
-        if pos in map.grid_map and (have_ocean or map.grid_map[pos].tile_type != Data.TileType.OCEAN):
-            neighbors.append(neighbor)
+    for neighbor in Hexlib.get_hex_adjacency_hex(Hexlib.create_hex(pos)):
+        var vec = neighbor.to_vector3()
+        if vec in map.grid_map and (have_ocean or map.grid_map[vec].tile_type != Data.TileType.OCEAN):
+            if to_vec:
+                neighbors.append(vec)
+            else:
+                neighbors.append(neighbor)
     return neighbors
 
 
@@ -106,22 +110,17 @@ func _add_resource_with_check(map: Protocol.MapInfo) -> Protocol.MapInfo:
 func _check_tile(tiles: Array) -> bool:
     var first_type = tiles.pop_at(0).tile_type
     for tile in tiles:
-        if tile.tile_type != first_type:
-            return false
-    return true
+        if tile.tile_type == first_type:
+            return true
+    return false
 
     
-
-# TODO: 分散的资源生成
 func _add_resource(map: Protocol.MapInfo) -> Protocol.MapInfo:
-    var tile_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size]["tile"].duplicate(true)
-    var count_dict: Dictionary = tile_data.each_num
+    var tile_data = Data.NUM_DATA[_setup_info.catan_size].tile.each_num.duplicate(true)
     if _setup_info.is_random_resource:
-        _randomize_resource(count_dict)
-    var grids = map.grid_map.values()
-    grids.shuffle()
-    for tile in grids:
-        tile.tile_type = _get_random_type(count_dict)
+        _randomize_resource(tile_data)
+    var filler = TileFiller.new(map, tile_data, build_graph(map))
+    filler.fill_tile()
     return map
 
 
@@ -131,16 +130,6 @@ func _randomize_resource(count_dict: Dictionary):
         var swap_idx = count_dict.keys()[Util.randi_range(0, length)]
         if idx != Data.TileType.DESERT and swap_idx != Data.TileType.DESERT:
             StdLib.swap(count_dict, idx, swap_idx)
-
-
-func _get_random_type(count_dict: Dictionary):
-    var length = len(count_dict)
-    var idx = Util.randi_range(0, length)
-    var type = count_dict.keys()[idx]
-    count_dict[type] -= 1
-    if count_dict[type] == 0:
-        count_dict.erase(type)
-    return type
 
 
 func _add_point_with_check(map: Protocol.MapInfo) -> Protocol.MapInfo:
@@ -157,16 +146,16 @@ func _check_point(tiles: Array) -> bool:
     var low_count = 0
     var high_count = 0
     for tile in tiles:
-        if tile.point_type in [Data.PointType.TWO, Data.PointType.TWELVE]:
+        if tile.point_type in Data.SMALL_POINT:
             low_count += 1
-        if tile.point_type in [Data.PointType.SIX, Data.PointType.EIGHT]:
+        if tile.point_type in Data.BIG_POINT:
             high_count += 1
-    return low_count == 3 or high_count == 3
+    return low_count > 1 or high_count > 1
     
 
 func _add_point(map: Protocol.MapInfo) -> Protocol.MapInfo:
     var point_data: Dictionary = Data.NUM_DATA[_setup_info.catan_size].point.each_num.duplicate(true)
-    var filler = PointFiller.new(map, point_data)
+    var filler = PointFiller.new(map, point_data, build_graph(map))
     filler.fill_point()
     return map
 
@@ -232,7 +221,7 @@ func _get_ocean_list(map: Protocol.MapInfo) -> Array:
     while queue:
         var tile = queue.pop_front()
         pos_list.append(tile.cube_pos)
-        for neighbor in _get_all_neighbor(map, tile.to_hex()):
+        for neighbor in _get_all_neighbor(map, tile.cube_pos):
             var pos = neighbor.to_vector3()
             if not pos in pos_list and map.grid_map[pos].tile_type == Data.TileType.OCEAN:
                 queue.append(map.grid_map[pos])
@@ -249,53 +238,78 @@ func _find_first_ocean_tile(map: Protocol.MapInfo):
 
 
 func _get_harbor_near_pos(map: Protocol.MapInfo, ocean_pos: Vector3) -> Vector3:
-    var ocean_hex = map.grid_map[ocean_pos].to_hex()
-    var neighbor_list := _get_all_neighbor(map, ocean_hex, false)
+    var neighbor_list := _get_all_neighbor(map, ocean_pos, false)
     var rand_hex = neighbor_list[Util.randi_range(0, len(neighbor_list))]
     return rand_hex.to_vector3()
 
 
-# 点数填充器
-class PointFiller:
+# 地块填充器
+class TileFiller:
     extends Reference
-    const ORIGIN: Vector3 = Vector3(0, 0, 0)
 
     var _map: Protocol.MapInfo
     var _count: Dictionary
     var _graph: StdLib.SparseMatrix
     var _order: Array
 
-    func _init(map: Protocol.MapInfo, count: Dictionary):
+    func _init(map: Protocol.MapInfo, count: Dictionary, graph: StdLib.SparseMatrix):
         _map = map
         _count = count
         _order = count.keys()
-        _graph = StdLib.SparseMatrix.new()
-        _build_graph()
+        _graph = graph
 
-    func _build_graph():
-        var queue = StdLib.Queue.new()
-        var has_parent = StdLib.Set.new()
-        var visited = StdLib.Set.new()
-        queue.enqueue(ORIGIN)
-        has_parent.add(ORIGIN)
-        while not queue.is_empty():
-            var node = queue.dequeue()
-            visited.add(node)
-            for neighbor in _get_neighbors(node):
-                if not visited.contains(neighbor):
-                    queue.enqueue(neighbor)
-                if not has_parent.contains(neighbor):
-                    _graph.add_edge(node, neighbor, 1)
-                    has_parent.add(neighbor)
-            
-    func _get_neighbors(pos: Vector3) -> Array:
-        var neighbors = Hexlib.get_hex_adjacency_hex(Hexlib.create_hex(pos))
-        var result = []
-        for neighbor in neighbors:
-            var vec_pos = neighbor.to_vector3()
-            if vec_pos in _map.grid_map:
-                result.append(vec_pos)
-        return result
+    # 填充点位
+    func fill_tile():
+        _dfs(ORIGIN)
+
+    func _dfs(pos: Vector3):
+        if not _set_tile_in_enough(pos, false):
+            _set_tile_in_enough(pos, true)
+        for neighbor in _graph.get_adjacency_nodes(pos):
+            _dfs(neighbor)
+
+    func _set_tile_in_enough(pos: Vector3, is_strict: bool) -> bool:
+        _order.shuffle()
+        for tile in _order:
+            if _count[tile] > 0 and (is_strict or _check_tile(pos, tile)):
+                _set_tile_type(pos, tile)
+                return true
+        return false
+
+    func _set_tile_type(pos: Vector3, tile_type: int):
+        _map.grid_map[pos].tile_type = tile_type
+        _count[tile_type] -= 1
+
+    func _check_tile(pos: Vector3, tile_type: int) -> bool:
+        for neighbor in _get_all_neighbor(pos):
+            var this_type = _map.grid_map[neighbor].tile_type
+            if this_type != Data.TileType.DESERT and this_type == tile_type:
+                return false
+        return true
+
+    func _get_all_neighbor(pos: Vector3) -> Array:
+        var neighbors = []
+        for neighbor in Hexlib.get_hex_adjacency_hex(Hexlib.create_hex(pos)):
+            var vec = neighbor.to_vector3()
+            if vec in _map.grid_map:
+                neighbors.append(vec)
+        return neighbors
+
+
+# 点数填充器
+class PointFiller:
+    extends Reference
+
+    var _map: Protocol.MapInfo
+    var _count: Dictionary
+    var _graph: StdLib.SparseMatrix
+    var _order: Array
+
+    func _init(map: Protocol.MapInfo, count: Dictionary, graph: StdLib.SparseMatrix):
+        _map = map
+        _count = count
+        _order = count.keys()
+        _graph = graph
 
     # 填充点位
     func fill_point():
@@ -324,7 +338,7 @@ class PointFiller:
         _count[point_type] -= 1
 
     func _check_point(pos: Vector3, point_type: int) -> bool:
-        var neighbors = _get_neighbors(pos)
+        var neighbors = _get_all_neighbor(pos)
         if point_type in Data.SMALL_POINT:
             for vec_pos in neighbors:
                 if _map.grid_map[vec_pos].point_type in Data.SMALL_POINT:
@@ -334,3 +348,31 @@ class PointFiller:
                 if _map.grid_map[vec_pos].point_type in Data.BIG_POINT:
                     return false
         return true
+
+    func _get_all_neighbor(pos: Vector3) -> Array:
+        var neighbors = []
+        for neighbor in Hexlib.get_hex_adjacency_hex(Hexlib.create_hex(pos)):
+            var vec = neighbor.to_vector3()
+            if vec in _map.grid_map:
+                neighbors.append(vec)
+        return neighbors
+
+
+# 生成单向图
+func build_graph(map: Protocol.MapInfo) -> StdLib.SparseMatrix:
+    var graph = StdLib.SparseMatrix.new()
+    var queue = StdLib.Queue.new()
+    var has_parent = StdLib.Set.new()
+    var visited = StdLib.Set.new()
+    queue.enqueue(ORIGIN)
+    has_parent.add(ORIGIN)
+    while not queue.is_empty():
+        var node = queue.dequeue()
+        visited.add(node)
+        for neighbor in _get_all_neighbor(map, node, false, true):
+            if not visited.contains(neighbor):
+                queue.enqueue(neighbor)
+            if not has_parent.contains(neighbor):
+                graph.add_edge(node, neighbor, 1)
+                has_parent.add(neighbor)
+    return graph

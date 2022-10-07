@@ -11,9 +11,14 @@ const KNIGHT_MOVE: AudioStream = preload("res://assets/audios/knight_move.wav")
 const PLACE_ROAD: AudioStream = preload("res://assets/audios/place_road.wav")
 const PLAYER_ROBBED: AudioStream = preload("res://assets/audios/player_robbed.wav")
 const FAN_FARE: AudioStream = preload("res://assets/audios/fanfare.mp3")
+const MY_TURN: AudioStream = preload("res://assets/audios/my_turn.wav")
+
+
+var _cur_turn_name := ""
 
 
 func init():
+    PlayingNet.get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
     PlayingNet.get_client().connect("notification_received", self, "_on_notification_received")
     PlayingNet.get_client().connect("stat_info_received", self, "_on_stat_info_received")
 
@@ -37,3 +42,13 @@ func _on_notification_received(noti_info: Protocol.NotificationInfo):
 
 func _on_stat_info_received(stat_info: Protocol.StatInfo):
     Audio.play_once(self, FAN_FARE)
+
+
+func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
+    if assist_info.player_turn_name != _cur_turn_name and assist_info.player_turn_name == _get_client().get_name():
+        Audio.play_once(self, MY_TURN)
+    _cur_turn_name = assist_info.player_turn_name
+
+
+func _get_client():
+    return PlayingNet.get_client()

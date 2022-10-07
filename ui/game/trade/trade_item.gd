@@ -19,6 +19,7 @@ var _num: int
 func _ready():
     $Texture.texture = load(Data.RES_ICON_DATA[res_type])
     set_num(StdLib.dict_get(_get_client().player_cards[_get_name()].res_cards, res_type, 0))
+    set_activiate(false)
     if enable_unit:
         _init_unit()
 
@@ -29,6 +30,14 @@ func set_num(num: int):
     _num = num
     $Num.text = str(_num)
 
+
+# 设置激活状态
+func set_activiate(is_activiate: bool):
+    if is_activiate:
+        self.modulate.a = 1
+    else:
+        self.modulate.a = 0.3
+    
 
 # 设置初始面板
 func set_item(trade_info: Protocol.TradeInfo):
@@ -46,7 +55,6 @@ func _reset():
     set_num(_origin)
     $Get.text = "0"
     $Pay.text = "0"
-
 
 
 # 初始化单位
@@ -74,6 +82,7 @@ func _sub_pay():
     $Pay.text = str(val-_unit)
     _num += _unit
     $Num.text = str(_num)
+    _switch_activiate()
 
 func _plus_get():
     var val = _get_num()
@@ -82,6 +91,7 @@ func _plus_get():
     $Get.text = str(val+1)
     _num += 1
     $Num.text = str(_num)
+    _switch_activiate()
 
 func _get_num() -> int:
     return int($Get.text)
@@ -99,6 +109,7 @@ func _sub_get():
     $Get.text = str(val-1)
     _num -= 1
     $Num.text = str(_num)
+    _switch_activiate()
 
 func _plus_pay():
     if _num-_unit < 0 and check_valid:
@@ -106,7 +117,13 @@ func _plus_pay():
     $Pay.text = str(_pay_num()+_unit)
     _num -= _unit
     $Num.text = str(_num)
+    _switch_activiate()
 
+func _switch_activiate():
+    if _num != _origin:
+        set_activiate(true)
+    else:
+        set_activiate(false)
 
 func _emit():
     var want = _num-_origin if _num >= _origin else (_num-_origin)/_unit

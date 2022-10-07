@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://ui/player/player_icon.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=2]
@@ -13,25 +13,74 @@
 [ext_resource path="res://assets/icons/longest_road.png" type="Texture" id=11]
 [ext_resource path="res://ui/player/player_info.gd" type="Script" id=12]
 
+[sub_resource type="Animation" id=1]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Outerline:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0.392157, 0.392157, 0.392157, 0.784314 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "on_turn"
+length = 5.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Outerline:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2, 3, 4, 5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.964706, 0.333333, 0.0235294, 0.784314 ), Color( 0.392157, 0.00784314, 0.952941, 0.784314 ), Color( 0.972549, 0.933333, 0.00392157, 0.784314 ), Color( 0, 0.529412, 1, 0.784314 ), Color( 0.0196078, 0.956863, 0.054902, 0.784314 ), Color( 0.964706, 0.333333, 0.0235294, 0.784314 ) ]
+}
+
 [node name="PlayerInfo" type="Control"]
-anchor_right = 0.234375
-anchor_bottom = 0.138889
-margin_bottom = -0.00012207
-rect_min_size = Vector2( 450, 150 )
+anchor_right = 0.244792
+anchor_bottom = 0.157407
+margin_right = -20.0
+margin_bottom = -20.0
+rect_min_size = Vector2( 460, 160 )
 script = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Outerline" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.03, 0.03, 0.03, 0.713726 )
+color = Color( 0.392157, 0.392157, 0.392157, 0.784314 )
+
+[node name="Bg" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -225.0
+margin_top = -75.0
+margin_right = 225.0
+margin_bottom = 75.0
+color = Color( 0.0313726, 0.0313726, 0.0313726, 0.784314 )
 
 [node name="HBox" type="HBoxContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -150.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -225.0
+margin_top = -75.0
+margin_right = 225.0
+margin_bottom = 75.0
 theme = ExtResource( 2 )
 theme_type_variation = "HBoxNoSpace"
 
@@ -152,3 +201,7 @@ __meta__ = {
 "_editor_description_": ""
 }
 icon = ExtResource( 11 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 1 )
+anims/on_turn = SubResource( 2 )

@@ -66,14 +66,19 @@ func get_settlement_num() -> int:
     return len(_get_client().player_buildings[_name].settlement_info)
 
 
-# TODO: 更加明显的回合提示
 func _on_player_assist_changed(assist_info: Protocol.AssistInfo):
-    if assist_info.player_turn_name == _name:
-        $HBox/PlayerIcon.set_on_turn(true)
-    else:
-        $HBox/PlayerIcon.set_on_turn(false)
+    var is_on_turn = assist_info.player_turn_name == _name
+    _set_on_turn(is_on_turn)
+    $HBox/PlayerIcon.set_on_turn(is_on_turn)
     $HBox/Grid/BiggestArmy.set_highlight(assist_info.biggest_name == _name)
     $HBox/Grid/LongestRoad.set_highlight(assist_info.longgest_name == _name)
+
+
+func _set_on_turn(is_on_turn: bool):
+    if is_on_turn:
+        $AnimationPlayer.play("on_turn")
+    else:
+        $AnimationPlayer.play("RESET")
 
 
 func _on_player_building_changed(name: String, building_info: Protocol.PlayerBuildingInfo):

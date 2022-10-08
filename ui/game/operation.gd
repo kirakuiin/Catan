@@ -45,7 +45,7 @@ func _clear_popup():
 
 
 func _on_client_state_changed(state):
-    _on_check_done(state)  # TODO: 更加明显的让过按钮
+    _on_check_done(state)
     _on_check_city(state)
     _on_check_settlement(state)
     _on_check_road(state)

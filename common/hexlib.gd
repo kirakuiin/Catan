@@ -172,7 +172,7 @@ static func hex_distance(hex_a: Hex, hex_b: Hex) -> int:
 
 
 static func hex_direction(direction: int) -> Hex:
-    assert(direction >= 0 and direction < 6, "六边形方向无效")
+    assert(direction in Directions, "六边形方向无效")
     var dir_list = [Hex.new(1, 0, -1), Hex.new(1, -1, -0), Hex.new(0, -1, 1),
                         Hex.new(-1, 0, 1), Hex.new(-1, 1, 0), Hex.new(0, 1, -1)]
     return dir_list[direction]

@@ -48,7 +48,6 @@ current = true
 layer = 2
 
 [node name="SettingPopup" parent="Popup" instance=ExtResource( 6 )]
-visible = false
 
 [node name="ScorePopup" parent="Popup" instance=ExtResource( 5 )]
 visible = false
@@ -57,3 +56,4 @@ visible = false
 [connection signal="wheel_down" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_wheel_down"]
 [connection signal="wheel_up" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_wheel_up"]
 [connection signal="show_setting" from="UIOverlay/Overlay" to="." method="_on_show_setting"]
+[connection signal="popup_hide" from="Popup/SettingPopup" to="." method="_on_hide_setting"]

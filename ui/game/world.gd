@@ -74,6 +74,11 @@ func _on_exit_game():
 
 func _on_show_setting():
 	$Popup/SettingPopup.popup_centered()
+	$Map/ViewContainer/Viewport.gui_disable_input = true
+
+
+func _on_hide_setting():
+	$Map/ViewContainer/Viewport.gui_disable_input = false
 
 
 func _on_mouse_moved(offset: Vector2):
@@ -90,8 +95,8 @@ func _on_wheel_up():
 		camera.zoom -= ZOOM_UNIT
 
 
-
 func _on_wheel_down():
 	var camera = $Map/ViewContainer/Viewport/Camera
 	if camera.zoom.x <= ZOOM_MIN:
 		camera.zoom += ZOOM_UNIT
+

@@ -1,0 +1,132 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+const float PI=3.1415926536;
+const float TAU=6.2831853072;
+
+float sstep(float edge, float x) {
+	return smoothstep(edge-0.001, edge+0.001, x);
+}
+
+float stroke(float x, float s, float w) {
+	float d = sstep(s, x + w/2.0) - sstep(s, x - w/2.0);
+	return clamp(d, 0.0, 1.0);
+}
+
+float circle(vec2 st) {
+	return length(st-vec2(0.5))*2.0;
+}
+
+float fill(float x, float size) {
+	return 1.0 - sstep(size, x);
+}
+
+float rect(vec2 st, vec2 s) {
+	st = st*2.0 - 1.0;
+	return max(abs(st.x/s.x), abs(st.y/s.y));
+}
+
+float rect_cross(vec2 st, float s) {
+	vec2 size = vec2(0.25, s);
+	return min(rect(st, size.xy), rect(st, size.yx));
+}
+
+float flip(float v, float pct) {
+	return mix(v, 1.0-v, pct);
+}
+
+float draw(vec2 st, vec2 tile_xy, vec2 count) {
+	int show_id = int(tile_xy.x + (tile_xy.y * count.x));
+    float color = 0.0;
+	st.y = 1.0-st.y;
+	switch(show_id) {
+		case 0: { // void
+			color = 0.0;
+			break;
+		}
+		case 1: { // justice
+			color = sstep(0.5, st.x);
+			break;
+		}
+		case 2: { // strength
+			color = sstep(cos(st.y*PI)*0.25+0.5, st.x);
+			break;
+		}
+		case 3: { // death
+			color = sstep(1.0-st.y, st.x);
+			break;
+		}
+		case 4: { // wall
+			color = stroke(st.x, 0.5, 0.2);
+			break;
+		}
+		case 5: { // temperance
+			float offset = cos(st.y*PI)*0.15;
+			color = stroke(st.x, 0.3+offset, 0.1) + stroke(st.x, 0.5+offset, 0.1) + stroke(st.x, 0.7+offset, 0.1);
+			break;
+		}
+		case 6: { // branch
+			float offset = st.y;
+			color = stroke(st.x, offset, 0.15);
+			break;
+		}
+		case 7: { // the hanged man
+			float offset = st.y;
+			color = stroke(st.x, offset, 0.15);
+			offset = 1.0-st.y;
+			color += stroke(st.x, offset, 0.15);
+			break;
+		}
+		case 8: { // the high priestess
+			color = stroke(circle(st), 0.5, 0.05);
+			break;
+		}
+		case 9: { // moon
+			color = fill(circle(st), 0.65) - fill(circle(st-vec2(0.1, 0.05)), 0.5);
+			break;
+		}
+		case 10: { // emperor
+			color = fill(rect(st, vec2(1.0)), 0.1) + stroke(rect(st, vec2(1.0)), 0.5, 0.1);
+			break;
+		}
+		case 11: { // the hierophant
+			float sdf = rect(st, vec2(1.0));
+			color = fill(sdf, 0.5);
+			float cross_sdf = rect_cross(st, 1.0);
+			color *= sstep(0.5, fract(cross_sdf*4.0));
+			color *= sstep(1.0, cross_sdf);
+			color += stroke(sdf, 0.65, 0.05);
+			color += stroke(sdf, 0.75, 0.025);
+			color += fill(cross_sdf, 0.45);
+			break;
+		}
+		case 12: { // the tower
+			float sdf = fill(rect(st, vec2(0.4, 0.7)), 1.0);
+			color = flip(sdf, stroke(st.x, 1.0-st.y, 0.03));
+			break;
+		}
+		case 13: { // merge
+			break;
+		}
+	}
+	return color;
+}
+
+void fragment() {   
+    vec2 count = vec2(10, 5);
+    vec2 tile_xy = floor(UV * count);
+    vec2 st = vec2(UV.x * count.x - tile_xy.x, UV.y * count.y - tile_xy.y);
+
+    vec2 grids = clamp(cos(UV*TAU*count)*10.0-9.8, 0.0, 1.0); // ---^---^---
+    float grid = max(grids.x, grids.y);
+    
+    float color = draw(st, tile_xy, count);
+    color = clamp(color + grid, 0.0, 1.0);
+    
+    COLOR = vec4(vec3(color), 1);
+}"
+
+[resource]
+shader = SubResource( 1 )

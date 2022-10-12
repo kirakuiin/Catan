@@ -56,6 +56,32 @@ vec2 rotate(vec2 st, float a) {
 	return vec2(cos(a)*st.x - sin(a)*st.y, sin(a)*st.x + cos(a)*st.y) + 0.5;
 }
 
+float polygon(vec2 st, int V) {
+    st = st * 2.0 - 1.0;
+    float a = atan(st.x, st.y) + PI;
+    float r = length(st);
+    float v = TAU / float(V);
+    return cos(floor(0.5+a/v)*v - a)*r;
+}
+
+float hex(vec2 st) {
+    st = abs(st * 2.0 - 1.0);
+    return max(st.x*0.866025 + st.y*0.5, st.y);
+}
+
+float star(vec2 st, int V, float s) { // 没搞懂原理
+    st = st * 4.0 - 2.0;
+    float a = atan(st.y, st.x) / TAU;
+    float seg = a * float(V);
+    a = ((floor(seg) + 0.5)/float(V) + mix(s, -s, step(0.5, fract(seg))))*TAU;
+    return abs(dot(vec2(cos(a), sin(a)), st));
+}
+
+float rays(vec2 st, int N) { // 30
+    st -= 0.5;
+    return fract(atan(st.y, st.x)/TAU * float(N));
+}
+
 float draw(vec2 st, vec2 tile_xy, vec2 count) {
 	int show_id = int(tile_xy.x + (tile_xy.y * count.x));
     float color = 0.0;
@@ -212,6 +238,92 @@ float draw(vec2 st, vec2 tile_xy, vec2 count) {
 			for(int i = 0; i < 4; ++i) {
 				color += stroke(rect(st-offsets[i], vec2(1.0)), 0.25, 0.05);
 			}
+			break;
+		}
+		case 26: { // the empress
+			float p1 = polygon(st, 5);
+			float p2 = polygon(vec2(st.x, 1.0-st.y), 5);
+			color = fill(p1, 0.75) * fill(fract(p1*5.0), 0.5);
+			color -= fill(p1, 0.6) * fill(fract(p2*4.9), 0.45);
+			break;
+		}
+		case 27: { // bundle
+			st = rotate(st, PI/2.0);
+			color = stroke(hex(st), 0.6, 0.1);
+			color += fill(hex(st+vec2(0.1, 0)), 0.12);
+			color += fill(hex(st+vec2(-0.05, 0.086)), 0.12);
+			color += fill(hex(st+vec2(-0.05, -0.086)), 0.12);
+			break;
+		}
+		case 28: { // the devil
+			color = stroke(circle(st), 0.7, 0.1);
+			color *= sstep(0.7, star(st.yx, 5, 0.3));
+			color += stroke(star(st.yx, 5, 0.3), 0.35, 0.1);
+			break;
+		}
+		case 29: { // the sun
+			color = fill(star(rotate(st, radians(22.5)), 8, 0.1), 1.0);
+			color += fill(star(st, 8, 0.1), 1.1);
+			vec2 offset = vec2(0, -0.27);
+			for(int i = 0; i < 8; ++i) {
+				color *= flip(stroke(polygon(rotate(st, radians(float(i)*45.0))+offset, 3), 0.25, 0.04), 1.0);
+			}
+			color *= flip(stroke(polygon(st, 8), 0.125, 0.04), 1.0);
+			break;
+		}
+		case 30: { // the star
+			color = stroke(rays(st, 8), 0.5, 0.15);
+			st = rotate(st, radians(30.0));
+			color *= sstep(0.6, star(st, 6, 0.083));
+			color += fill(star(st, 6, 0.083), 0.5);
+			color *= sstep(0.45, star(st, 6, 0.083));
+			color += fill(star(st, 6, 0.083), 0.4);
+			color -= stroke(star(rotate(st, radians(-30.0)), 6, 0.083), 0.21, 0.05);
+			break;
+		}
+		case 31: { // judgement
+			color = stroke(rays(st, 28), 0.5, 0.15);
+			color = flip(color, sstep(st.y, 0.5));
+			color *= sstep(0.2, rect(st, vec2(1.0)));
+			color += fill(rect(st, vec2(1.0)), 0.15);
+			break;
+		}
+		case 32: { // wheel of fortune
+			color = stroke(rays(st, 8), 0.5, 0.2);
+			color *= fill(polygon(st, 8), 0.5);
+			color += stroke(polygon(st, 8), 0.6, 0.1);
+			color = min(color, sstep(0.25, polygon(st, 8)));
+			color += stroke(polygon(st, 8), 0.2, 0.05);
+			break;
+		}
+		case 33: { // vision	
+			st = rotate(st, PI/2.0);
+			vec2 offset = vec2(-0.05, 0.0);
+			color += stroke(vesica(st+offset, 0.5), 0.83, 0.05);
+			color *= sstep(0.81, vesica(st+offset, 0.5));
+			color += stroke(circle(st), 0.3, 0.05);
+			color *= fill(vesica(st+offset, 0.5), 0.85);
+			st = rotate(st, -PI/2.0);
+			color += sstep(vesica(st, 0.3), sstep(0.83, vesica(rotate(st, PI/2.0)+offset, 0.5)) * stroke(rays(st, 50), 0.2, 0.2));
+			break;
+		}
+		case 34: { // the lovers
+			break;
+		}
+		case 35: { // the magician
+			break;
+		}
+		case 36: { // the link
+			break;
+		}
+		case 37: { // holding together
+			break;
+		}
+		case 38: { // the chariot
+			break;
+		}
+		case 39: { // the loop
+			color = rays(st, 5);
 			break;
 		}
 		case 49: { // enlightment

@@ -77,9 +77,21 @@ float star(vec2 st, int V, float s) { // 没搞懂原理
     return abs(dot(vec2(cos(a), sin(a)), st));
 }
 
-float rays(vec2 st, int N) { // 30
+float rays(vec2 st, int N) {
     st -= 0.5;
     return fract(atan(st.y, st.x)/TAU * float(N));
+}
+
+float heart(vec2 st, float size) {
+	st -= vec2(0.5, 0.8);
+    float r = length(st) * 5.0;
+    st = normalize(st);
+    return r - ((st.y*pow(abs(st.x), 0.67))/(st.y + 1.5) - 2.0*st.y + 1.26);
+}
+
+float bridge(float c, float d, float s, float w) {
+    c *= 1.0 - stroke(d, s, w * 2.0);
+    return c + stroke(d, s, w);
 }
 
 float draw(vec2 st, vec2 tile_xy, vec2 count) {
@@ -308,22 +320,51 @@ float draw(vec2 st, vec2 tile_xy, vec2 count) {
 			break;
 		}
 		case 34: { // the lovers
+			color = fill(heart(st, 0.5), 0.1);
+			color -= stroke(polygon(st, 3), 0.12, 0.04);
 			break;
 		}
 		case 35: { // the magician
+			st.x = flip(st.x, step(0.5, st.y));
+			color = stroke(circle(st+vec2(0.15, 0)), 0.4, 0.06);
+			color = bridge(color, circle(st-vec2(0.15, 0)), 0.4, 0.06);
 			break;
 		}
 		case 36: { // the link
+			st.y = flip(st.y, step(0.5, st.x));
+			color = stroke(rect(rotate(st-vec2(0, 0.1), PI/4.0), vec2(1.0)), 0.3, 0.1);
+			color = bridge(color, rect(rotate(st+vec2(0, 0.1), PI/4.0), vec2(1.0)), 0.3, 0.1);
+			color += fill(rhomb(abs(st-vec2(0.0, 0.5))), 0.1);
 			break;
 		}
 		case 37: { // holding together
+			st.x = flip(st.x, step(0.5, st.y));
+			float size = 0.098;
+			color = stroke(rect(rotate(st-vec2(0.05, 0), PI/4.0), vec2(1.0)), 0.144, size);
+			color = bridge(color, rect(rotate(st+vec2(0.05, 0), PI/4.0), vec2(1.0)), 0.144, size);
 			break;
 		}
 		case 38: { // the chariot
+			float r1 = rect(st, vec2(1.0));
+			float r2 = rect(rotate(st, PI/4.0), vec2(1.0));
+			float inv = step(1.0, (st.x+st.y));
+			inv = flip(inv, step(st.y, st.x));
+			color = stroke(r1, 0.5, 0.1) + stroke(r2, 0.5, 0.1);
+			float bridges = mix(r1, r2, inv);
+			color = bridge(color, bridges, 0.5, 0.1);
 			break;
 		}
 		case 39: { // the loop
-			color = rays(st, 5);
+			float inv = step(.5, st.y);
+	        st = rotate(st, PI/4.0) - .2;
+	        st = mix(st, 0.6 - st, inv);
+	        for (int i = 0; i < 5; i++) {
+	            float r = rect(st, vec2(1.));
+	            float s = .25;
+	            s -= abs(float(i)*0.1 - 0.2);
+	            color = bridge(color, r, s, 0.05);
+	            st += 0.1;
+	        }
 			break;
 		}
 		case 49: { // enlightment

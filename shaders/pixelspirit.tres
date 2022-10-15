@@ -367,6 +367,48 @@ float draw(vec2 st, vec2 tile_xy, vec2 count) {
 	        }
 			break;
 		}
+		case 40: { // turning point
+			st = rotate(st, PI/3.0);
+	        st.y = flip(st.y, step(0.5, st.x));
+	        st.y += .25;
+	        float down = polygon(st, 3);
+	        float top = polygon(vec2(st.x, 1.5-st.y), 3);
+	        color = stroke(top, 0.4, 0.15);
+	        color = bridge(color, down, 0.4, 0.15);
+	        break;
+		}
+		case 41: { // trinity
+			st = vec2(st.x, 1.0-st.y);
+			float t1 = polygon(st+vec2(0.0, 0.15), 3);
+			float t2 = polygon(st+vec2(0.15, -0.1), 3);
+			float t3 = polygon(st+vec2(-0.15, -0.1), 3);
+			color = stroke(t1, 0.3, 0.1) + stroke(t2, 0.3, 0.1) + stroke(t3, 0.3, 0.1);
+			float bridges = mix(mix(t1, t2, step(0.5, st.y)), mix(t3, t2, step(0.5, st.y)), step(0.5, st.x));
+			color = bridge(color, bridges, 0.3, 0.1);
+			//color = bridges;
+			break;
+		}
+		case 42: { // cauldron
+			break;
+		}
+		case 43: { // the elders
+			break;
+		}
+		case 44: { // the core
+			break;
+		}
+		case 45: { // inner truth
+			break;
+		}
+		case 46: { // the world
+			break;
+		}
+		case 47: { // the fool
+			break;
+		}
+		case 48: { // elements
+			break;
+		}
 		case 49: { // enlightment
 			color = 1.0;
 			break;

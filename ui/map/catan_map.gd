@@ -116,6 +116,7 @@ func _init_signal():
 	_get_client().connect("client_state_changed", self, "_on_client_state_changed")
 	_get_client().connect("robber_pos_changed", self, "_on_robber_pos_changed")
 	_get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
+	_get_client().connect("reconnect_overed", self, "_on_reconnect_overed")
 	for _tile in _tile_map.values():
 		_tile.init_signal()
 
@@ -262,4 +263,9 @@ func _on_robber_pos_changed(pos: Vector3):
 
 func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
 	if _is_enable_fog == true and assist_info.turn_num == 1:
+		set_all_point_visible(true)
+
+
+func _on_reconnect_overed():
+	if _get_client().assist_info.turn_num > 0:
 		set_all_point_visible(true)

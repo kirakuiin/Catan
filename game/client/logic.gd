@@ -15,6 +15,7 @@ signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
 signal player_hint_showed(hint, always_show)  # 提示信息变化
 signal stat_info_received(msg)  # 收到结算消息
+signal reconnect_overed()  # 重连完毕
 signal exit_game()  # 退出游戏
 
 
@@ -387,4 +388,5 @@ func exit_to_prepare():
 # 重连结束
 func reconnect_done():
     _logger.logd("接收重连数据完毕!")
+    emit_signal("reconnect_overed")
     change_client_state(state_mgr.get_client_state())

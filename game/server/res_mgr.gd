@@ -24,7 +24,7 @@ func _init(map: Protocol.MapInfo, buildings: Dictionary, cards: Dictionary, setu
 
 func _init_num_corner():
     _num_to_corner = {}
-    for num in Data.POINT_DATA.keys():
+    for num in UI_Data.POINT_DATA.keys():
         _num_to_corner[num] = StdLib.Set.new()
     for tile in _map.grid_map.values():
         if tile.point_type in _num_to_corner:
@@ -166,7 +166,7 @@ func _dispatch_extra_res(player_name: String) -> Dictionary:
     var result = {}
     var extra_num = _setup.initial_res
     if  extra_num > 0:
-        for type in Data.RES_DATA:
+        for type in UI_Data.RES_DATA:
             var num = _give_res_to_player(player_name, type, extra_num)
             StdLib.num_dict_add(result, type, num)
     return result

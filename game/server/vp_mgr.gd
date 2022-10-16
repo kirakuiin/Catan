@@ -188,6 +188,3 @@ func _find_new_road_holder() -> String:
     if max_len < 5:
         holder = ""
     return holder
-
-
-        

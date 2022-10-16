@@ -76,7 +76,7 @@ func _ready():
 # 设置卡牌类型
 func set_type(dev_type: int):
 	_type = dev_type
-	$CardImage.texture = ResourceLoader.load(Data.CARD_DATA[dev_type])
+	$CardImage.texture = ResourceLoader.load(UI_Data.CARD_DATA[dev_type])
 
 
 # 获得类型

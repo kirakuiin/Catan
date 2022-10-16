@@ -10,8 +10,8 @@ var _tips = null
 
 
 func _ready():
-    texture_normal = ResourceLoader.load(Data.OP_BTN_DATA[btn_type])
-    texture_disabled = ResourceLoader.load(Data.OP_DISABLE_DATA[btn_type])
+    texture_normal = ResourceLoader.load(UI_Data.OP_BTN_DATA[btn_type])
+    texture_disabled = ResourceLoader.load(UI_Data.OP_DISABLE_DATA[btn_type])
     connect("mouse_entered", self, "_on_mouse_entered")
     connect("mouse_exited", self, "_on_mouse_exited")
 

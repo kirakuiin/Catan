@@ -18,5 +18,5 @@ func set_pos(begin: Vector2, end: Vector2):
 
 
 func set_order(order: int):
-	var color = Data.ORDER_DATA[order]
+	var color = UI_Data.ORDER_DATA[order]
 	$Road.modulate = color

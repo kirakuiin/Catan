@@ -8,7 +8,7 @@ func init(player_info: Protocol.PlayerInfo):
     if player_info.peer_id != NetDefines.SERVER_ID:
         $HBoxContainer/HostFlagTexture.texture = null
     $HBoxContainer/PlayerNameLabel.text = player_info.player_name
-    $HBoxContainer/PlayerAvatorTexture.texture = ResourceLoader.load(Data.ICON_DATA[player_info.icon_id])
+    $HBoxContainer/PlayerAvatorTexture.texture = ResourceLoader.load(UI_Data.ICON_DATA[player_info.icon_id])
 
 
 func get_player_name() -> String:

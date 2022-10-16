@@ -112,7 +112,7 @@ func is_have_res() -> bool:
 
 # 获得玩家颜色
 func get_color(player_name: String) -> Color:
-    return Data.ORDER_DATA[order_info.get_order(player_name)]
+    return UI_Data.ORDER_DATA[order_info.get_order(player_name)]
 
 
 # 设置客户端状态

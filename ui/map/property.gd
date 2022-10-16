@@ -13,7 +13,7 @@ func set_pos(pos: Vector2):
 
 
 func set_order(order: int):
-	var color = Data.ORDER_DATA[order]
+	var color = UI_Data.ORDER_DATA[order]
 	$SettlementTexture.modulate = color
 	$CityTexture.modulate = color
 

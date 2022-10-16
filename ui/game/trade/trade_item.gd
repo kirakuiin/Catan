@@ -17,7 +17,7 @@ var _num: int
 
 
 func _ready():
-    $Texture.texture = load(Data.RES_ICON_DATA[res_type])
+    $Texture.texture = load(UI_Data.RES_ICON_DATA[res_type])
     set_num(StdLib.dict_get(_get_client().player_cards[_get_name()].res_cards, res_type, 0))
     set_activiate(false)
     if enable_unit:

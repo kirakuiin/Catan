@@ -169,6 +169,7 @@ func _reset_settler():
 	$Option/Seafarer.hide()
 	$Option/Settler.show()
 	$Option/Settler/Scroll/VCon/RandLandContainer/Btn.select(int(info.expansion_mode.is_random_land))
+	$Option/Special/Scroll/VCon/WinVP/Edit.value = Data.SETTLER_DATA[info.catan_size]["vic_point"]
 
 
 func _reset_seafarer():
@@ -176,6 +177,7 @@ func _reset_seafarer():
 	$Option/Settler.hide()
 	$Option/Seafarer.show()
 	$Option/Seafarer/Scroll/VCon/Map/Btn.select(info.expansion_mode.selected_map)
+	$Option/Special/Scroll/VCon/WinVP/Edit.value = Data.SEAFARER_DATA[info.catan_size][info.expansion_mode.selected_map]["vic_point"]
 
 
 func _on_change_num(index):

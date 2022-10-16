@@ -19,14 +19,14 @@ func _init_player_name():
 
 
 func _init_avatar():
-    var icon = Data.ICON_DATA[GameConfig.get_icon_id()]
+    var icon = UI_Data.ICON_DATA[GameConfig.get_icon_id()]
     $Panel/VBoxContainer/IconContainer/PlayerAvatar.set_icon(icon)
 
 
 func _init_icon_grid_item():
-    for id in Data.ICON_DATA:
+    for id in UI_Data.ICON_DATA:
         var button = Avatar.instance()
-        button.set_icon(Data.ICON_DATA[id])
+        button.set_icon(UI_Data.ICON_DATA[id])
         button.set_button_cb(funcref(self, "_on_confirm_avatar"), id)
         $IconSelectScroll/IconSelectContainer.add_child(button)
 
@@ -41,7 +41,7 @@ func _on_change_icon(id):
 
 func _on_confirm_avatar(icon_id: int):
     $IconSelectScroll.hide()
-    $Panel/VBoxContainer/IconContainer/PlayerAvatar.set_icon(Data.ICON_DATA[icon_id])
+    $Panel/VBoxContainer/IconContainer/PlayerAvatar.set_icon(UI_Data.ICON_DATA[icon_id])
     GameConfig.save_icon_id(icon_id)
 
 

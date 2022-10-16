@@ -16,7 +16,7 @@ func init(player_info: Protocol.PlayerInfo):
     $Info.show()
     $Info/NameLabel.text = player_info.player_name
     $Info/NameLabel.add_color_override("font_color", player_color)
-    $Info/AvatarTexture.texture = ResourceLoader.load(Data.ICON_DATA[player_info.icon_id])
+    $Info/AvatarTexture.texture = ResourceLoader.load(UI_Data.ICON_DATA[player_info.icon_id])
 
 
 # 清除头像

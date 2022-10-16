@@ -19,7 +19,7 @@ func init(order: int, name: String, setup: Protocol.CatanSetupInfo):
 
 
 func _init_icon():
-    $HBox/PlayerIcon.player_color = Data.ORDER_DATA[_order]
+    $HBox/PlayerIcon.player_color = UI_Data.ORDER_DATA[_order]
     $HBox/PlayerIcon.init(PlayerInfoMgr.get_info(_name))
 
 

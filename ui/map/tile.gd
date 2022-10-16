@@ -25,7 +25,7 @@ func set_tile_info(tile_info: Protocol.TileInfo):
 
 
 func set_harbor_type(type: int, angle: float):
-	$Point/HarborTexture.texture = ResourceLoader.load(Data.HARBOR_DATA[type])
+	$Point/HarborTexture.texture = ResourceLoader.load(UI_Data.HARBOR_DATA[type])
 	$Point/BridgeTexture.rect_pivot_offset = $Point/HarborTexture.rect_size/2
 	$Point/BridgeTexture.rect_rotation = angle
 	$Point/BridgeTexture.show()
@@ -40,9 +40,9 @@ func set_point_visible(is_visible: bool):
 
 
 func _init_texture():
-	$TileTexture.texture = ResourceLoader.load(Data.TILE_DATA[_tile_info.tile_type])
+	$TileTexture.texture = ResourceLoader.load(UI_Data.TILE_DATA[_tile_info.tile_type])
 	if not _tile_info.tile_type in [Data.TileType.DESERT, Data.TileType.OCEAN]:
-		$Point/NumberTexture.texture = ResourceLoader.load(Data.POINT_DATA[_tile_info.point_type])
+		$Point/NumberTexture.texture = ResourceLoader.load(UI_Data.POINT_DATA[_tile_info.point_type])
 
 
 func _init_pos():

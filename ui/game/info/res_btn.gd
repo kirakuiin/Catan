@@ -11,7 +11,7 @@ var _num = 0
 
 
 func _ready():
-    $Btn.texture_normal = load(Data.RES_ICON_DATA[res_type])
+    $Btn.texture_normal = load(UI_Data.RES_ICON_DATA[res_type])
 
 
 # 设置回调

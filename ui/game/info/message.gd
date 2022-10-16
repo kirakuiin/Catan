@@ -77,13 +77,13 @@ class RichMessage:
                 else:
                     result = "[valign px=10][color=%s]%s[/color][/valign]" % [Util.color_to_str(PlayingNet.get_client().get_color(val)), val]
             RES:
-                result = "[img=50x50]%s[/img]" % Data.RES_ICON_DATA[val]
+                result = "[img=50x50]%s[/img]" % UI_Data.RES_ICON_DATA[val]
             BUILDING:
-                result = "[img=50x50]%s[/img]" % Data.BUILDING_ICON_DATA[val]
+                result = "[img=50x50]%s[/img]" % UI_Data.BUILDING_ICON_DATA[val]
             DEV:
-                result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
+                result = "[img=50x50]%s[/img]" % UI_Data.DEV_ICON_DATA
             BUY_DEV:
-                result = "[img=50x50]%s[/img]" % Data.DEV_ICON_DATA
+                result = "[img=50x50]%s[/img]" % UI_Data.DEV_ICON_DATA
             ARMY_ARCH:
                 if val:
                     result = "获得[shake rate=10 level=30][color=silver]成就[/color][/shake] [[rainbow freq=0.2 sat=10 val=20]最多军队[/rainbow]]"
@@ -207,7 +207,7 @@ static func play_card(player: String, dev_type: int) -> RichMessage:
     message.add_player(player)
     message.add_text(" 打出发展卡")
     message.add_development(dev_type)
-    message.add_text("[%s]" % [Data.CARD_NAME[dev_type]])
+    message.add_text("[%s]" % [UI_Data.CARD_NAME[dev_type]])
     return message
 
 

@@ -12,52 +12,12 @@ enum HostState {PREPARE, PLAYING}
 enum ExpansionMode {SETTLER, SEAFARER}
 
 
-# 图标映射数据
-const ICON_DATA: Dictionary = {
-    1: "res://assets/icons/aphrodite.png",
-    2: "res://assets/icons/artemis.png",
-    3: "res://assets/icons/athena.png",
-    4: "res://assets/icons/cerberus.png",
-    5: "res://assets/icons/charon.png",
-    6: "res://assets/icons/demeter.png",
-    7: "res://assets/icons/hades.png",
-    8: "res://assets/icons/medusa.png",
-    9: "res://assets/icons/megaera.png",
-    10: "res://assets/icons/nyx.png",
-    11: "res://assets/icons/poseidon.png",
-    12: "res://assets/icons/zeus.png"
-}
-
-
-# 位置颜色映射
-const ORDER_DATA: Dictionary = {
-    1: Color.red,
-    2: Color.orange,
-    3: Color.yellow,
-    4: Color.green,
-    5: Color.blue,
-    6: Color.purple,
-}
-
-
 # 玩家数量映射
 enum CatanSize {BIG=6, SMALL=4}
 
 
 # 地块映射
-enum TileType{DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN}
-
-
-const TILE_DATA = {
-    TileType.DESERT: "res://assets/tiles/desert.png",
-    TileType.OCEAN: "res://assets/tiles/ocean.png",
-    TileType.FIELD: "res://assets/tiles/field.png",
-    TileType.HILL: "res://assets/tiles/hill.png",
-    TileType.MOUNTAIN: "res://assets/tiles/mountain.png",
-    TileType.PASTURE: "res://assets/tiles/pasture.png",
-    TileType.FOREST: "res://assets/tiles/forest.png",
-}
-
+enum TileType{DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD}
 
 
 # 成就映射
@@ -70,20 +30,6 @@ enum PointType{ZERO=0, TWO=2, THREE=3, FOUR=4, FIVE=5, SIX=6, SEVEN=7, EIGHT=8, 
 
 const SMALL_POINT = [PointType.TWO, PointType.TWELVE]
 const BIG_POINT = [PointType.SIX, PointType.EIGHT]
-
-
-const POINT_DATA = {
-    PointType.TWO: "res://assets/tiles/number2.png",
-    PointType.THREE: "res://assets/tiles/number3.png",
-    PointType.FOUR: "res://assets/tiles/number4.png",
-    PointType.FIVE: "res://assets/tiles/number5.png",
-    PointType.SIX: "res://assets/tiles/number6.png",
-    PointType.EIGHT: "res://assets/tiles/number8.png",
-    PointType.NINE: "res://assets/tiles/number9.png",
-    PointType.TEN: "res://assets/tiles/number10.png",
-    PointType.ELEVEN: "res://assets/tiles/number11.png",
-    PointType.TWELVE: "res://assets/tiles/number12.png",
-}
 
 
 # 资源映射
@@ -99,73 +45,17 @@ const TILE_RES = {
 }
 
 
-const RES_DATA = {
-    ResourceType.LUMBER: "res://assets/cards/lumber.png",
-    ResourceType.WOOL: "res://assets/cards/wool.png",
-    ResourceType.GRAIN: "res://assets/cards/grain.png",
-    ResourceType.BRICK: "res://assets/cards/brick.png",
-    ResourceType.ORE: "res://assets/cards/ore.png",
-}
-
-
-const RES_ICON_DATA = {
-    ResourceType.LUMBER: "res://assets/icons/lumber.png",
-    ResourceType.WOOL: "res://assets/icons/wool.png",
-    ResourceType.GRAIN: "res://assets/icons/grain.png",
-    ResourceType.BRICK: "res://assets/icons/brick.png",
-    ResourceType.ORE: "res://assets/icons/ore.png",
-}
-
-
 # 卡牌映射
 enum CardType{KNIGHT, VP, ROAD, PLENTY, MONOPOLY}
 
-const DEV_ICON_DATA = "res://assets/icons/development.png"
-
-const CARD_DATA = {
-    CardType.KNIGHT: "res://assets/cards/knight.png",
-    CardType.VP: "res://assets/cards/vp.png",
-    CardType.ROAD: "res://assets/cards/road.png",
-    CardType.PLENTY: "res://assets/cards/year.png",
-    CardType.MONOPOLY: "res://assets/cards/mono.png",
-}
-
-const CARD_NAME = {
-    CardType.KNIGHT: "骑士",
-    CardType.VP: "胜利",
-    CardType.ROAD: "道路",
-    CardType.PLENTY: "丰年",
-    CardType.MONOPOLY: "垄断",
-}
-
 
 # 建筑映射
-enum BuildingType{SETTLEMENT, CITY, ROAD}
-
-const BUILDING_ICON_DATA = {
-    BuildingType.SETTLEMENT: "res://assets/icons/settlement.png",
-    BuildingType.CITY: "res://assets/icons/city.png",
-    BuildingType.ROAD: "res://assets/icons/road.png",
-}
+enum BuildingType{SETTLEMENT, CITY, ROAD, SHIP}
 
 
 # 操作映射
 enum OpType{SETTLEMENT, CITY, ROAD, DEV_CARD}
 
-
-const OP_BTN_DATA = {
-    OpType.SETTLEMENT: "res://assets/images/settlement_btn.png",
-    OpType.CITY: "res://assets/images/city_btn.png",
-    OpType.ROAD: "res://assets/images/road_btn.png",
-    OpType.DEV_CARD: "res://assets/images/development_btn.png"
-}
-
-const OP_DISABLE_DATA = {
-    OpType.SETTLEMENT: "res://assets/images/settlement_btn_disable.png",
-    OpType.CITY: "res://assets/images/city_btn_disable.png",
-    OpType.ROAD: "res://assets/images/road_btn_disable.png",
-    OpType.DEV_CARD: "res://assets/images/development_btn_disable.png"
-}
 
 const OP_DATA = {
     OpType.SETTLEMENT: {
@@ -205,15 +95,6 @@ const RES_TO_HARBOR = {
     ResourceType.ORE: HarborType.ORE,
 }
 
-const HARBOR_DATA = {
-    HarborType.LUMBER: "res://assets/tiles/lumber_harbor.png",
-    HarborType.BRICK: "res://assets/tiles/brick_harbor.png",
-    HarborType.ORE: "res://assets/tiles/ore_harbor.png",
-    HarborType.WOOL: "res://assets/tiles/wool_harbor.png",
-    HarborType.GRAIN: "res://assets/tiles/grain_harbor.png",
-    HarborType.GENERIC: "res://assets/tiles/generic_harbor.png",
-}
-
 const HARBOR_UNIT = {
     HarborType.LUMBER: 2,
     HarborType.BRICK: 2,
@@ -224,9 +105,10 @@ const HARBOR_UNIT = {
 }
 
 
-# 数量映射
+# 标准数据
 const SETTLER_DATA = {
     CatanSize.SMALL: {
+        "vic_point": 10,
         "resource": {
             "total_num": 95,
             "type_num": 5,
@@ -300,6 +182,7 @@ const SETTLER_DATA = {
         },
     },
     CatanSize.BIG: {
+        "vic_point": 10,
         "resource": {
             "total_num": 120,
             "type_num": 5,
@@ -370,6 +253,124 @@ const SETTLER_DATA = {
                 HarborType.GRAIN: 1,
                 HarborType.GENERIC: 5,
             },
+        },
+    },
+}
+
+# ============================ 航海家数据 ==============================
+
+# 地图枚举
+enum SeafarerMap {NEW_SHORE, FOUR_ISLAND, FOG_ISLAND, THROUGH_DESERT, FOGGOTTEN_TRIBE}
+
+
+# 数量信息
+const SEAFARER_DATA = {
+    CatanSize.SMALL: {
+        SeafarerMap.NEW_SHORE: {
+            "vic_point": 13,
+            "resource": SETTLER_DATA[CatanSize.SMALL].resource,
+            "card":  SETTLER_DATA[CatanSize.SMALL].card,
+            "building": SETTLER_DATA[CatanSize.SMALL].building,
+            "main_island": {
+                "tile": SETTLER_DATA[CatanSize.SMALL].tile,
+                "harbor": SETTLER_DATA[CatanSize.SMALL].harbor,
+                "point": SETTLER_DATA[CatanSize.SMALL].point,
+            },
+            "other_islands": {
+                "tile": {
+                    "total_num": 7,
+                    "type_num": 6,
+                    "each_num": {
+                        TileType.HILL: 1,
+                        TileType.MOUNTAIN: 2,
+                        TileType.PASTURE: 1,
+                        TileType.FIELD: 1,
+                        TileType.FOREST: 1,
+                        TileType.GOLD: 2,
+                    },
+                },
+                "point": {
+                    "total_num": 8,
+                    "type_num": 8,
+                    "each_num": {
+                        PointType.TWO: 1,
+                        PointType.THREE: 1,
+                        PointType.FOUR: 1,
+                        PointType.FIVE: 1,
+                        PointType.EIGHT: 1,
+                        PointType.NINE: 1,
+                        PointType.TEN: 1,
+                        PointType.ELEVEN: 1,
+                    },
+                }
+            }
+        },
+        SeafarerMap.FOUR_ISLAND: {
+            "vic_point": 14,
+        },
+        SeafarerMap.FOG_ISLAND: {
+            "vic_point": 15,
+        },
+        SeafarerMap.THROUGH_DESERT: {
+            "vic_point": 16,
+        },
+        SeafarerMap.FOGGOTTEN_TRIBE: {
+            "vic_point": 18,
+        },
+    },
+    CatanSize.BIG: {
+        SeafarerMap.NEW_SHORE: {
+            "vic_point": 13,
+            "resource": SETTLER_DATA[CatanSize.BIG].resource,
+            "card":  SETTLER_DATA[CatanSize.BIG].card,
+            "building": SETTLER_DATA[CatanSize.BIG].building,
+            "main_island": {
+                "tile": SETTLER_DATA[CatanSize.BIG].tile,
+                "harbor": SETTLER_DATA[CatanSize.BIG].harbor,
+                "point": SETTLER_DATA[CatanSize.BIG].point,
+            },
+            "other_islands": {
+                "tile": {
+                    "total_num": 10,
+                    "type_num": 6,
+                    "each_num": {
+                        TileType.HILL: 2,
+                        TileType.MOUNTAIN: 2,
+                        TileType.PASTURE: 1,
+                        TileType.FIELD: 1,
+                        TileType.FOREST: 1,
+                        TileType.GOLD: 3,
+                    },
+                },
+                "point": {
+                    "total_num": 10,
+                    "type_num": 10,
+                    "each_num": {
+                        PointType.TWO: 1,
+                        PointType.THREE: 1,
+                        PointType.FOUR: 1,
+                        PointType.FIVE: 1,
+                        PointType.SIX: 1,
+                        PointType.EIGHT: 1,
+                        PointType.NINE: 1,
+                        PointType.TEN: 1,
+                        PointType.ELEVEN: 1,
+                        PointType.TWELVE: 1,
+                    },
+                }
+            }
+        },
+        SeafarerMap.FOUR_ISLAND: {
+            "vic_point": 14,
+        },
+        SeafarerMap.FOG_ISLAND: {
+            "vic_point": 15,
+        },
+        SeafarerMap.THROUGH_DESERT: {
+            "vic_point": 16,
+        },
+        SeafarerMap.FOGGOTTEN_TRIBE: {
+            "vic_point": 18,
         },
     },
 }

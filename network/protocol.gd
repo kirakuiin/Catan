@@ -12,6 +12,8 @@ static func get_cls(cls_name) -> ProtocolData:
         "ServerResponseInfo": ServerResponseInfo,
         "PlayerInfo": PlayerInfo,
         "CatanSetupInfo": CatanSetupInfo,
+        "SettlerModeInfo": SettlerModeInfo,
+        "SeafarerModeInfo": SeafarerModeInfo,
         "PlayerOrderInfo": PlayerOrderInfo,
         "TileInfo": TileInfo,
         "MapInfo": MapInfo,
@@ -160,20 +162,64 @@ class CatanSetupInfo:
 
     var catan_size: int
     var is_enable_fog: bool
-    var is_random_land: bool
     var is_random_order: bool
     var is_random_resource: bool
+    var expansion_mode: ProtocolData
 
     var initial_res: int
-    var initial_vp: int
+    var win_vp: int
+    var custom_dev: bool
 
-    func _init(size=Data.CatanSize.SMALL, fog=false, land=false, order=false, resource=false):
+    func _init(size=Data.CatanSize.SMALL, fog=false, order=false, resource=false):
         cls_name = "CatanSetupInfo"
         catan_size = size
         is_enable_fog = fog
-        is_random_land = land
         is_random_order = order
         is_random_resource = resource
+        expansion_mode = SettlerModeInfo.new()
+
+        initial_res = 0
+        win_vp = 10
+        custom_dev = false
+
+    func is_settler() -> bool:
+        return expansion_mode.mode_type == Data.ExpansionMode.SETTLER
+
+    func is_seafarer() -> bool:
+        return expansion_mode.mode_type == Data.ExpansionMode.SEAFARER
+
+    func change_mode_by_idx(idx: int):
+        if idx == Data.ExpansionMode.SETTLER:
+            expansion_mode = SettlerModeInfo.new()
+        elif idx == Data.ExpansionMode.SEAFARER:
+            expansion_mode = SeafarerModeInfo.new()
+
+    func mode_idx() -> int:
+        return expansion_mode.mode_type
+
+
+# 标准版设置信息
+class SettlerModeInfo:
+    extends ProtocolData
+
+    const mode_type: int = Data.ExpansionMode.SETTLER
+    var is_random_land: bool
+
+    func _init(rand_land: bool=false):
+        cls_name = "SettlerModeInfo"
+        is_random_land = rand_land
+
+
+# 航海家版设置信息
+class SeafarerModeInfo:
+    extends ProtocolData
+
+    const mode_type: int = Data.ExpansionMode.SEAFARER
+    var selected_map: int
+
+    func _init(select: int=0):
+        cls_name = "SeafarerModeInfo"
+        selected_map = select
 
 
 # 玩家顺序信息
@@ -367,8 +413,8 @@ class BankInfo:
 
     func _init(catan_size: int=Data.CatanSize.SMALL):
         cls_name = "BankInfo"
-        res_info = Data.NUM_DATA[catan_size].resource.each_num.duplicate(true)
-        avail_card = Data.NUM_DATA[catan_size].card.total_num
+        res_info = Data.SETTLER_DATA[catan_size].resource.each_num.duplicate(true)
+        avail_card = Data.SETTLER_DATA[catan_size].card.total_num
 
 
 # 交易信息

@@ -8,6 +8,10 @@ class_name Data
 enum HostState {PREPARE, PLAYING}
 
 
+# 扩展模式
+enum ExpansionMode {SETTLER, SEAFARER}
+
+
 # 图标映射数据
 const ICON_DATA: Dictionary = {
     1: "res://assets/icons/aphrodite.png",
@@ -38,19 +42,6 @@ const ORDER_DATA: Dictionary = {
 
 # 玩家数量映射
 enum CatanSize {BIG=6, SMALL=4}
-
-
-const MAPSIZE_DATA = {
-    0: CatanSize.SMALL,
-    1: CatanSize.BIG,
-}
-
-
-# 开关映射
-const SWITCH_DATA = {
-    0: '关闭',
-    1: '开启',
-}
 
 
 # 地块映射
@@ -234,7 +225,7 @@ const HARBOR_UNIT = {
 
 
 # 数量映射
-const NUM_DATA = {
+const SETTLER_DATA = {
     CatanSize.SMALL: {
         "resource": {
             "total_num": 95,

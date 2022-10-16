@@ -127,7 +127,7 @@ class PlayerRoadNumCondition:
     func is_meet_condition() -> bool:
         var server = PlayingNet.get_server()
         var cur_num = len(server.player_buildings[_name].road_info)
-        var max_num = Data.NUM_DATA[server.setup_info.catan_size].building.each_num[Data.BuildingType.ROAD]
+        var max_num = Data.SETTLER_DATA[server.setup_info.catan_size].building.each_num[Data.BuildingType.ROAD]
         return max_num-cur_num == _num
 
 
@@ -167,4 +167,4 @@ class WinCondtion:
         _name = player_name
 
     func is_meet_condition() -> bool:
-        return PlayingNet.get_server().player_personals[_name].vic_point >= 10
+        return PlayingNet.get_server().player_personals[_name].vic_point >= PlayingNet.get_server().setup_info.win_vp

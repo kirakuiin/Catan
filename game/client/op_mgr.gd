@@ -40,7 +40,7 @@ func can_place_settlement() -> bool:
     return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.SETTLEMENT))
 
 func _get_building_limit(type: int) -> int:
-    return Data.NUM_DATA[_size].building.each_num[type]
+    return Data.SETTLER_DATA[_size].building.each_num[type]
 
 func _get_required(type: int) -> Dictionary:
     return Data.OP_DATA[type]

@@ -68,7 +68,7 @@ func update_road(player_name: String) -> Archievement:
 
 # 更新玩家分数
 func update_vp(player_name: String):
-    var vp := _setup.initial_vp
+    var vp := 0
     var building = _buildings[player_name]
     vp += len(building.settlement_info)
     vp += len(building.city_info)*2

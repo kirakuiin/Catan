@@ -6,13 +6,13 @@ extends Control
 
 var _name: String
 var _order: int
-var _size: int
+var _setup: Protocol.CatanSetupInfo
 
 
-func init(order: int, name: String, catan_size: int):
+func init(order: int, name: String, setup: Protocol.CatanSetupInfo):
     _order = order
     _name = name
-    _size = catan_size
+    _setup = setup
     _init_icon()
     _init_format()
     _init_signal()
@@ -27,6 +27,7 @@ func _init_format():
     $HBox/Grid/Road.set_format("%s/{0}".format([_get_data(Data.BuildingType.ROAD)]))
     $HBox/Grid/City.set_format("%s/{0}".format([_get_data(Data.BuildingType.CITY)]))
     $HBox/Grid/Settlement.set_format("%s/{0}".format([_get_data(Data.BuildingType.SETTLEMENT)]))
+    $HBox/Grid/VP.set_format("%s/{0}".format([_setup.win_vp]))
 
 
 func _init_signal():
@@ -39,7 +40,7 @@ func _init_signal():
 
 
 func _get_data(type: int):
-    return Data.NUM_DATA[_size].building.each_num[type]
+    return Data.SETTLER_DATA[_setup.catan_size].building.each_num[type]
 
 
 func get_order_num() -> int:

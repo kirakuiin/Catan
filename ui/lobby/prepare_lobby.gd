@@ -4,7 +4,7 @@ extends Control
 
 
 const PlayerItem: PackedScene = preload("res://ui/lobby/player_item.tscn")
-const MapGenerator: Script = preload("res://game/map_generator.gd")
+const MapGenerator: Script = preload("res://game/map/generator.gd")
 
 
 var _host_info: Protocol.HostInfo
@@ -36,21 +36,37 @@ func _input(event):
 
 
 func _init_option():
-	for index in Data.MAPSIZE_DATA:
-		var desc = "%s-%s人" % [Data.MAPSIZE_DATA[index]-1, Data.MAPSIZE_DATA[index]]
-		$Option/OptionScroll/VCon/PlayerNumContainer/Btn.add_item(desc, index)
-	for index in Data.SWITCH_DATA:
-		$Option/OptionScroll/VCon/FogContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$Option/OptionScroll/VCon/RandResourceContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$Option/OptionScroll/VCon/RandSeatContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
-		$Option/OptionScroll/VCon/RandLandContainer/Btn.add_item(Data.SWITCH_DATA[index], index)
+	_init_basic_option()
+	_init_mode_option()
 	if GameServer.is_server():
 		_init_special_option()
 	else:
-		$Option/SpecialOptionScroll.hide()
+		$Option/Special.hide()
+
+
+func _init_basic_option():
+	for index in UI_Data.MAPSIZE_DATA:
+		var desc = "%s-%s人" % [UI_Data.MAPSIZE_DATA[index]-1, UI_Data.MAPSIZE_DATA[index]]
+		$Option/Basic/Scroll/VCon/PlayerNumContainer/Btn.add_item(desc, index)
+	for index in UI_Data.SWITCH_DATA:
+		$Option/Basic/Scroll/VCon/FogContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
+		$Option/Basic/Scroll/VCon/RandResourceContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
+		$Option/Basic/Scroll/VCon/RandSeatContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
+	for index in UI_Data.MODE_DATA:
+		$Option/Basic/Scroll/VCon/ExpansionMode/Btn.add_item(UI_Data.MODE_DATA[index], index)
+
+
+func _init_mode_option():
+	for index in UI_Data.SEAFARER_MAP_DATA:
+		$Option/Seafarer/Scroll/VCon/Map/Btn.add_item(UI_Data.SEAFARER_MAP_DATA[index], index)
+	for index in UI_Data.SWITCH_DATA:
+		$Option/Settler/Scroll/VCon/RandLandContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
+
 
 func _init_special_option():
-	$Option/SpecialOptionScroll.show()
+	$Option/Special/Scroll.show()
+	for index in UI_Data.SWITCH_DATA:
+		$Option/Special/Scroll/VCon/DIYDev/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
 
 
 func _init_player_list():
@@ -132,11 +148,34 @@ master func reconnect(net_data):
 
 func _reset_catan_setup():
 	var info = _catan_setup_info
-	$Option/OptionScroll/VCon/PlayerNumContainer/Btn.select(int(info.catan_size!=Data.CatanSize.SMALL))
-	$Option/OptionScroll/VCon/FogContainer/Btn.select(int(info.is_enable_fog))
-	$Option/OptionScroll/VCon/RandResourceContainer/Btn.select(int(info.is_random_resource))
-	$Option/OptionScroll/VCon/RandSeatContainer/Btn.select(int(info.is_random_order))
-	$Option/OptionScroll/VCon/RandLandContainer/Btn.select(int(info.is_random_land))
+	$Option/Basic/Scroll/VCon/ExpansionMode/Btn.select(info.mode_idx())
+	$Option/Basic/Scroll/VCon/PlayerNumContainer/Btn.select(int(info.catan_size!=Data.CatanSize.SMALL))
+	$Option/Basic/Scroll/VCon/FogContainer/Btn.select(int(info.is_enable_fog))
+	$Option/Basic/Scroll/VCon/RandResourceContainer/Btn.select(int(info.is_random_resource))
+	$Option/Basic/Scroll/VCon/RandSeatContainer/Btn.select(int(info.is_random_order))
+	_reset_mode_setup()
+
+
+func _reset_mode_setup():
+	var info = _catan_setup_info
+	if info.is_settler():
+		_reset_settler()
+	elif info.is_seafarer():
+		_reset_seafarer()
+
+
+func _reset_settler():
+	var info = _catan_setup_info
+	$Option/Seafarer.hide()
+	$Option/Settler.show()
+	$Option/Settler/Scroll/VCon/RandLandContainer/Btn.select(int(info.expansion_mode.is_random_land))
+
+
+func _reset_seafarer():
+	var info = _catan_setup_info
+	$Option/Settler.hide()
+	$Option/Seafarer.show()
+	$Option/Seafarer/Scroll/VCon/Map/Btn.select(info.expansion_mode.selected_map)
 
 
 func _on_change_num(index):
@@ -144,8 +183,8 @@ func _on_change_num(index):
 
 
 remotesync func change_max_player_num(index: int):
-	_catan_setup_info.catan_size = Data.MAPSIZE_DATA[index]
-	_host_info.max_player_num = Data.MAPSIZE_DATA[index]
+	_catan_setup_info.catan_size = UI_Data.MAPSIZE_DATA[index]
+	_host_info.max_player_num = UI_Data.MAPSIZE_DATA[index]
 	ConnState.set_max_conn(_host_info.max_player_num-1)
 	_reset_catan_setup()
 	_generate_map()
@@ -157,15 +196,6 @@ func _on_change_fog(index: int):
 
 remotesync func change_fog_state(index: int):
 	_catan_setup_info.is_enable_fog = bool(index)
-	_reset_catan_setup()
-
-
-func _on_change_land(index: int):
-	rpc("change_land_state", index)
-
-
-remotesync func change_land_state(index: int):
-	_catan_setup_info.is_random_land = bool(index)
 	_reset_catan_setup()
 
 
@@ -184,6 +214,34 @@ func _on_change_resource(index: int):
 
 remotesync func change_resource_state(index: int):
 	_catan_setup_info.is_random_resource = bool(index)
+	_reset_catan_setup()
+
+
+func _on_change_mode(index: int):
+	rpc("change_mode_state", index)
+
+
+remotesync func change_mode_state(index: int):
+	_catan_setup_info.change_mode_by_idx(index)
+	_reset_catan_setup()
+	_generate_map()
+
+
+func _on_change_land(index: int):
+	rpc("change_land_state", index)
+
+
+remotesync func change_land_state(index: int):
+	_catan_setup_info.expansion_mode.is_random_land = bool(index)
+	_reset_catan_setup()
+
+
+func _on_change_sea_map(index: int):
+	rpc("change_sea_map", index)
+
+
+remotesync func change_sea_map(index: int):
+	_catan_setup_info.expansion_mode.selected_map = index
 	_reset_catan_setup()
 
 
@@ -271,8 +329,12 @@ func _on_preview_map():
 
 
 func _on_vp_value_changed(value: float):
-	_catan_setup_info.initial_vp = int(value)
+	_catan_setup_info.win_vp = int(value)
 
 
 func _on_res_value_changed(value: float):
 	_catan_setup_info.initial_res = int(value)
+
+
+func _on_enable_diy_dev(index: int):
+	_catan_setup_info.custom_dev = bool(index)

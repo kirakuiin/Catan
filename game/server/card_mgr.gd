@@ -15,7 +15,7 @@ func _init(cards: Dictionary, personals: Dictionary, size: int, bank: Protocol.B
     _personals = personals
     _size = size
     _bank = bank
-    _card_capacity = Data.NUM_DATA[size].card.each_num.duplicate(true)
+    _card_capacity = Data.SETTLER_DATA[size].card.each_num.duplicate(true)
 
 
 # 打出卡牌

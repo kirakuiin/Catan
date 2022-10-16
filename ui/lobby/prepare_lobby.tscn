@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/fonts/OPPOSans-B.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://ui/lobby/prepare_lobby.gd" type="Script" id=2]
 [ext_resource path="res://ui/map/catan_map.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/images/divide_line.png" type="Texture" id=4]
 [ext_resource path="res://ui/lobby/player_seat.tscn" type="PackedScene" id=10]
 
 [sub_resource type="DynamicFont" id=2]
@@ -27,14 +28,26 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="OptionScroll" type="ScrollContainer" parent="Option"]
+[node name="Basic" type="VBoxContainer" parent="Option"]
 margin_right = 500.0
-margin_bottom = 400.0
-rect_min_size = Vector2( 500, 400 )
+margin_bottom = 267.0
+custom_constants/separation = 15
 
-[node name="VCon" type="VBoxContainer" parent="Option/OptionScroll"]
+[node name="Label" type="Label" parent="Option/Basic"]
 margin_right = 500.0
-margin_bottom = 372.0
+margin_bottom = 32.0
+text = "基础设置"
+align = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Option/Basic"]
+margin_top = 47.0
+margin_right = 500.0
+margin_bottom = 267.0
+rect_min_size = Vector2( 500, 220 )
+
+[node name="VCon" type="VBoxContainer" parent="Option/Basic/Scroll"]
+margin_right = 488.0
+margin_bottom = 310.0
 size_flags_horizontal = 3
 custom_constants/separation = 30
 __meta__ = {
@@ -43,20 +56,36 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="OptionLabel" type="Label" parent="Option/OptionScroll/VCon"]
-margin_right = 500.0
-margin_bottom = 32.0
-text = "参数设置"
+[node name="ExpansionMode" type="HBoxContainer" parent="Option/Basic/Scroll/VCon"]
+margin_right = 488.0
+margin_bottom = 38.0
+
+[node name="Label" type="Label" parent="Option/Basic/Scroll/VCon/ExpansionMode"]
+margin_top = 3.0
+margin_right = 161.0
+margin_bottom = 35.0
+hint_tooltip = "卡坦岛的基本规则"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "扩展包:"
 align = 1
 
-[node name="PlayerNumContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
-margin_top = 62.0
-margin_right = 500.0
-margin_bottom = 100.0
+[node name="Btn" type="OptionButton" parent="Option/Basic/Scroll/VCon/ExpansionMode"]
+margin_left = 165.0
+margin_right = 488.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+align = 1
 
-[node name="Label" type="Label" parent="Option/OptionScroll/VCon/PlayerNumContainer"]
+[node name="PlayerNumContainer" type="HBoxContainer" parent="Option/Basic/Scroll/VCon"]
+margin_top = 68.0
+margin_right = 488.0
+margin_bottom = 106.0
+
+[node name="Label" type="Label" parent="Option/Basic/Scroll/VCon/PlayerNumContainer"]
 margin_top = 3.0
-margin_right = 165.0
+margin_right = 161.0
 margin_bottom = 35.0
 hint_tooltip = "参加游戏的人数范围"
 mouse_filter = 0
@@ -64,71 +93,23 @@ size_flags_horizontal = 3
 text = "玩家人数: "
 align = 1
 
-[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/PlayerNumContainer"]
-margin_left = 169.0
-margin_right = 500.0
+[node name="Btn" type="OptionButton" parent="Option/Basic/Scroll/VCon/PlayerNumContainer"]
+margin_left = 165.0
+margin_right = 488.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "选择人数"
 align = 1
 
-[node name="FogContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
-margin_top = 130.0
-margin_right = 500.0
-margin_bottom = 168.0
+[node name="RandSeatContainer" type="HBoxContainer" parent="Option/Basic/Scroll/VCon"]
+margin_top = 136.0
+margin_right = 488.0
+margin_bottom = 174.0
 
-[node name="Label" type="Label" parent="Option/OptionScroll/VCon/FogContainer"]
+[node name="Label" type="Label" parent="Option/Basic/Scroll/VCon/RandSeatContainer"]
 margin_top = 3.0
-margin_right = 165.0
-margin_bottom = 35.0
-hint_tooltip = "开启迷雾后在初始阶段无法看到每个地块上的点数"
-mouse_filter = 0
-size_flags_horizontal = 3
-text = "地图迷雾: "
-align = 1
-
-[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/FogContainer"]
-margin_left = 169.0
-margin_right = 500.0
-margin_bottom = 38.0
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-text = "关闭"
-align = 1
-
-[node name="RandResourceContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
-margin_top = 198.0
-margin_right = 500.0
-margin_bottom = 236.0
-
-[node name="Label" type="Label" parent="Option/OptionScroll/VCon/RandResourceContainer"]
-margin_top = 3.0
-margin_right = 165.0
-margin_bottom = 35.0
-hint_tooltip = "随机两种资源地块的数量会更少"
-mouse_filter = 0
-size_flags_horizontal = 3
-text = "随机资源:"
-align = 1
-
-[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/RandResourceContainer"]
-margin_left = 169.0
-margin_right = 500.0
-margin_bottom = 38.0
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-text = "关闭"
-align = 1
-
-[node name="RandSeatContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
-margin_top = 266.0
-margin_right = 500.0
-margin_bottom = 304.0
-
-[node name="Label" type="Label" parent="Option/OptionScroll/VCon/RandSeatContainer"]
-margin_top = 3.0
-margin_right = 165.0
+margin_right = 161.0
 margin_bottom = 35.0
 hint_tooltip = "所有玩家将以随机的顺序开始游戏"
 mouse_filter = 0
@@ -136,21 +117,108 @@ size_flags_horizontal = 3
 text = "随机顺序:"
 align = 1
 
-[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/RandSeatContainer"]
-margin_left = 169.0
-margin_right = 500.0
+[node name="Btn" type="OptionButton" parent="Option/Basic/Scroll/VCon/RandSeatContainer"]
+margin_left = 165.0
+margin_right = 488.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "关闭"
 align = 1
 
-[node name="RandLandContainer" type="HBoxContainer" parent="Option/OptionScroll/VCon"]
-margin_top = 334.0
-margin_right = 500.0
-margin_bottom = 372.0
+[node name="RandResourceContainer" type="HBoxContainer" parent="Option/Basic/Scroll/VCon"]
+margin_top = 204.0
+margin_right = 488.0
+margin_bottom = 242.0
 
-[node name="Label" type="Label" parent="Option/OptionScroll/VCon/RandLandContainer"]
+[node name="Label" type="Label" parent="Option/Basic/Scroll/VCon/RandResourceContainer"]
+margin_top = 3.0
+margin_right = 161.0
+margin_bottom = 35.0
+hint_tooltip = "随机两种资源地块的数量会更少"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "随机资源:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="Option/Basic/Scroll/VCon/RandResourceContainer"]
+margin_left = 165.0
+margin_right = 488.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "关闭"
+align = 1
+
+[node name="FogContainer" type="HBoxContainer" parent="Option/Basic/Scroll/VCon"]
+margin_top = 272.0
+margin_right = 488.0
+margin_bottom = 310.0
+
+[node name="Label" type="Label" parent="Option/Basic/Scroll/VCon/FogContainer"]
+margin_top = 3.0
+margin_right = 161.0
+margin_bottom = 35.0
+hint_tooltip = "开启迷雾后在初始阶段无法看到每个地块上的点数"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "地图迷雾: "
+align = 1
+
+[node name="Btn" type="OptionButton" parent="Option/Basic/Scroll/VCon/FogContainer"]
+margin_left = 165.0
+margin_right = 488.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "关闭"
+align = 1
+
+[node name="Settler" type="VBoxContainer" parent="Option"]
+margin_top = 271.0
+margin_right = 500.0
+margin_bottom = 548.0
+custom_constants/separation = 15
+
+[node name="Line" type="TextureRect" parent="Option/Settler"]
+margin_right = 500.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+
+[node name="Label" type="Label" parent="Option/Settler"]
+margin_top = 30.0
+margin_right = 500.0
+margin_bottom = 62.0
+custom_colors/font_color = Color( 0.0509804, 0.823529, 0.0431373, 1 )
+text = "标准版设置"
+align = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Option/Settler"]
+margin_top = 77.0
+margin_right = 500.0
+margin_bottom = 277.0
+rect_min_size = Vector2( 500, 200 )
+
+[node name="VCon" type="VBoxContainer" parent="Option/Settler/Scroll"]
+margin_right = 500.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+custom_constants/separation = 30
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="RandLandContainer" type="HBoxContainer" parent="Option/Settler/Scroll/VCon"]
+margin_right = 500.0
+margin_bottom = 38.0
+
+[node name="Label" type="Label" parent="Option/Settler/Scroll/VCon/RandLandContainer"]
 margin_top = 3.0
 margin_right = 165.0
 margin_bottom = 35.0
@@ -160,24 +228,109 @@ size_flags_horizontal = 3
 text = "随机地形:"
 align = 1
 
-[node name="Btn" type="OptionButton" parent="Option/OptionScroll/VCon/RandLandContainer"]
+[node name="Btn" type="OptionButton" parent="Option/Settler/Scroll/VCon/RandLandContainer"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-text = "关闭"
 align = 1
 
-[node name="SpecialOptionScroll" type="ScrollContainer" parent="Option"]
-margin_top = 404.0
+[node name="Seafarer" type="VBoxContainer" parent="Option"]
+visible = false
+margin_top = 552.0
 margin_right = 500.0
-margin_bottom = 604.0
+margin_bottom = 829.0
+custom_constants/separation = 15
+
+[node name="Line" type="TextureRect" parent="Option/Seafarer"]
+margin_right = 500.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+
+[node name="Label" type="Label" parent="Option/Seafarer"]
+margin_top = 30.0
+margin_right = 500.0
+margin_bottom = 62.0
+custom_colors/font_color = Color( 0.0156863, 0.537255, 0.921569, 1 )
+text = "航海家版设置"
+align = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Option/Seafarer"]
+margin_top = 77.0
+margin_right = 500.0
+margin_bottom = 277.0
 rect_min_size = Vector2( 500, 200 )
 
-[node name="VCon" type="VBoxContainer" parent="Option/SpecialOptionScroll"]
+[node name="VCon" type="VBoxContainer" parent="Option/Seafarer/Scroll"]
 margin_right = 500.0
-margin_bottom = 156.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+custom_constants/separation = 30
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": true
+}
+
+[node name="Map" type="HBoxContainer" parent="Option/Seafarer/Scroll/VCon"]
+margin_right = 500.0
+margin_bottom = 38.0
+
+[node name="Label" type="Label" parent="Option/Seafarer/Scroll/VCon/Map"]
+margin_top = 3.0
+margin_right = 165.0
+margin_bottom = 35.0
+hint_tooltip = "地形不在以紧密排列的形式分布"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "地图名称:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="Option/Seafarer/Scroll/VCon/Map"]
+margin_left = 169.0
+margin_right = 500.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+align = 1
+
+[node name="Special" type="VBoxContainer" parent="Option"]
+margin_top = 552.0
+margin_right = 500.0
+margin_bottom = 829.0
+custom_constants/separation = 15
+
+[node name="Line" type="TextureRect" parent="Option/Special"]
+margin_right = 500.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+
+[node name="Label" type="Label" parent="Option/Special"]
+modulate = Color( 0.992157, 0.839216, 0.00392157, 1 )
+margin_top = 30.0
+margin_right = 500.0
+margin_bottom = 62.0
+text = "特殊参数"
+align = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Option/Special"]
+margin_top = 77.0
+margin_right = 500.0
+margin_bottom = 277.0
+rect_min_size = Vector2( 500, 200 )
+
+[node name="VCon" type="VBoxContainer" parent="Option/Special/Scroll"]
+margin_right = 500.0
+margin_bottom = 162.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 __meta__ = {
@@ -186,19 +339,11 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="OptionLabel" type="Label" parent="Option/SpecialOptionScroll/VCon"]
-modulate = Color( 0.992157, 0.839216, 0.00392157, 1 )
+[node name="InitialRes" type="HBoxContainer" parent="Option/Special/Scroll/VCon"]
 margin_right = 500.0
-margin_bottom = 32.0
-text = "特殊参数"
-align = 1
+margin_bottom = 42.0
 
-[node name="InitialRes" type="HBoxContainer" parent="Option/SpecialOptionScroll/VCon"]
-margin_top = 52.0
-margin_right = 500.0
-margin_bottom = 94.0
-
-[node name="Label" type="Label" parent="Option/SpecialOptionScroll/VCon/InitialRes"]
+[node name="Label" type="Label" parent="Option/Special/Scroll/VCon/InitialRes"]
 margin_top = 5.0
 margin_right = 165.0
 margin_bottom = 37.0
@@ -208,7 +353,7 @@ size_flags_horizontal = 3
 text = "初始资源:"
 align = 1
 
-[node name="Edit" type="SpinBox" parent="Option/SpecialOptionScroll/VCon/InitialRes"]
+[node name="Edit" type="SpinBox" parent="Option/Special/Scroll/VCon/InitialRes"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 42.0
@@ -217,42 +362,67 @@ size_flags_stretch_ratio = 2.0
 max_value = 10.0
 align = 1
 
-[node name="Overlay" type="Control" parent="Option/SpecialOptionScroll/VCon/InitialRes/Edit"]
+[node name="Overlay" type="Control" parent="Option/Special/Scroll/VCon/InitialRes/Edit"]
 anchor_left = 0.28852
 anchor_top = 0.0238095
 anchor_right = 0.675227
 anchor_bottom = 0.97619
 
-[node name="InitialVP" type="HBoxContainer" parent="Option/SpecialOptionScroll/VCon"]
-margin_top = 114.0
+[node name="WinVP" type="HBoxContainer" parent="Option/Special/Scroll/VCon"]
+margin_top = 62.0
 margin_right = 500.0
-margin_bottom = 156.0
+margin_bottom = 104.0
 
-[node name="Label" type="Label" parent="Option/SpecialOptionScroll/VCon/InitialVP"]
+[node name="Label" type="Label" parent="Option/Special/Scroll/VCon/WinVP"]
 margin_top = 5.0
 margin_right = 165.0
 margin_bottom = 37.0
-hint_tooltip = "每个玩家的开始胜利点数"
+hint_tooltip = "游戏结束需要的胜利点数"
 mouse_filter = 0
 size_flags_horizontal = 3
-text = "初始胜点:"
+text = "胜利胜点:"
 align = 1
 
-[node name="Edit" type="SpinBox" parent="Option/SpecialOptionScroll/VCon/InitialVP"]
+[node name="Edit" type="SpinBox" parent="Option/Special/Scroll/VCon/WinVP"]
 margin_left = 169.0
 margin_right = 500.0
 margin_bottom = 42.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-max_value = 10.0
+min_value = 2.0
+max_value = 20.0
+value = 10.0
 rounded = true
 align = 1
 
-[node name="Overlay" type="Control" parent="Option/SpecialOptionScroll/VCon/InitialVP/Edit"]
+[node name="Overlay" type="Control" parent="Option/Special/Scroll/VCon/WinVP/Edit"]
 anchor_left = 0.287009
 anchor_top = 0.0238095
 anchor_right = 0.673716
 anchor_bottom = 0.97619
+
+[node name="DIYDev" type="HBoxContainer" parent="Option/Special/Scroll/VCon"]
+margin_top = 124.0
+margin_right = 500.0
+margin_bottom = 162.0
+
+[node name="Label" type="Label" parent="Option/Special/Scroll/VCon/DIYDev"]
+margin_top = 3.0
+margin_right = 165.0
+margin_bottom = 35.0
+hint_tooltip = "是否添加自定义发展卡"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "自定义卡牌:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="Option/Special/Scroll/VCon/DIYDev"]
+margin_left = 169.0
+margin_right = 500.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+align = 1
 
 [node name="TitleLabel" type="Label" parent="."]
 anchor_right = 1.0
@@ -275,15 +445,15 @@ __meta__ = {
 }
 
 [node name="StartBtn" type="Button" parent="."]
-anchor_left = 0.791667
-anchor_top = 0.911111
-anchor_right = 1.0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
+margin_left = -200.0
+margin_top = -96.0001
+margin_right = 200.0
 disabled = true
 text = "开始"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="BroadcastTimer" type="Timer" parent="."]
 __meta__ = {
@@ -341,13 +511,16 @@ anchor_bottom = 1.0
 margin_right = 0.0
 margin_bottom = 0.0
 
-[connection signal="item_selected" from="Option/OptionScroll/VCon/PlayerNumContainer/Btn" to="." method="_on_change_num"]
-[connection signal="item_selected" from="Option/OptionScroll/VCon/FogContainer/Btn" to="." method="_on_change_fog"]
-[connection signal="item_selected" from="Option/OptionScroll/VCon/RandResourceContainer/Btn" to="." method="_on_change_resource"]
-[connection signal="item_selected" from="Option/OptionScroll/VCon/RandSeatContainer/Btn" to="." method="_on_change_order"]
-[connection signal="item_selected" from="Option/OptionScroll/VCon/RandLandContainer/Btn" to="." method="_on_change_land"]
-[connection signal="value_changed" from="Option/SpecialOptionScroll/VCon/InitialRes/Edit" to="." method="_on_res_value_changed"]
-[connection signal="value_changed" from="Option/SpecialOptionScroll/VCon/InitialVP/Edit" to="." method="_on_vp_value_changed"]
+[connection signal="item_selected" from="Option/Basic/Scroll/VCon/ExpansionMode/Btn" to="." method="_on_change_mode"]
+[connection signal="item_selected" from="Option/Basic/Scroll/VCon/PlayerNumContainer/Btn" to="." method="_on_change_num"]
+[connection signal="item_selected" from="Option/Basic/Scroll/VCon/RandSeatContainer/Btn" to="." method="_on_change_order"]
+[connection signal="item_selected" from="Option/Basic/Scroll/VCon/RandResourceContainer/Btn" to="." method="_on_change_resource"]
+[connection signal="item_selected" from="Option/Basic/Scroll/VCon/FogContainer/Btn" to="." method="_on_change_fog"]
+[connection signal="item_selected" from="Option/Settler/Scroll/VCon/RandLandContainer/Btn" to="." method="_on_change_land"]
+[connection signal="item_selected" from="Option/Seafarer/Scroll/VCon/Map/Btn" to="." method="_on_change_sea_map"]
+[connection signal="value_changed" from="Option/Special/Scroll/VCon/InitialRes/Edit" to="." method="_on_res_value_changed"]
+[connection signal="value_changed" from="Option/Special/Scroll/VCon/WinVP/Edit" to="." method="_on_vp_value_changed"]
+[connection signal="item_selected" from="Option/Special/Scroll/VCon/DIYDev/Btn" to="." method="_on_enable_diy_dev"]
 [connection signal="button_down" from="ExitButton" to="." method="_on_exit_prepare"]
 [connection signal="button_down" from="StartBtn" to="." method="_on_start_game"]
 [connection signal="timeout" from="BroadcastTimer" to="." method="_on_broadcast"]

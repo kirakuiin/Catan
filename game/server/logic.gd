@@ -142,7 +142,7 @@ func roll_dice():
 # 设置胜者
 func set_stat_info():
     for player in player_personals:
-        if player_personals[player].vic_point >= 10:
+        if player_personals[player].vic_point >= setup_info.win_vp:
             stat_info.winner_name = player
             break
     stat_info.turn_num = assist_info.turn_num

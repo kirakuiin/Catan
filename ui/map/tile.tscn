@@ -49,8 +49,13 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="BridgeTexture" type="TextureRect" parent="Point"]
+[node name="Harbor" type="Control" parent="Point"]
 visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="BridgeTexture" type="TextureRect" parent="Point/Harbor"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 100, 100 )
@@ -59,7 +64,7 @@ texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
 
-[node name="HarborTexture" type="TextureRect" parent="Point"]
+[node name="HarborTexture" type="TextureRect" parent="Point/Harbor"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_pivot_offset = Vector2( 100, 100 )
@@ -67,8 +72,7 @@ mouse_filter = 2
 expand = true
 stretch_mode = 6
 
-[node name="RatioLabel21" type="Label" parent="Point"]
-visible = false
+[node name="RatioLabel21" type="Label" parent="Point/Harbor"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 1 )
@@ -76,8 +80,7 @@ text = "2 : 1"
 align = 1
 valign = 1
 
-[node name="RatioLabel31" type="Label" parent="Point"]
-visible = false
+[node name="RatioLabel31" type="Label" parent="Point/Harbor"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 1 )

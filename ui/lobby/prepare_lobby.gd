@@ -61,6 +61,9 @@ func _init_mode_option():
 		$Option/Seafarer/Scroll/VCon/Map/Btn.add_item(UI_Data.SEAFARER_MAP_DATA[index], index)
 	for index in UI_Data.SWITCH_DATA:
 		$Option/Settler/Scroll/VCon/RandLandContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
+	var maps = [""] + Util.get_maps().keys()
+	for index in len(maps):
+		$Option/Settler/Scroll/VCon/Map/Btn.add_item(maps[index], index)
 
 
 func _init_special_option():
@@ -247,6 +250,15 @@ remotesync func change_sea_map(index: int):
 	_reset_catan_setup()
 
 
+func _on_change_custom_map(index: int):
+	var maps = Util.get_maps()
+	if index != 0:
+		_catan_setup_info.expansion_mode.selected_map = maps[maps.keys()[index-1]]
+	else:
+		_catan_setup_info.expansion_mode.selected_map = ""
+	_generate_map()
+
+
 func _on_player_added(player_info: Protocol.PlayerInfo):
 	_add_player_item(player_info)
 	_host_info.cur_player_num += 1
@@ -313,9 +325,20 @@ func _on_conn_state_changed(state):
 
 func _generate_map():
 	if GameServer.is_server():
-		var generator := MapGenerator.new()
-		_map_info = generator.generate(_catan_setup_info)
+		if _catan_setup_info.is_settler() and _catan_setup_info.expansion_mode.selected_map:
+			_map_info = _load_map()
+		else:
+			var generator := MapGenerator.new()
+			_map_info = generator.generate(_catan_setup_info)
 		rpc("recv_map_info", Protocol.serialize(_map_info))
+
+func _load_map() -> Protocol.MapInfo:
+	var map_info = Protocol.MapInfo.new()
+	var fp = File.new()
+	if fp.open(_catan_setup_info.expansion_mode.selected_map, File.READ) == OK:
+		map_info = Protocol.deserialize(parse_json(fp.get_line()))
+		fp.close()
+	return map_info
 
 
 remote func recv_map_info(data):
@@ -327,6 +350,7 @@ remote func recv_map_info(data):
 func _on_preview_map():
 	_generate_map()
 	$CatanMap.show_preview(_map_info, _catan_setup_info.is_enable_fog)
+	$CatanMap.rect_pivot_offset = rect_size/2
 	$CatanMap.show()
 
 

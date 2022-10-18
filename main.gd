@@ -20,3 +20,7 @@ func _on_edit_setting():
 
 func _on_exit_game():
     get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
+
+
+func _on_open_editor():
+    SceneMgr.goto_scene(SceneMgr.EDITOR_SCENE)

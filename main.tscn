@@ -36,34 +36,42 @@ margin_left = 216.0
 margin_top = 536.0
 margin_right = 516.0
 margin_bottom = 936.0
-custom_constants/separation = 50
+custom_constants/separation = 30
 
 [node name="StartGameBtn" type="Button" parent="VCon"]
 margin_right = 300.0
-margin_bottom = 62.0
+margin_bottom = 56.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "开始游戏"
 
 [node name="CharacterBtn" type="Button" parent="VCon"]
-margin_top = 112.0
+margin_top = 86.0
 margin_right = 300.0
-margin_bottom = 175.0
+margin_bottom = 142.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 1 )
 text = "角色信息"
 
 [node name="SettingBtn" type="Button" parent="VCon"]
-margin_top = 225.0
+margin_top = 172.0
 margin_right = 300.0
-margin_bottom = 287.0
+margin_bottom = 228.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "游戏设置"
 
+[node name="EditorBtn" type="Button" parent="VCon"]
+margin_top = 258.0
+margin_right = 300.0
+margin_bottom = 314.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "地图编辑"
+
 [node name="ExitBtn" type="Button" parent="VCon"]
-margin_top = 337.0
+margin_top = 344.0
 margin_right = 300.0
 margin_bottom = 400.0
 size_flags_horizontal = 3
@@ -84,4 +92,5 @@ align = 1
 [connection signal="button_down" from="VCon/StartGameBtn" to="." method="_on_start_game"]
 [connection signal="button_down" from="VCon/CharacterBtn" to="." method="_on_edit_character_info"]
 [connection signal="button_down" from="VCon/SettingBtn" to="." method="_on_edit_setting"]
+[connection signal="button_down" from="VCon/EditorBtn" to="." method="_on_open_editor"]
 [connection signal="button_down" from="VCon/ExitBtn" to="." method="_on_exit_game"]

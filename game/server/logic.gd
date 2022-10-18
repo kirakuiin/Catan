@@ -72,6 +72,8 @@ func _init_robber():
     for tile in map_info.grid_map.values():
         if tile.tile_type == Data.TileType.DESERT:
             canditate_pos.append(tile.cube_pos)
+    if not canditate_pos:
+        canditate_pos = [Vector3(0, 0, 0)]
     canditate_pos.shuffle()
     robber_pos = canditate_pos[0]
 

@@ -42,3 +42,22 @@ static func time_convert(time_in_sec: int, fmt: String="%02d时:%02d分:%02d秒"
     var minutes = (time_in_sec/60)%60
     var hours = (time_in_sec/60)/60
     return fmt % [hours, minutes, seconds]
+
+
+# 连接文件路径
+static func join_file_path(path_list: PoolStringArray) -> String:
+    return path_list.join("/")
+
+
+# 得到地图
+static func get_maps() -> Dictionary:
+    var result = {}
+    var dir = Directory.new()
+    if dir.open(Data.MAP_FOLDER) == OK:
+        dir.list_dir_begin()
+        var file_name = dir.get_next()
+        while file_name != "":
+            if not dir.current_is_dir() and file_name.ends_with(Data.MAP_SUFFIX):
+                result[file_name.trim_suffix(Data.MAP_SUFFIX)] = join_file_path([Data.MAP_FOLDER, file_name])
+            file_name = dir.get_next()
+    return result

@@ -65,6 +65,7 @@ func _clear_all_tile():
 
 func _draw_base():
 	for tile_info in _map.grid_map.values():
+		print(tile_info)
 		var tile = Tile.instance()
 		tile.set_tile_info(tile_info)
 		$Tile.add_child(tile)

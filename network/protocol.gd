@@ -204,10 +204,12 @@ class SettlerModeInfo:
 
     const mode_type: int = Data.ExpansionMode.SETTLER
     var is_random_land: bool
+    var selected_map: String
 
-    func _init(rand_land: bool=false):
+    func _init(rand_land: bool=false, selected: String=""):
         cls_name = "SettlerModeInfo"
         is_random_land = rand_land
+        selected_map = selected
 
 
 # 航海家版设置信息
@@ -250,7 +252,7 @@ class TileInfo:
     var tile_type: int
     var point_type: int
 
-    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.DESERT, point=Data.PointType.ZERO):
+    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.NULL, point=Data.PointType.ZERO):
         cls_name = "TileInfo"
         cube_pos = pos
         tile_type = tile
@@ -268,7 +270,7 @@ class HarborInfo:
     var near_pos: Vector3
     var harbor_type: int
 
-    func _init(pos: Vector3=Vector3(0, 0, 0), near: Vector3=Vector3(0, 0, 0), type=Data.HarborType.GENERIC):
+    func _init(pos: Vector3=Vector3(0, 0, 0), near: Vector3=Vector3(0, 0, 0), type=Data.HarborType.NULL):
         cls_name = "HarborInfo"
         cube_pos = pos
         near_pos = near

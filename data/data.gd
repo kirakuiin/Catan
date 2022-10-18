@@ -4,6 +4,10 @@ extends Node
 class_name Data
 
 
+const MAP_FOLDER = "user://map"
+const MAP_SUFFIX = ".map"
+
+
 # 主机状态
 enum HostState {PREPARE, PLAYING}
 
@@ -17,7 +21,7 @@ enum CatanSize {BIG=6, SMALL=4}
 
 
 # 地块映射
-enum TileType{DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD}
+enum TileType{NULL, DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD}
 
 
 # 成就映射
@@ -85,7 +89,7 @@ enum EnemyType{ROBBER, PIRATE}
 
 
 # 港口映射
-enum HarborType{LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC}
+enum HarborType{NULL, LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC}
 
 const RES_TO_HARBOR = {
     ResourceType.LUMBER: HarborType.LUMBER,

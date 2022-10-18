@@ -3,11 +3,11 @@ extends Control
 # 地块表现
 
 var _tile_info: Protocol.TileInfo
+var _harbor_info: Protocol.HarborInfo = Protocol.HarborInfo.new()
 onready var _layout: Hexlib.HexLayout = Hexlib.HexLayout.new(Hexlib.Flat(), rect_size/2)
 
 
 func _ready():
-	_init_texture()
 	_init_pos()
 	_init_particle()
 
@@ -22,17 +22,41 @@ func init_signal():
 
 func set_tile_info(tile_info: Protocol.TileInfo):
 	_tile_info = tile_info
+	_init_texture()
+
+
+func get_tile_info() -> Protocol.TileInfo:
+	return _tile_info
+
+
+func get_harbor_info() -> Protocol.HarborInfo:
+	return _harbor_info
 
 
 func set_harbor_type(type: int, angle: float):
-	$Point/HarborTexture.texture = ResourceLoader.load(UI_Data.HARBOR_DATA[type])
-	$Point/BridgeTexture.rect_pivot_offset = $Point/HarborTexture.rect_size/2
-	$Point/BridgeTexture.rect_rotation = angle
-	$Point/BridgeTexture.show()
-	if type == Data.HarborType.GENERIC:
-		$Point/RatioLabel31.show()
+	_set_harbor_info(type, angle)
+	if type == Data.HarborType.NULL:
+		$Point/Harbor.hide()
 	else:
-		$Point/RatioLabel21.show()
+		$Point/Harbor.show()
+		$Point/Harbor/HarborTexture.texture = ResourceLoader.load(UI_Data.HARBOR_DATA[type])
+		$Point/Harbor/BridgeTexture.rect_pivot_offset = $Point/Harbor/HarborTexture.rect_size/2
+		$Point/Harbor/BridgeTexture.rect_rotation = angle
+		if type == Data.HarborType.GENERIC:
+			$Point/Harbor/RatioLabel31.show()
+			$Point/Harbor/RatioLabel21.hide()
+		else:
+			$Point/Harbor/RatioLabel21.show()
+			$Point/Harbor/RatioLabel31.hide()
+
+
+func _set_harbor_info(type: int, angle: float):
+	_harbor_info.harbor_type = type
+	_harbor_info.cube_pos = _tile_info.cube_pos
+	var self_hex = Hexlib.create_hex(_tile_info.cube_pos)
+	for hex in Hexlib.get_hex_adjacency_hex(self_hex):
+		if abs(Hexlib.hex_relative_angle(self_hex, hex)-angle) < 1:
+			_harbor_info.near_pos = hex.to_vector3()
 
 
 func set_point_visible(is_visible: bool):
@@ -40,9 +64,14 @@ func set_point_visible(is_visible: bool):
 
 
 func _init_texture():
-	$TileTexture.texture = ResourceLoader.load(UI_Data.TILE_DATA[_tile_info.tile_type])
-	if not _tile_info.tile_type in [Data.TileType.DESERT, Data.TileType.OCEAN]:
+	if _tile_info.tile_type != Data.TileType.NULL:
+		$TileTexture.texture = ResourceLoader.load(UI_Data.TILE_DATA[_tile_info.tile_type])
+	else:
+		$TileTexture.texture = null
+	if _tile_info.point_type != Data.PointType.ZERO:
 		$Point/NumberTexture.texture = ResourceLoader.load(UI_Data.POINT_DATA[_tile_info.point_type])
+	else:
+		$Point/NumberTexture.texture = null
 
 
 func _init_pos():

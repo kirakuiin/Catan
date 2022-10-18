@@ -265,6 +265,24 @@ static func hex_intersect(hex_a: Hex, hex_b: Hex) -> Array:
     return result
 
 
+# 六边形坐标取整
+static func hex_round(frac: Vector3):
+    var q = round(frac.x)
+    var r = round(frac.y)
+    var s = round(frac.z)
+    var q_diff = abs(q - frac.x)
+    var r_diff = abs(r - frac.y)
+    var s_diff = abs(s - frac.z)
+
+    if q_diff > r_diff and q_diff > s_diff:
+        q = -r-s
+    elif r_diff > s_diff:
+        r = -q-s
+    else:
+        s = -q-r
+    return Hex.new(q, r, s)
+
+
 # 两个六边形之间的相对角度
 static func hex_relative_angle(hex_a: Hex, hex_b: Hex, layout: HexLayout = Layout()) -> float:
     var center_a = hex_to_pixel(layout, hex_a)
@@ -297,3 +315,12 @@ static func get_hex_corner_pixel(layout:HexLayout, coord: Hex) -> Array:
     for corner in get_all_corner(coord):
         result.append(corner_to_pixel(layout, corner))
     return result
+
+
+# 像素坐标转六边形坐标
+static func pixel_to_hex(layout: HexLayout, p: Vector2) -> Hex:
+    var M = layout.orientation;
+    var point = Vector2((p.x - layout.origin.x) / layout.size.x, (p.y - layout.origin.y) / layout.size.y);
+    var q = M.b0 * point.x + M.b1 * point.y
+    var r = M.b2 * point.x + M.b3 * point.y
+    return hex_round(Vector3(q, r, -q-r));

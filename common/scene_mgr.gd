@@ -3,6 +3,7 @@ extends Node
 
 const MAIN_SCENE: String = "res://main.tscn"
 const SETTING_SCENE: String = "res://ui/info/game_setting.tscn"
+const EDITOR_SCENE: String = "res://ui/editor/editor_main.tscn"
 const LOBBY_SCENE: String = "res://ui/lobby/game_lobby.tscn"
 const PREPARE_SCENE: String = "res://ui/lobby/prepare_lobby.tscn"
 const PLAYER_SCENE: String = "res://ui/info/player_info_setting.tscn"

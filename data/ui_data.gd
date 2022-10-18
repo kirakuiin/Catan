@@ -70,12 +70,14 @@ const TILE_DATA = {
     Data.TileType.MOUNTAIN: "res://assets/tiles/mountain.png",
     Data.TileType.PASTURE: "res://assets/tiles/pasture.png",
     Data.TileType.FOREST: "res://assets/tiles/forest.png",
-    Data.TileType.GOLD: "res://assets/tiles/gold.png"
+    Data.TileType.GOLD: "res://assets/tiles/gold.png",
+    Data.TileType.NULL: "res://assets/tiles/empty.png",
 }
 
 
 # 点数图片
 const POINT_DATA = {
+    Data.PointType.ZERO: "res://assets/tiles/number0.png",
     Data.PointType.TWO: "res://assets/tiles/number2.png",
     Data.PointType.THREE: "res://assets/tiles/number3.png",
     Data.PointType.FOUR: "res://assets/tiles/number4.png",
@@ -167,4 +169,5 @@ const HARBOR_DATA = {
     Data.HarborType.WOOL: "res://assets/tiles/wool_harbor.png",
     Data.HarborType.GRAIN: "res://assets/tiles/grain_harbor.png",
     Data.HarborType.GENERIC: "res://assets/tiles/generic_harbor.png",
+    Data.HarborType.NULL: "res://assets/tiles/null_harbor.png"
 }

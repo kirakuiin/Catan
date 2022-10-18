@@ -61,7 +61,7 @@ func reset():
 
 
 # client
-puppet func recv_all_player_info(net_datas: Array):
+puppet func recv_all_player_info(net_datas):
     var info_list = Protocol.deserialize(net_datas)
     for player_info in info_list:
         add_player_info(player_info)

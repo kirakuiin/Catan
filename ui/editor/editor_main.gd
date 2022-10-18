@@ -19,7 +19,6 @@ func _ready():
     _create_layout_tile()
     _draw_grid()
     _init_btn()
-    _create_map_dir()
 
 
 func _create_layout_tile():
@@ -47,11 +46,6 @@ func _init_btn():
     for btn in $Harbor/Con.get_children():
         btn.group = _group
         btn.set_callback(funcref(self, "_on_harbor_changed"))
-
-
-func _create_map_dir():
-    if not File.new().file_exists(Data.MAP_FOLDER):
-        Directory.new().make_dir(Data.MAP_FOLDER)
 
 
 func _unhandled_input(event):
@@ -136,12 +130,7 @@ func _on_mouse_moved(relative: Vector2):
 
 func _on_map_saved(map_name: String):
     var map_info = _generate_map_info()
-    var fp = File.new()
-    var file_path = Util.join_file_path([Data.MAP_FOLDER, map_name+Data.MAP_SUFFIX])
-    fp.open(file_path, File.WRITE) 
-    fp.store_line(to_json(Protocol.serialize(map_info)))
-    fp.close()
-    Log.logi("存储地图至 %s" % file_path)
+    MapLoader.save_map(map_name, map_info)
 
 
 func _generate_map_info() -> Protocol.MapInfo:

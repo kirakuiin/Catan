@@ -204,9 +204,10 @@ func _filter_invalid_tile(hexs: Array):
     var result = []
     for hex in hexs:
         var hex_pos = hex.to_vector3()
-        var tile = _map.grid_map[hex_pos]
-        if hex_pos != _robber_pos and tile.point_type != Data.PointType.ZERO:
-            result.append(hex_pos)
+        if hex_pos in _map.grid_map:
+            var tile = _map.grid_map[hex_pos]
+            if hex_pos != _robber_pos and tile.point_type != Data.PointType.ZERO:
+                result.append(hex_pos)
     return result
 
 func _give_res_to_player(player: String, res_type: int, num: int) -> int:

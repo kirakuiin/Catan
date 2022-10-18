@@ -67,35 +67,44 @@ class ProtocolData:
 
 # 序列化数据
 static func serialize(datas):
+    var result = _serialize(datas)
+    return var2str(result)
+
+static func _serialize(datas):
     var result = datas
     if datas is ProtocolData:
-        result = serialize(datas.to_var())
+        result = _serialize(datas.to_var())
     elif datas is Array:
         result = []
         for data in datas:
-            result.append(serialize(data))
+            result.append(_serialize(data))
     elif datas is Dictionary:
         result = {}
         for key in datas:
-            result[key] = serialize(datas[key])
+            result[key] = _serialize(datas[key])
     return result
 
 
 # 反序列化数据
 static func deserialize(net_data) -> ProtocolData:
+    net_data = str2var(net_data)
+    return _deserialize(net_data)
+
+static func _deserialize(net_data) -> ProtocolData:
     var result = net_data
     if net_data is Dictionary:
         result = {}
         for key in net_data:
-            result[key] = deserialize(net_data[key])
+            result[key] = _deserialize(net_data[key])
         if "cls_name" in net_data:
             var datas = result
             result = get_cls(net_data["cls_name"]).new()
-            result.load_var(datas)
+            datas.erase("cls_name")
+            result.load_var(_deserialize(datas))
     elif net_data is Array:
         result = []
         for data in net_data:
-            result.append(deserialize(data))
+            result.append(_deserialize(data))
     return result
 
 

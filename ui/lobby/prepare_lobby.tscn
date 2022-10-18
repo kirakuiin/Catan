@@ -259,6 +259,18 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 align = 1
 
+[node name="Name" type="Label" parent="Option/Settler/Scroll/VCon/Map"]
+visible = false
+margin_left = 317.0
+margin_top = 3.0
+margin_right = 500.0
+margin_bottom = 35.0
+hint_tooltip = "游玩的地图"
+mouse_filter = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+align = 1
+
 [node name="Seafarer" type="VBoxContainer" parent="Option"]
 visible = false
 margin_top = 552.0

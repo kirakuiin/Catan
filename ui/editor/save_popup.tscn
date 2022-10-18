@@ -3,6 +3,7 @@
 [ext_resource path="res://ui/editor/save_popup.gd" type="Script" id=1]
 
 [node name="SavePopup" type="PopupDialog"]
+visible = true
 margin_right = 600.0
 margin_bottom = 400.0
 script = ExtResource( 1 )
@@ -28,20 +29,24 @@ placeholder_text = "请输入地图名"
 caret_blink = true
 
 [node name="Confirm" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -60.0
-margin_top = -38.0
+anchor_left = 0.88
+anchor_top = 0.88
+anchor_right = 0.98
+anchor_bottom = 0.975
 text = "确定"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Cancel" type="Button" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -38.0
-margin_right = 60.0
+anchor_left = 0.0133333
+anchor_top = 0.88
+anchor_right = 0.113333
+anchor_bottom = 0.975
 text = "取消"
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [connection signal="button_down" from="Confirm" to="." method="_on_confirm"]
 [connection signal="button_down" from="Cancel" to="." method="_on_cancel"]

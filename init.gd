@@ -26,6 +26,7 @@ func _init_log_setting():
 
 func _init_game_setting():
     randomize()
+    MapLoader.create_map_dir()
 
 
 func _init_audio_setting():

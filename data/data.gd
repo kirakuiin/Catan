@@ -4,10 +4,6 @@ extends Node
 class_name Data
 
 
-const MAP_FOLDER = "user://map"
-const MAP_SUFFIX = ".map"
-
-
 # 主机状态
 enum HostState {PREPARE, PLAYING}
 

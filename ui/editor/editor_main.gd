@@ -19,6 +19,7 @@ func _ready():
     _create_layout_tile()
     _draw_grid()
     _init_btn()
+    _init_info()
 
 
 func _create_layout_tile():
@@ -46,6 +47,11 @@ func _init_btn():
     for btn in $Harbor/Con.get_children():
         btn.group = _group
         btn.set_callback(funcref(self, "_on_harbor_changed"))
+
+
+func _init_info():
+    # TODO: 编辑航海家版地图
+    $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[0], 0)
 
 
 func _unhandled_input(event):
@@ -121,7 +127,10 @@ func _on_quit_editor():
 
 
 func _on_save_map():
-    $SavePopup.popup_centered()
+    if $Info/File/LineEdit.text:
+        _save_map()
+    else:
+        $SavePopup.popup_centered()
 
 
 func _on_mouse_moved(relative: Vector2):
@@ -129,8 +138,14 @@ func _on_mouse_moved(relative: Vector2):
 
 
 func _on_map_saved(map_name: String):
+    $Info/File/LineEdit.text = map_name
+    _save_map()
+
+
+func _save_map():
+    var file_name = $Info/File/LineEdit.text
     var map_info = _generate_map_info()
-    MapLoader.save_map(map_name, map_info)
+    MapLoader.save_map(file_name, map_info)
 
 
 func _generate_map_info() -> Protocol.MapInfo:
@@ -142,3 +157,30 @@ func _generate_map_info() -> Protocol.MapInfo:
         if harbor_info.harbor_type != Data.HarborType.NULL and harbor_info.near_pos in _tiles:
             map_info.harbor_list.append(harbor_info)
     return map_info
+
+
+func _on_open_map():
+    $OpenPopup.popup_centered()
+
+
+func _on_map_selected(map_name: String):
+    $Info/File/LineEdit.text = map_name
+    _map_info_to_editor(MapLoader.get_map(map_name))
+
+
+func _map_info_to_editor(map_info: Protocol.MapInfo):
+    _clear()
+    for tile_info in map_info.grid_map.values():
+        var tile = Tile.instance()
+        tile.set_tile_info(tile_info)
+        $CanvasBG/OriginPoint/Tile.add_child(tile)
+        _tiles[tile_info.cube_pos] = tile
+    for harbor_info in map_info.harbor_list:
+        _tiles[harbor_info.cube_pos].set_harbor_type(harbor_info.harbor_type, harbor_info.get_harbor_angle())
+
+
+func _clear():
+    for tile in _tiles.values():
+        tile.queue_free()
+    _tiles = {}
+

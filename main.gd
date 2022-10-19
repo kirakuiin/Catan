@@ -3,7 +3,6 @@ extends Control
 # 游戏的主界面
 
 
-# TODO: 支持取消建筑
 # TODO: 支持特殊建筑阶段
 
 

@@ -150,6 +150,8 @@ func _on_client_state_changed(state):
 			_show_move_robber_hint()
 		NetDefines.ClientState.ROB_PLAYER:
 			_show_rob_player_hint()
+		NetDefines.ClientState.IDLE:
+			_clear_hint()
 
 
 # 展示定居点提示
@@ -227,6 +229,15 @@ func _on_click_rob_point(player: String, point: Vector3):
 	for point in _corner_point_map.values():
 		point.hide()
 	_get_client().rob_player_done(player)
+
+
+# 取消全部提示
+func _clear_hint():
+	for child in $Line.get_children():
+		child.queue_free()
+	for point in _corner_point_map.values():
+		point.hide()
+	pass
 
 
 # 在地图上增加定居点

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://assets/images/clock.png" type="Texture" id=1]
 [ext_resource path="res://assets/images/done_btn_pressed.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/images/trade.png" type="Texture" id=7]
 [ext_resource path="res://assets/images/trade_disable.png" type="Texture" id=8]
 [ext_resource path="res://assets/images/bank.png" type="Texture" id=9]
+[ext_resource path="res://assets/images/cancel_btn.png" type="Texture" id=10]
 [ext_resource path="res://ui/game/tips/op_button.tscn" type="PackedScene" id=14]
 
 [sub_resource type="Animation" id=1]
@@ -67,6 +68,20 @@ disabled = true
 texture_normal = ExtResource( 3 )
 texture_pressed = ExtResource( 2 )
 texture_disabled = ExtResource( 5 )
+expand = true
+stretch_mode = 4
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="CancelBtn" type="TextureButton" parent="."]
+visible = false
+anchor_left = 0.25625
+anchor_top = 0.25625
+anchor_right = 0.74375
+anchor_bottom = 0.74375
+hint_tooltip = "取消操作"
+texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 4
 __meta__ = {
@@ -172,6 +187,7 @@ anims/RESET = SubResource( 1 )
 anims/rotate = SubResource( 2 )
 
 [connection signal="button_up" from="DoneBtn" to="." method="_on_player_turn_done"]
+[connection signal="button_up" from="CancelBtn" to="." method="_on_player_cancel_op"]
 [connection signal="button_up" from="Road" to="." method="_on_place_road"]
 [connection signal="button_up" from="Settlement" to="." method="_on_place_settlement"]
 [connection signal="button_up" from="City" to="." method="_on_upgrade_city"]

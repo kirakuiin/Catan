@@ -86,7 +86,7 @@ anchor_bottom = 1.0
 margin_left = -309.0
 margin_top = -66.0
 theme_type_variation = "BigLabel"
-text = "版本号: 1.1"
+text = "版本号: 1.2"
 align = 1
 
 [connection signal="button_down" from="VCon/StartGameBtn" to="." method="_on_start_game"]

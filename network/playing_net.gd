@@ -105,6 +105,11 @@ master func ready_to_exit(player_name: String):
     get_server().ready_to_exit(player_name)
 
 
+# 玩家取消操作
+master func cancel_op(player_name: String):
+    get_server().cancel_op(player_name)
+
+
 # S2C
 
 # 通知客户端放置道路

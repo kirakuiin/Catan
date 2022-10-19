@@ -232,6 +232,13 @@ func ready_to_exit():
     _logger.logd("玩家[%s]准备退出" % [get_name()])
     PlayingNet.rpc("ready_to_exit", get_name())
 
+
+# 取消操作
+func cancel_op():
+    _logger.logd("玩家[%s]取消操作" % [get_name()])
+    change_client_state(NetDefines.ClientState.IDLE)
+    PlayingNet.rpc("cancel_op", get_name())
+
 # S2C
 
 

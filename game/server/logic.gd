@@ -231,6 +231,13 @@ func update_breaked_road(player_name: String, pos: Vector3):
         update_road_archievement(breaked_player)
 
 
+# 建筑操作
+func building_op(player_name: String, build_type: int):
+    if assist_info.turn_num > 0:
+        _res_mgr.buy(player_name, build_type)
+        broadcast_bank_info()
+        change_card_info(player_name)
+
 # C2S
 
 
@@ -263,25 +270,16 @@ func change_player_op_state(player_name: String, state: String, params: Array=[]
 # 请求放置定居点
 func request_place_settlement(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_SETTLEMENT)
-    _res_mgr.buy(player_name, Data.OpType.SETTLEMENT)
-    broadcast_bank_info()
-    change_card_info(player_name)
 
 
 # 请求放置道路
 func request_place_road(player_name: String):
     change_player_op_state(player_name, NetDefines.PlayerOpState.BUILD_ROAD)
-    _res_mgr.buy(player_name, Data.OpType.ROAD)
-    broadcast_bank_info()
-    change_card_info(player_name)
 
 
 # 请求升级城市
 func request_upgrade_city(player_name: String):
-    _res_mgr.buy(player_name, Data.OpType.CITY)
-    broadcast_bank_info()
     change_player_op_state(player_name, NetDefines.PlayerOpState.UPGRADE_CITY)
-    change_card_info(player_name)
 
 
 # 请求购买卡牌
@@ -309,6 +307,7 @@ func request_trade(trade_info: Protocol.TradeInfo):
 # 增加指定玩家的定居点
 func add_settlement(player_name: String, pos: Vector3):
     player_buildings[player_name].settlement_info.append(pos)
+    building_op(player_name, Data.OpType.SETTLEMENT)
     update_vp(player_name)
     change_building_info(player_name)
     broadcast_notification(Notification.place_settlement(player_name))
@@ -319,6 +318,7 @@ func add_settlement(player_name: String, pos: Vector3):
 # 增加指定玩家的道路
 func add_road(player_name: String, road: Protocol.RoadInfo):
     player_buildings[player_name].road_info.append(road)
+    building_op(player_name, Data.OpType.ROAD)
     change_building_info(player_name)
     update_road_archievement(player_name)
     broadcast_notification(Notification.place_road(player_name))
@@ -329,6 +329,7 @@ func add_road(player_name: String, road: Protocol.RoadInfo):
 func upgrade_city(player_name: String, pos: Vector3):
     player_buildings[player_name].city_info.append(pos)
     player_buildings[player_name].settlement_info.erase(pos)
+    building_op(player_name, Data.OpType.CITY)
     update_vp(player_name)
     change_building_info(player_name)
     broadcast_notification(Notification.upgrade_city(player_name))
@@ -400,6 +401,12 @@ func choose_mono_type_done(player_name: String, type: int):
 # 玩家准备退出
 func ready_to_exit(player_name: String):
     _logger.logd("玩家[%s]准备退出" % [player_name])
+    change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
+
+
+# 玩家取消操作
+func cancel_op(player_name: String):
+    _logger.logd("玩家[%s]取消操作" % [player_name])
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 

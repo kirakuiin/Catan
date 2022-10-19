@@ -46,6 +46,7 @@ func _clear_popup():
 
 func _on_client_state_changed(state):
     _on_check_done(state)
+    _on_check_cancel(state)
     _on_check_city(state)
     _on_check_settlement(state)
     _on_check_road(state)
@@ -56,6 +57,13 @@ func _on_client_state_changed(state):
 
 func _on_check_done(state):
     $DoneBtn.disabled = not (_is_free(state) or state == NetDefines.ClientState.PLAY_BEFORE_DICE)
+
+
+func _on_check_cancel(state):
+    if state in [NetDefines.ClientState.PLACE_ROAD_TURN, NetDefines.ClientState.PLACE_SETTLEMENT_TURN, NetDefines.ClientState.UPGRADE_CITY]:
+        $CancelBtn.show()
+    else:
+        $CancelBtn.hide()
 
 
 func _is_free(state):
@@ -122,3 +130,5 @@ func _on_trade_with_player():
     trade.popup_centered()
 
 
+func _on_player_cancel_op():
+    _get_client().cancel_op()

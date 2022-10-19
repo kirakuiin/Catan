@@ -65,8 +65,9 @@ func _get_road_tuple_from_corner(pos: Vector3) -> StdLib.Set:
         var result = StdLib.Set.new()
         var begin = Hexlib.create_corner(pos)
         for end in Hexlib.get_adjacency_corner(begin):
-            if _is_valid_land_corner(end):
-                result.add(Protocol.RoadInfo.new(begin.to_vector3(), end.to_vector3()).to_tuple())
+            var road = Protocol.RoadInfo.new(begin.to_vector3(), end.to_vector3())
+            if _is_valid_land_corner(end) and _is_valid_road(road):
+                result.add(road.to_tuple())
         return result
 
 func _is_valid_land_corner(corner: Hexlib.Corner) -> bool:
@@ -75,6 +76,20 @@ func _is_valid_land_corner(corner: Hexlib.Corner) -> bool:
         if cube_pos in _map.grid_map and _map.grid_map[cube_pos].tile_type != Data.TileType.OCEAN:
             return true
     return false
+
+func _is_valid_road(road_info: Protocol.RoadInfo) -> bool:
+    var set_a = StdLib.Set.new()
+    for hex in Hexlib.get_corner_adjacency_hex(Hexlib.create_corner(road_info.begin_node)):
+        set_a.add(hex.to_vector3())
+    var set_b = StdLib.Set.new()
+    for hex in Hexlib.get_corner_adjacency_hex(Hexlib.create_corner(road_info.end_node)):
+        set_b.add(hex.to_vector3())
+    var set = set_a.intersect(set_b)
+    for pos in set.values():
+        if pos in _map.grid_map and _map.grid_map[pos].tile_type != Data.TileType.OCEAN:
+            return true
+    return false
+
 
 
 # 获得回合阶段所有的可放置道路

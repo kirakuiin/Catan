@@ -7,6 +7,7 @@ extends PopupDialog
 signal map_selected(map_name)
 
 var _map_name: String
+var _cur_index: int
 
 
 func _ready():
@@ -28,3 +29,10 @@ func _on_cancel():
 
 func _on_item_selected(index: int):
     _map_name = $ScrollContainer/ItemList.get_item_text(index)
+    _cur_index = index
+
+
+func _on_delete():
+    if _map_name:
+        MapLoader.remove_map(_map_name)
+        $ScrollContainer/ItemList.remove_item(_cur_index)

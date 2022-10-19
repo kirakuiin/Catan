@@ -73,3 +73,8 @@ static func get_map(map_name: String, mode: int=Data.ExpansionMode.SETTLER) -> P
 static func has_map(map_name: String, mode: int=Data.ExpansionMode.SETTLER) -> bool:
     var fp = File.new()
     return fp.file_exists(get_map_path(map_name, mode))
+
+
+# 删除地图
+static func remove_map(map_name: String, mode: int=Data.ExpansionMode.SETTLER):
+    Directory.new().remove(get_map_path(map_name, mode))

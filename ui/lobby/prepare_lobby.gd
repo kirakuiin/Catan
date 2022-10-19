@@ -347,8 +347,16 @@ func _generate_map():
 
 remote func recv_map_info(data):
 	_map_info = Protocol.deserialize(data) as Protocol.MapInfo
+	_download_map(_map_info)
 	if $CatanMap.visible:
 		_on_preview_map()
+
+
+func _download_map(map_info: Protocol.MapInfo):
+	var map_name = _catan_setup_info.expansion_mode.selected_map
+	var mode = _catan_setup_info.expansion_mode.mode_type
+	if _catan_setup_info.is_settler() and map_name and not MapLoader.has_map(map_name, mode):
+		MapLoader.save_map(map_name, map_info, mode)
 
 
 func _on_preview_map():

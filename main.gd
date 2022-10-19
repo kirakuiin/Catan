@@ -3,9 +3,6 @@ extends Control
 # 游戏的主界面
 
 
-# TODO: 支持特殊建筑阶段
-
-
 func _on_start_game():
     SceneMgr.goto_scene(SceneMgr.LOBBY_SCENE)
 

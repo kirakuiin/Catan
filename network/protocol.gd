@@ -208,6 +208,9 @@ class CatanSetupInfo:
     func mode_idx() -> int:
         return expansion_mode.mode_type
 
+    func is_five_or_six():
+        return catan_size == Data.CatanSize.BIG
+
 
 # 标准版设置信息
 class SettlerModeInfo:

@@ -58,6 +58,7 @@ class ClientState:
 
     const IDLE: String="空闲"
     const FREE_ACTION: String="自由行动"
+    const SPECIAL_BUILDING: String="特殊建造阶段"
     const PLAY_BEFORE_DICE: String="投掷前出牌"
     const PLACE_SETTLEMENT_SETUP: String="放置初始定居点"
     const PLACE_SETTLEMENT_TURN: String="放置回合定居点"

@@ -96,6 +96,9 @@ class PlayerTurnState:
         _machine.state_list.append(BuyDevCardState.new(self, _name))
         _machine.state_list.append(Card.PlayCardState.new(self, _name))
         _machine.state_list.append(TradeState.new(self, _name))
+        # TODO: 实现特殊建造阶段
+        # if PlayingNet.get_server().setup_info.is_five_or_six():
+        #     _machine.state_list.append(SpecialBuildingState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
     func activiate():
@@ -416,3 +419,55 @@ class TradeState:
         var target = get_state_in_parent(BuildAndTradeState)
         add_transition(HSM.Transition.new(target, 0, HSM.TrueCondition.new()))
         _exit_actions.append(Action.reset_op_state(_name))
+
+
+# 特殊建造阶段
+class SpecialBuildingState:
+    extends HSM.SubMachineState
+
+    var _name: String
+
+    func _init(parent, player_name: String).(parent):
+        _machine = HSM.StateMachine.new(parent)
+        _name = player_name
+        _init_all_state()
+
+    func _to_string():
+        return 'SpecialBuildingState[%s]' % _name
+
+    func _init_all_state():
+        for name in get_special_order_list():
+            _machine.state_list.append(PlayerSpecialPhaseState.new(self, name))
+        _machine.initial_state = _machine.state_list[0]
+
+    func get_special_order_list() -> Array:
+        var name_list = get_name_list()
+        var index = name_list.find(_name)
+        print(name_list.slice(index+1, len(name_list)-1), name_list.slice(0, index-1))
+        name_list = name_list.slice(index+1, len(name_list)-1) + name_list.slice(0, index-1)
+        name_list.erase(_name)
+        return name_list
+
+    func get_name_list() -> Array:
+        var orders = PlayingNet.get_server().order_info.order_to_name.keys()
+        orders.sort()
+        var result = []
+        for order in orders:
+            result.append(PlayingNet.get_server().order_info.order_to_name[order])
+        return result
+
+
+# 玩家特殊建造阶段
+class PlayerSpecialPhaseState:
+    extends HSM.State
+
+    var _name: String
+
+    func _init(parent, name: String).(parent):
+        _name = name
+
+    func _to_string():
+        return "PlayerSpecialPhaseState[%s]" % _name
+
+    func activiate():
+        pass

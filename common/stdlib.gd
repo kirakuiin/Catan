@@ -273,3 +273,17 @@ static func swap(container, idx_a, idx_b):
     var var_b = container[idx_b]
     container[idx_a] = var_b
     container[idx_b] = var_a
+
+
+# 位移元素
+static func shift_right(array: Array, num: int) -> Array:
+    if not array:
+        return array
+    var result = array
+    while num > 0:
+        result.push_front(result.pop_back())
+        num -= 1
+    while num < 0:
+        result.push_back(result.pop_front())
+        num += 1
+    return result

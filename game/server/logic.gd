@@ -25,7 +25,6 @@ var stat_info: Protocol.StatInfo
 var player_net_state: Dictionary
 var player_op_state: Dictionary
 var dice: Dice
-var has_roll_dice: bool
 
 var _server_state: HSM.StateMachine
 var _res_mgr: ResMgr
@@ -124,7 +123,13 @@ func reset_player_op_state(player_name: String):
 # 设置当前玩家回合名称
 func set_cur_turn_name(player_name: String):
     assist_info.player_turn_name = player_name
-    has_roll_dice = false
+    broadcast_assist_info()
+
+
+# 设置回合阶段
+func set_turn_phase(phase: String):
+    _logger.logd("回合阶段[%s]" % phase)
+    assist_info.turn_phase = phase
     broadcast_assist_info()
 
 
@@ -137,7 +142,6 @@ func update_turn_num():
 # 投掷骰子
 func roll_dice():
     broadcast_dice_info(dice.roll())
-    has_roll_dice = true
     StdLib.num_dict_add(stat_info.dice_info, dice.get_last_num(), 1)
 
 
@@ -580,6 +584,15 @@ func notify_special_play(player_name: String):
     _logger.logd("通知[%s]特殊出牌" % [player_name])
     var peer_id = PlayerInfoMgr.get_peer(player_name)
     PlayingNet.rpc_id(peer_id, "special_play")
+
+
+# 通知特殊建造
+func notify_special_building(player_name: String):
+    change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
+    _logger.logd("通知[%s]进入特殊建筑阶段" % [player_name])
+    var peer_id = PlayerInfoMgr.get_peer(player_name)
+    PlayingNet.rpc_id(peer_id, "into_special_building")
+    broadcast_notification(Notification.special_building(player_name))
 
 
 # 通知选择获得资源

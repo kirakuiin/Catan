@@ -100,7 +100,7 @@ master func choose_mono_type_done(player_name: String, result: int):
     get_server().choose_mono_type_done(player_name, result)
 
 
-# 玩家准备退出
+
 master func ready_to_exit(player_name: String):
     get_server().ready_to_exit(player_name)
 
@@ -200,6 +200,11 @@ remotesync func rob_player():
 # 通知客户端特殊出卡
 remotesync func special_play():
     get_client().special_play()
+
+
+# 通知客户端进入特殊阶段
+remotesync func into_special_building():
+    get_client().into_special_building()
 
 
 # 通知客户端选择获得资源

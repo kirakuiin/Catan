@@ -29,6 +29,7 @@ static func move_robber(player: String) -> Protocol.NotificationInfo:
         NetDefines.NotificationType.MOVE_ROBBER, {"player": player})
 
 
+
 # 玩家被抢劫
 static func player_robbed(robber: String, robbed: String) -> Protocol.NotificationInfo:
     return Protocol.NotificationInfo.new(
@@ -81,3 +82,9 @@ static func lost_res(player: String, res_info: Dictionary) -> Protocol.Notificat
 static func get_res(player: String, res_info: Dictionary) -> Protocol.NotificationInfo:
     return Protocol.NotificationInfo.new(
         NetDefines.NotificationType.GET_RESOURCE, {"player": player, "res_info": res_info})
+
+
+# 特殊建造阶段
+static func special_building(player: String) -> Protocol.NotificationInfo:
+    return Protocol.NotificationInfo.new(
+        NetDefines.NotificationType.SPECIAL_BUILDING, {"player": player})

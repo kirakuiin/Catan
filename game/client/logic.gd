@@ -363,6 +363,15 @@ func special_play():
         show_hint("是否打出骑士卡?", true)
 
 
+# 进入特殊建筑阶段
+func into_special_building():
+    if setting_mgr.is_auto_pass and not op_mgr.can_building():
+        pass_turn()
+    else:
+        change_client_state(NetDefines.ClientState.SPECIAL_BUILDING)
+        show_hint("特殊建造阶段")
+
+
 # 选择资源
 func choose_res():
     change_client_state(NetDefines.ClientState.CHOOSE_RES)

@@ -14,6 +14,11 @@ func _init(buildings: Dictionary, cards: Dictionary, catan_size: int):
     _size = catan_size
 
 
+# 是否可以进行建筑
+func can_building() -> bool:
+    return can_buy_dev() or can_place_road() or can_upgrade_city() or can_place_settlement()
+
+
 # 是否可以购买发展卡
 func can_buy_dev() -> bool:
     return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.DEV_CARD))

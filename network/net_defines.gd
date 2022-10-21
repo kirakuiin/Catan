@@ -72,6 +72,15 @@ class ClientState:
     const CHOOSE_MONO_TYPE: String="选择垄断类型"
 
 
+# 回合状态枚举
+class TurnPhase:
+    extends Reference
+
+    const ROLL: String="投掷阶段"
+    const MAIN: String="主要阶段" 
+    const SPECIAL_BUILDING: String="特殊建造阶段"
+
+
 # 交易状态枚举
 class TradeState:
     extends Reference
@@ -97,4 +106,5 @@ enum NotificationType {
     PLAYER_ROBBED,
     PLAY_CARD,
     BUY_CARD,
+    SPECIAL_BUILDING,
 }

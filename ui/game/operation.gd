@@ -56,11 +56,11 @@ func _on_client_state_changed(state):
 
 
 func _on_check_done(state):
-    $DoneBtn.disabled = not (_is_free(state) or state == NetDefines.ClientState.PLAY_BEFORE_DICE)
+    $DoneBtn.disabled = not (_is_building(state) or state == NetDefines.ClientState.PLAY_BEFORE_DICE)
 
 
 func _on_check_cancel(state):
-    if state in [NetDefines.ClientState.PLACE_ROAD_TURN, NetDefines.ClientState.PLACE_SETTLEMENT_TURN, NetDefines.ClientState.UPGRADE_CITY]:
+    if _is_place(state):
         $CancelBtn.show()
     else:
         $CancelBtn.hide()
@@ -70,20 +70,28 @@ func _is_free(state):
     return state == NetDefines.ClientState.FREE_ACTION
 
 
+func _is_building(state):
+    return state in [NetDefines.ClientState.FREE_ACTION, NetDefines.ClientState.SPECIAL_BUILDING]
+
+
+func _is_place(state):
+    return state in [NetDefines.ClientState.PLACE_ROAD_TURN, NetDefines.ClientState.PLACE_SETTLEMENT_TURN, NetDefines.ClientState.UPGRADE_CITY]
+
+
 func _on_check_city(state):
-    $City.disabled = not(_is_free(state) and _get_client().op_mgr.can_upgrade_city() and _get_client().build_mgr.get_avail_upgrade_point())
+    $City.disabled = not(_is_building(state) and _get_client().op_mgr.can_upgrade_city() and _get_client().build_mgr.get_avail_upgrade_point())
 
 
 func _on_check_settlement(state):
-    $Settlement.disabled = not(_is_free(state) and _get_client().op_mgr.can_place_settlement() and _get_client().build_mgr.get_turn_available_point())
+    $Settlement.disabled = not(_is_building(state) and _get_client().op_mgr.can_place_settlement() and _get_client().build_mgr.get_turn_available_point())
 
 
 func _on_check_road(state):
-    $Road.disabled = not(_is_free(state) and _get_client().op_mgr.can_place_road() and _get_client().build_mgr.get_turn_available_road())
+    $Road.disabled = not(_is_building(state) and _get_client().op_mgr.can_place_road() and _get_client().build_mgr.get_turn_available_road())
 
 
 func _on_check_dev_card(state):
-    $DevCard.disabled = not(_is_free(state) and _get_client().op_mgr.can_buy_dev() and _get_client().bank_info.avail_card > 0)
+    $DevCard.disabled = not(_is_building(state) and _get_client().op_mgr.can_buy_dev() and _get_client().bank_info.avail_card > 0)
 
 
 func _on_check_bank(state):

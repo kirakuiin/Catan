@@ -62,6 +62,11 @@ static func notify_special_play(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_special_play"), [player_name])
 
 
+# 通知特殊建造
+static func notify_special_building(player_name: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_special_building"), [player_name])
+
+
 # 通知选择资源
 static func notify_choose_res(player_name: String) -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_choose_res"), [player_name])
@@ -90,6 +95,11 @@ static func set_turn_name(player_name: String) -> HSM.Action:
 # 更新回合数
 static func update_turn() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "update_turn_num"), [])
+
+
+# 设置回合阶段
+static func set_turn_phase(phase: String) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "set_turn_phase"), [phase])
 
 
 # 投掷骰子

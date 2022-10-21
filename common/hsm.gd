@@ -107,6 +107,13 @@ class State:
     func get_transitions() -> Array:
         return _transitions
 
+    # 获得下一个状态
+    func get_next_state():
+        var parent = get_parent_machine()
+        var state_list = parent.get_state_list()
+        var target = state_list[state_list.find(self)+1]
+        return target
+
 
 # 转换
 class Transition:

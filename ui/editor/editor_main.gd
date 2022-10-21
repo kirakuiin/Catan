@@ -51,6 +51,7 @@ func _init_btn():
 
 func _init_info():
     # TODO: 编辑航海家版地图
+    # TODO: 更加丰富的编辑选项
     $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[0], 0)
 
 

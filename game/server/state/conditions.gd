@@ -105,14 +105,6 @@ class DiceEqualSevenCondition:
         return PlayingNet.get_server().dice.get_last_num() == Data.PointType.SEVEN
 
 
-# 玩家回合是否投掷过骰子
-class HasRollDiceCondition:
-    extends HSM.Condition
-
-    func is_meet_condition() -> bool:
-        return PlayingNet.get_server().has_roll_dice
-
-
 # 玩家剩余道路数量
 class PlayerRoadNumCondition:
     extends HSM.Condition
@@ -168,3 +160,16 @@ class WinCondtion:
 
     func is_meet_condition() -> bool:
         return PlayingNet.get_server().player_personals[_name].vic_point >= PlayingNet.get_server().setup_info.win_vp
+
+
+# 回合阶段条件
+class TurnPhaseCondtion:
+    extends HSM.Condition
+
+    var _phase: String
+
+    func _init(need_phase: String):
+        _phase = need_phase
+
+    func is_meet_condition() -> bool:
+        return PlayingNet.get_server().assist_info.turn_phase == _phase

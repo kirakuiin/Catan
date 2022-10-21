@@ -408,6 +408,7 @@ class AssistInfo:
     extends ProtocolData
 
     var turn_num: int
+    var turn_phase: String
     var player_turn_name: String
     var longgest_name: String
     var biggest_name: String
@@ -415,6 +416,7 @@ class AssistInfo:
     func _init(turn: int=0, turn_name: String=""):
         cls_name = "AssistInfo"
         turn_num = turn
+        turn_phase = ""
         player_turn_name = turn_name
         longgest_name = ""
         biggest_name = ""

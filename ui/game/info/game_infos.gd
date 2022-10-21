@@ -10,6 +10,7 @@ const Bullet: PackedScene = preload("res://ui/game/info/bullet_info.tscn")
 const ResPop: PackedScene = preload("res://ui/game/info/res_popup.tscn")
 
 var _bullet_track: Array
+var _assist_info: Protocol.AssistInfo = Protocol.AssistInfo.new()
 
 
 func init():
@@ -36,14 +37,17 @@ func _get_client():
 func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
     _show_player_turn(assist_info.player_turn_name)
     _show_turn_info(assist_info.turn_num)
+    _show_turn_phase(assist_info.turn_phase)
+    _assist_info = assist_info
 
 
 func _show_player_turn(player_name: String):
-    var color = _get_client().get_color(player_name)
-    $PlayerTurn.add_color_override("font_color", color)
-    $PlayerTurn.text = "玩家[%s]行动..." % player_name
-    $TurnPlayer.stop()
-    $TurnPlayer.play("popup")
+    if _assist_info.player_turn_name != player_name:
+        var color = _get_client().get_color(player_name)
+        $PlayerTurn.add_color_override("font_color", color)
+        $PlayerTurn.text = "玩家[%s]行动..." % player_name
+        $TurnPlayer.stop()
+        $TurnPlayer.play("popup")
 
 
 func _show_turn_info(turn_num: int):
@@ -51,6 +55,18 @@ func _show_turn_info(turn_num: int):
         $Turn.text = "布置阶段"
     else:
         $Turn.text = "回合[%d]" % turn_num
+
+
+func _show_turn_phase(phase: String):
+    var color = Color.white
+    match phase:
+        NetDefines.TurnPhase.ROLL:
+            color = Color.orangered
+        NetDefines.TurnPhase.MAIN:
+            color = Color.lime
+        NetDefines.TurnPhase.SPECIAL_BUILDING:
+            color = Color.aquamarine
+    $Phase.bbcode_text = "[center][color=%s]%s[/color][/center]" % [Util.color_to_str(color), phase]
 
 
 func _on_player_hint_showed(hint: String, is_always_show: bool):

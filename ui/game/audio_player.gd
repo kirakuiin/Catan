@@ -14,13 +14,15 @@ const FAN_FARE: AudioStream = preload("res://assets/audios/fanfare.mp3")
 const MY_TURN: AudioStream = preload("res://assets/audios/my_turn.wav")
 
 
-var _cur_turn_name := ""
+var _assist_info := Protocol.AssistInfo.new()
+var _has_been_special := false
 
 
 func init():
     PlayingNet.get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
     PlayingNet.get_client().connect("notification_received", self, "_on_notification_received")
     PlayingNet.get_client().connect("stat_info_received", self, "_on_stat_info_received")
+    PlayingNet.get_client().connect("client_state_changed", self, "_on_client_state_changed")
 
 
 func _on_notification_received(noti_info: Protocol.NotificationInfo):
@@ -45,9 +47,16 @@ func _on_stat_info_received(stat_info: Protocol.StatInfo):
 
 
 func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
-    if assist_info.player_turn_name != _cur_turn_name and assist_info.player_turn_name == _get_client().get_name():
+    if assist_info.player_turn_name != _assist_info.player_turn_name and assist_info.player_turn_name == _get_client().get_name():
         Audio.play_once(self, MY_TURN)
-    _cur_turn_name = assist_info.player_turn_name
+        _has_been_special = false
+    _assist_info = assist_info
+
+
+func _on_client_state_changed(client_state: String):
+    if client_state == NetDefines.ClientState.SPECIAL_BUILDING and not _has_been_special:
+        Audio.play_once(self, MY_TURN)
+        _has_been_special = true
 
 
 func _get_client():

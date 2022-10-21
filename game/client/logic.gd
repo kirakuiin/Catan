@@ -9,7 +9,7 @@ signal bank_info_changed(bank_info)  # 银行信息改变
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal card_info_changed(player_name, card_info)  # 得分信息改变
 signal personal_info_changed(player_name, personal_info)  # 个人信息改变
-signal client_state_changed(state)  # 客户端状态改变
+signal client_state_changed(state, params)  # 客户端状态改变
 signal notification_received(message)  # 服务器通知
 signal dice_changed(info)  # 骰子变化
 signal robber_pos_changed(pos)  # 强盗位置变化
@@ -116,11 +116,11 @@ func get_color(player_name: String) -> Color:
 
 
 # 设置客户端状态
-func change_client_state(state: String):
+func change_client_state(state: String, params: Dictionary={}):
     client_state = state
-    state_mgr.save_client_state(state)
-    _logger.logd("客户端状态变为 '%s'" % [state])
-    emit_signal("client_state_changed", client_state)
+    state_mgr.save_client_state(state, params)
+    _logger.logd("客户端状态变为 '%s', 参数为: %s" % [state, params])
+    emit_signal("client_state_changed", client_state, params)
 
 
 # 发送局部信息
@@ -175,9 +175,9 @@ func place_settlement_done(pos: Vector3):
 
 
 # 放置道路完毕
-func place_road_done(road: Protocol.RoadInfo):
+func place_road_done(road: Protocol.RoadInfo, is_need_res: bool):
     change_client_state(NetDefines.ClientState.IDLE)
-    PlayingNet.rpc("place_road_done", get_name(), Protocol.serialize(road))
+    PlayingNet.rpc("place_road_done", get_name(), Protocol.serialize(road), is_need_res)
 
 
 # 升级城市完毕
@@ -243,14 +243,14 @@ func cancel_op():
 
 
 # 放置定居点
-func place_settlement(is_setup: bool):
-    change_client_state(NetDefines.ClientState.PLACE_SETTLEMENT_SETUP if is_setup else NetDefines.ClientState.PLACE_SETTLEMENT_TURN)
+func place_settlement(type: int):
+    change_client_state(NetDefines.ClientState.PLACE_SETTLEMENT, {"type": type})
     show_hint("请放置定居点...")
 
 
 # 放置道路
-func place_road(is_setup: bool):
-    change_client_state(NetDefines.ClientState.PLACE_ROAD_SETUP if is_setup else NetDefines.ClientState.PLACE_ROAD_TURN)
+func place_road(type: int):
+    change_client_state(NetDefines.ClientState.PLACE_ROAD, {"type": type})
     show_hint("请放置道路...")
 
 
@@ -405,4 +405,4 @@ func exit_to_prepare():
 func reconnect_done():
     _logger.logd("接收重连数据完毕!")
     emit_signal("reconnect_overed")
-    change_client_state(state_mgr.get_client_state())
+    change_client_state(state_mgr.get_client_state(), state_mgr.get_state_params())

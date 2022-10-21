@@ -44,9 +44,9 @@ func _clear_popup():
         child.queue_free()
 
 
-func _on_client_state_changed(state):
+func _on_client_state_changed(state: String, params: Dictionary):
     _on_check_done(state)
-    _on_check_cancel(state)
+    _on_check_cancel(state, params)
     _on_check_city(state)
     _on_check_settlement(state)
     _on_check_road(state)
@@ -59,8 +59,8 @@ func _on_check_done(state):
     $DoneBtn.disabled = not (_is_building(state) or state == NetDefines.ClientState.PLAY_BEFORE_DICE)
 
 
-func _on_check_cancel(state):
-    if _is_place(state):
+func _on_check_cancel(state, params):
+    if _is_place(state, params):
         $CancelBtn.show()
     else:
         $CancelBtn.hide()
@@ -74,8 +74,14 @@ func _is_building(state):
     return state in [NetDefines.ClientState.FREE_ACTION, NetDefines.ClientState.SPECIAL_BUILDING]
 
 
-func _is_place(state):
-    return state in [NetDefines.ClientState.PLACE_ROAD_TURN, NetDefines.ClientState.PLACE_SETTLEMENT_TURN, NetDefines.ClientState.UPGRADE_CITY]
+func _is_place(state, params):
+    if state == NetDefines.ClientState.PLACE_ROAD and params.type == NetDefines.RoadType.TURN:
+        return true
+    if state == NetDefines.ClientState.PLACE_SETTLEMENT and params.type == NetDefines.SettlementType.TURN:
+        return true
+    if state == NetDefines.ClientState.UPGRADE_CITY:
+        return true
+    return false
 
 
 func _on_check_city(state):

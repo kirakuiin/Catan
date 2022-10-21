@@ -66,7 +66,7 @@ class PlaceSettlementState:
         add_transition(HSM.Transition.new(state_list[index+1], 0, condition))
 
     func _init_actions():
-        _entry_actions.append(Action.notify_place_settlement(_name, true))
+        _entry_actions.append(Action.notify_place_settlement(_name, NetDefines.SettlementType.SETUP))
         _entry_actions.append(Action.set_turn_name(_name))
         if _is_last:
             _exit_actions.append(Action.initial_res(_name))
@@ -95,7 +95,7 @@ class PlaceRoadState:
         add_transition(HSM.Transition.new(state_list[index+1], 0, condition))
 
     func _init_actions():
-        _entry_actions.append(Action.notify_place_road(_name, true))
+        _entry_actions.append(Action.notify_place_road(_name, NetDefines.RoadType.SETUP))
 
 
 # 结束

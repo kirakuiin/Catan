@@ -53,7 +53,7 @@ func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
     _assist_info = assist_info
 
 
-func _on_client_state_changed(client_state: String):
+func _on_client_state_changed(client_state: String, params: Dictionary):
     if client_state == NetDefines.ClientState.SPECIAL_BUILDING and not _has_been_special:
         Audio.play_once(self, MY_TURN)
         _has_been_special = true

@@ -79,7 +79,7 @@ func _on_player_hint_showed(hint: String, is_always_show: bool):
         $HintPlayer.play("RESET")
 
 
-func _on_client_state_changed(state: String):
+func _on_client_state_changed(state: String, params: Dictionary):
     $SingleInfo.hide()
     _create_popup(state)
 

@@ -338,7 +338,7 @@ class PlaceSettlementState:
     func activiate():
         var done = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, done))
-        _entry_actions.append(Action.notify_place_settlement(_name, false))
+        _entry_actions.append(Action.notify_place_settlement(_name, NetDefines.SettlementType.TURN))
         _exit_actions.append(Action.reset_op_state(_name))
 
 
@@ -357,7 +357,7 @@ class PlaceRoadState:
     func activiate():
         var done = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(get_state_in_parent(BuildAndTradeState), 0, done))
-        _entry_actions.append(Action.notify_place_road(_name, false))
+        _entry_actions.append(Action.notify_place_road(_name, NetDefines.RoadType.TURN))
         _exit_actions.append(Action.reset_op_state(_name))
 
 
@@ -544,7 +544,7 @@ class SpecialPlaceSettlementState:
     func activiate():
         var done = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(get_state_in_parent(PlayerSpecialBeginState), 0, done))
-        _entry_actions.append(Action.notify_place_settlement(_name, false))
+        _entry_actions.append(Action.notify_place_settlement(_name, NetDefines.SettlementType.TURN))
         _exit_actions.append(Action.reset_op_state(_name))
 
 
@@ -563,7 +563,7 @@ class SpecialPlaceRoadState:
     func activiate():
         var done = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(get_state_in_parent(PlayerSpecialBeginState), 0, done))
-        _entry_actions.append(Action.notify_place_road(_name, false))
+        _entry_actions.append(Action.notify_place_road(_name, NetDefines.RoadType.TURN))
         _exit_actions.append(Action.reset_op_state(_name))
 
 

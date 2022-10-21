@@ -320,9 +320,10 @@ func add_settlement(player_name: String, pos: Vector3):
 
 
 # 增加指定玩家的道路
-func add_road(player_name: String, road: Protocol.RoadInfo):
+func add_road(player_name: String, road: Protocol.RoadInfo, is_need_res):
     player_buildings[player_name].road_info.append(road)
-    building_op(player_name, Data.OpType.ROAD)
+    if is_need_res:
+        building_op(player_name, Data.OpType.ROAD)
     change_building_info(player_name)
     update_road_archievement(player_name)
     broadcast_notification(Notification.place_road(player_name))
@@ -431,19 +432,19 @@ func send_reconnect_info(player_name: String):
 
 
 # 通知玩家放置定居点
-func notify_place_settlement(player_name: String, is_setup: bool):
+func notify_place_settlement(player_name: String, type: int):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置定居点" % [player_name])
     var peer_id = PlayerInfoMgr.get_peer(player_name)
-    PlayingNet.rpc_id(peer_id, "place_settlement", is_setup)
+    PlayingNet.rpc_id(peer_id, "place_settlement", type)
 
 
 # 通知玩家放置道路
-func notify_place_road(player_name: String, is_setup: bool):
+func notify_place_road(player_name: String, type: int):
     change_player_net_state(player_name, NetDefines.PlayerNetState.WAIT_FOR_RESPONE)
     _logger.logd("通知玩家[%s]放置道路" % [player_name])
     var peer_id = PlayerInfoMgr.get_peer(player_name)
-    PlayingNet.rpc_id(peer_id, "place_road", is_setup)
+    PlayingNet.rpc_id(peer_id, "place_road", type)
 
 
 # 通知玩家放置道路

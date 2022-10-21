@@ -61,8 +61,8 @@ master func place_settlement_done(player_name: String, pos: Vector3):
 
 
 # 客户端放置道路结束
-master func place_road_done(player_name: String, road_data):
-    get_server().add_road(player_name, Protocol.deserialize(road_data))
+master func place_road_done(player_name: String, road_data, is_need_res):
+    get_server().add_road(player_name, Protocol.deserialize(road_data), is_need_res)
 
 
 # 客户端放置道路结束
@@ -113,13 +113,13 @@ master func cancel_op(player_name: String):
 # S2C
 
 # 通知客户端放置道路
-remotesync func place_road(is_setup):
-    get_client().place_road(is_setup)
+remotesync func place_road(type):
+    get_client().place_road(type)
 
 
 # 通知客户端放置定居点
-remotesync func place_settlement(is_setup):
-    get_client().place_settlement(is_setup)
+remotesync func place_settlement(type):
+    get_client().place_settlement(type)
 
 
 # 通知客户端放置定居点

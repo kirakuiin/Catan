@@ -193,7 +193,7 @@ class PlaceRoadState:
         return "PlaceRoadState[%s]" % _name
 
     func activiate():
-        _entry_actions.append(Action.notify_place_road(_name, false))
+        _entry_actions.append(Action.notify_place_road(_name, NetDefines.RoadType.CARD))
         _exit_actions.append(Action.reset_op_state(_name))
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.DONE)
         add_transition(HSM.Transition.new(get_parent_machine().get_state_by_idx(self, 1), 0, condition))

@@ -43,13 +43,13 @@ static func set_play_card(player_name: String, is_play: bool) -> HSM.Action:
 
 
 # 通知放置定居点
-static func notify_place_settlement(player_name: String, is_setup: bool) -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_settlement"), [player_name, is_setup])
+static func notify_place_settlement(player_name: String, settlement_type: int) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_settlement"), [player_name, settlement_type])
 
 
 # 通知放置道路
-static func notify_place_road(player_name: String, is_setup: bool) -> HSM.Action:
-    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_road"), [player_name, is_setup])
+static func notify_place_road(player_name: String, road_type: int) -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "notify_place_road"), [player_name, road_type])
 
 
 # 通知放置道路

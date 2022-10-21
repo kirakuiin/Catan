@@ -52,6 +52,11 @@ class PlayerOpStruct:
         params = p
 
 
+# 建筑类型枚举
+enum RoadType {SETUP, TURN, CARD}
+enum SettlementType {SETUP, TURN}
+
+
 # 客户端状态枚举
 class ClientState:
     extends Reference
@@ -60,10 +65,8 @@ class ClientState:
     const FREE_ACTION: String="自由行动"
     const SPECIAL_BUILDING: String="特殊建造阶段"
     const PLAY_BEFORE_DICE: String="投掷前出牌"
-    const PLACE_SETTLEMENT_SETUP: String="放置初始定居点"
-    const PLACE_SETTLEMENT_TURN: String="放置回合定居点"
-    const PLACE_ROAD_SETUP: String="放置初始道路"
-    const PLACE_ROAD_TURN: String="放置回合道路"
+    const PLACE_SETTLEMENT: String="放置定居点"
+    const PLACE_ROAD: String="放置道路"
     const UPGRADE_CITY: String="升级城市"
     const DISCARD_RESOURCE: String="丢弃资源"
     const MOVE_ROBBER: String="移动强盗"

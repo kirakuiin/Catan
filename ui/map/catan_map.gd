@@ -134,16 +134,12 @@ func _on_building_info_changed(player_name: String, building_info: Protocol.Play
 			_add_road_to_map(road, order)
 
 
-func _on_client_state_changed(state):
+func _on_client_state_changed(state: String, params: Dictionary):
 	match state:
-		NetDefines.ClientState.PLACE_ROAD_SETUP:
-			_show_road_hint(true)
-		NetDefines.ClientState.PLACE_ROAD_TURN:
-			_show_road_hint(false)
-		NetDefines.ClientState.PLACE_SETTLEMENT_SETUP:
-			_show_settlement_hint(true)
-		NetDefines.ClientState.PLACE_SETTLEMENT_TURN:
-			_show_settlement_hint(false)
+		NetDefines.ClientState.PLACE_ROAD:
+			_show_road_hint(params.type)
+		NetDefines.ClientState.PLACE_SETTLEMENT:
+			_show_settlement_hint(params.type)
 		NetDefines.ClientState.UPGRADE_CITY:
 			_show_upgrade_hint()
 		NetDefines.ClientState.MOVE_ROBBER:
@@ -155,8 +151,13 @@ func _on_client_state_changed(state):
 
 
 # 展示定居点提示
-func _show_settlement_hint(is_setup=false):
-	for point in _get_client().build_mgr.get_setup_available_point() if is_setup else _get_client().build_mgr.get_turn_available_point():
+func _show_settlement_hint(settlement_type: int):
+	var points = []
+	if settlement_type == NetDefines.SettlementType.SETUP:
+		points = _get_client().build_mgr.get_setup_available_point()
+	else:
+		points = _get_client().build_mgr.get_turn_available_point()
+	for point in points:
 		_corner_point_map[point].show()
 		_corner_point_map[point].set_callback(funcref(self, "_on_click_corner_point"), [point])
 
@@ -167,21 +168,25 @@ func _on_click_corner_point(point):
 
 
 # 展示道路提示
-func _show_road_hint(is_setup=false):
-	var roads = _get_client().build_mgr.get_setup_available_road() if is_setup else _get_client().build_mgr.get_turn_available_road()
+func _show_road_hint(road_type: int):
+	var roads = []
+	if road_type == NetDefines.RoadType.SETUP:
+		roads = _get_client().build_mgr.get_setup_available_road()
+	else:
+		roads = _get_client().build_mgr.get_turn_available_road()
 	for road in roads:
-		_create_road_hint(road)
+		_create_road_hint(road, road_type)
 		
-func _create_road_hint(road: Protocol.RoadInfo):
+func _create_road_hint(road: Protocol.RoadInfo, road_type: int):
 	var hint = LineHint.instance()
 	$Line.add_child(hint)
 	hint.set_pos(_corner_to_pos(road.begin_node), _corner_to_pos(road.end_node))
-	hint.set_callback(funcref(self, "_on_click_line"), [road])
+	hint.set_callback(funcref(self, "_on_click_line"), [road, road_type])
 
-func _on_click_line(road: Protocol.RoadInfo):
+func _on_click_line(road: Protocol.RoadInfo, road_type: int):
 	for child in $Line.get_children():
 		child.queue_free()
-	_get_client().place_road_done(road)
+	_get_client().place_road_done(road, road_type!=NetDefines.RoadType.CARD)
 
 
 # 展示升级提示

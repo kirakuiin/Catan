@@ -88,7 +88,7 @@ func _place_card_by_idx(card, idx: int):
     card.z_index = idx
     
 
-func _on_client_state_changed(state: String):
+func _on_client_state_changed(state: String, params: Dictionary):
     if state == NetDefines.ClientState.DISCARD_RESOURCE:
         var total_num = StdLib.sum(_get_client().player_cards[_get_client().get_name()].res_cards.values())/2
         _init_discard(total_num)

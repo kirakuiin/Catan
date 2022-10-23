@@ -124,6 +124,7 @@ valign = 1
 
 [node name="City" parent="HBox/Building" instance=ExtResource( 2 )]
 type = 1
+min_num = 0
 
 [node name="Settlement" parent="HBox/Building" instance=ExtResource( 2 )]
 margin_top = 100.0
@@ -133,7 +134,6 @@ margin_bottom = 160.0
 margin_top = 164.0
 margin_bottom = 224.0
 type = 2
-min_num = 0
 
 [node name="Cancel" type="Button" parent="."]
 anchor_top = 1.0

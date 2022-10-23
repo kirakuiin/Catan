@@ -26,6 +26,7 @@ func _ready():
 	_init_signal()
 	_init_broadcast()
 	_init_btn()
+	_generate_map()
 	_init_catan_setup()
 
 

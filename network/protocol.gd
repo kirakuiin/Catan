@@ -421,6 +421,11 @@ class MapInfo:
         for pos in points:
             self.tile_map[pos].point_type = points[pos].point_type
 
+    func correct_map():
+        for tile in tile_map.values():
+            if tile.tile_type == Data.TileType.DESERT:
+                tile.point_type = Data.PointType.ZERO
+
 
 # 地图骨架
 class MapBlueprintInfo:

@@ -16,3 +16,4 @@ func generate(setup: Protocol.CatanSetupInfo, map_info: Protocol.MapInfo):
         generator = SeaFarer.new(setup, map_info)
     if generator:
         generator.generate()
+    map_info.correct_map()

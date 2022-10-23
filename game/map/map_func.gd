@@ -81,8 +81,6 @@ class PointFiller:
         if not _is_desert(pos):
             if not _set_point_in_enough(pos, false):
                 _set_point_in_enough(pos, true)
-        else:
-            _map.tile_map[pos].point_type = Data.PointType.ZERO
         for neighbor in graph.get_adjacency_nodes(pos):
             _dfs(neighbor, graph)
 

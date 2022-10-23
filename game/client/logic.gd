@@ -62,7 +62,7 @@ func _init_local_info():
     player_cards = {}
     player_personals = {}
     build_mgr = BuildMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size)
-    op_mgr = OpMgr.new(player_buildings, player_cards, setup_info.catan_size)
+    op_mgr = OpMgr.new(player_buildings, player_cards, map_info)
     setting_mgr = SettingMgr.new()
     state_mgr = StateMgr.new(get_name())
     

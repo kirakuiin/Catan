@@ -3,19 +3,19 @@ extends Reference
 # 卡牌管理器
 
 var _cards: Dictionary
-var _size: int
+var _map: Protocol.MapInfo
 var _bank: Protocol.BankInfo
 var _personals
 
 var _card_capacity: Dictionary
 
 
-func _init(cards: Dictionary, personals: Dictionary, size: int, bank: Protocol.BankInfo):
+func _init(cards: Dictionary, personals: Dictionary, map: Protocol.MapInfo, bank: Protocol.BankInfo):
     _cards = cards
     _personals = personals
-    _size = size
     _bank = bank
-    _card_capacity = Data.SETTLER_DATA[size].card.each_num.duplicate(true)
+    _map = map
+    _card_capacity = map.card_data.duplicate(true)
 
 
 # 打出卡牌

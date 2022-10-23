@@ -57,16 +57,16 @@ static func get_map_list(mode: int=Data.ExpansionMode.SETTLER) -> Array:
 
 # 加载地图
 static func get_map(map_name: String, mode: int=Data.ExpansionMode.SETTLER) -> Protocol.MapInfo:
-    var map_info = Protocol.MapInfo.new()
     var fp = File.new()
     if fp.open(get_map_path(map_name, mode), File.READ) == OK:
         Log.logd("读取地图[%s]成功" % map_name)
         var data = parse_json(fp.get_line())
-        map_info = Protocol.str_deserialize(data) as Protocol.MapInfo
+        var map_info = Protocol.str_deserialize(data)
         fp.close()
+        return map_info
     else:
         Log.logd("读取地图[%s]失败" % map_name)
-    return map_info
+        return null
 
 
 # 是否存在地图

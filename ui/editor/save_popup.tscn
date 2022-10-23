@@ -3,7 +3,6 @@
 [ext_resource path="res://ui/editor/save_popup.gd" type="Script" id=1]
 
 [node name="SavePopup" type="PopupDialog"]
-visible = true
 margin_right = 600.0
 margin_bottom = 400.0
 script = ExtResource( 1 )

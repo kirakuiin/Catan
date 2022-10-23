@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/editor/config_item/card.gd" type="Script" id=1]
+
+[node name="Year" type="HBoxContainer"]
+margin_right = 331.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+script = ExtResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 163.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 60 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "丰年"
+align = 1
+valign = 1
+
+[node name="Edit" type="SpinBox" parent="."]
+margin_left = 167.0
+margin_right = 331.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="value_changed" from="Edit" to="." method="_on_value_changed"]

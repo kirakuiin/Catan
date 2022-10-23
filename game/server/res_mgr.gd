@@ -26,7 +26,7 @@ func _init_num_corner():
     _num_to_corner = {}
     for num in UI_Data.POINT_DATA.keys():
         _num_to_corner[num] = StdLib.Set.new()
-    for tile in _map.grid_map.values():
+    for tile in _map.tile_map.values():
         if tile.point_type in _num_to_corner:
             var corners = Hexlib.get_all_corner(Hexlib.create_hex(tile.cube_pos))
             for corner in corners:
@@ -195,7 +195,7 @@ func _find_corner_res(corner_pos: Vector3) -> Array:
     var corner = Hexlib.create_corner(corner_pos)
     var hexs = _filter_invalid_tile(Hexlib.get_corner_adjacency_hex(corner))
     for pos in hexs:
-        var tile = _map.grid_map[pos]
+        var tile = _map.tile_map[pos]
         var res_type = Data.TILE_RES[tile.tile_type]
         result.append([res_type, tile.point_type])
     return result
@@ -204,8 +204,8 @@ func _filter_invalid_tile(hexs: Array):
     var result = []
     for hex in hexs:
         var hex_pos = hex.to_vector3()
-        if hex_pos in _map.grid_map:
-            var tile = _map.grid_map[hex_pos]
+        if hex_pos in _map.tile_map:
+            var tile = _map.tile_map[hex_pos]
             if hex_pos != _robber_pos and tile.point_type != Data.PointType.ZERO:
                 result.append(hex_pos)
     return result

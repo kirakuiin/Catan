@@ -10,14 +10,9 @@ var _map_name: String
 var _cur_index: int
 
 
-func _ready():
-    var name_list = MapLoader.get_map_list()
-    for name in name_list:
-        $ScrollContainer/ItemList.add_item(name)
-
-
 func _on_confirm():
-    emit_signal("map_selected", _map_name)
+    if _map_name:
+        emit_signal("map_selected", _map_name)
     hide()
     $ScrollContainer/ItemList.unselect_all()
 
@@ -36,3 +31,10 @@ func _on_delete():
     if _map_name:
         MapLoader.remove_map(_map_name)
         $ScrollContainer/ItemList.remove_item(_cur_index)
+        _map_name = ""
+
+func _on_show():
+    $ScrollContainer/ItemList.clear()
+    var name_list = MapLoader.get_map_list()
+    for name in name_list:
+        $ScrollContainer/ItemList.call_deferred("add_item", name)

@@ -17,6 +17,7 @@ func _init():
 	_host_info = Protocol.HostInfo.new(GameConfig.get_player_name(),
 			GameConfig.get_icon_id(), 1, Data.CatanSize.SMALL, Data.HostState.PREPARE)
 	_catan_setup_info = Protocol.CatanSetupInfo.new(Data.CatanSize.SMALL)
+	_catan_setup_info.expansion_mode.selected_map = MapLoader.get_map_list(_catan_setup_info.expansion_mode.mode_type)[0]
 
 
 func _ready():
@@ -25,7 +26,6 @@ func _ready():
 	_init_signal()
 	_init_broadcast()
 	_init_btn()
-	_generate_map()
 	_init_catan_setup()
 
 
@@ -52,28 +52,22 @@ func _init_basic_option():
 		$Option/Basic/Scroll/VCon/FogContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
 		$Option/Basic/Scroll/VCon/RandResourceContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
 		$Option/Basic/Scroll/VCon/RandSeatContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
-	for index in UI_Data.MODE_DATA:
-		$Option/Basic/Scroll/VCon/ExpansionMode/Btn.add_item(UI_Data.MODE_DATA[index], index)
+	$Option/Basic/Scroll/VCon/ExpansionMode/Btn.add_item(UI_Data.MODE_DATA[0], 0)
 
 
 func _init_mode_option():
-	for index in UI_Data.SEAFARER_MAP_DATA:
-		$Option/Seafarer/Scroll/VCon/Map/Btn.add_item(UI_Data.SEAFARER_MAP_DATA[index], index)
-	for index in UI_Data.SWITCH_DATA:
-		$Option/Settler/Scroll/VCon/RandLandContainer/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
 	if GameServer.is_server():
-		var maps = [""] + MapLoader.get_map_list()
+		var maps = MapLoader.get_map_list()
 		for index in len(maps):
 			$Option/Settler/Scroll/VCon/Map/Btn.add_item(maps[index], index)
 	else:
 		$Option/Settler/Scroll/VCon/Map/Btn.hide()
 		$Option/Settler/Scroll/VCon/Map/Name.show()
+		$Option/Settler/Scroll/VCon/Map/Name.text = MapLoader.get_map_list().front()
 
 
 func _init_special_option():
 	$Option/Special/Scroll.show()
-	for index in UI_Data.SWITCH_DATA:
-		$Option/Special/Scroll/VCon/DIYDev/Btn.add_item(UI_Data.SWITCH_DATA[index], index)
 
 
 func _init_player_list():
@@ -175,8 +169,6 @@ func _reset_settler():
 	var info = _catan_setup_info
 	$Option/Seafarer.hide()
 	$Option/Settler.show()
-	$Option/Settler/Scroll/VCon/RandLandContainer/Btn.select(int(info.expansion_mode.is_random_land))
-	$Option/Special/Scroll/VCon/WinVP/Edit.value = Data.SETTLER_DATA[info.catan_size]["vic_point"]
 	if GameServer.is_server():
 		if not info.expansion_mode.selected_map:
 			$Option/Settler/Scroll/VCon/Map/Btn.select(0)
@@ -189,7 +181,6 @@ func _reset_seafarer():
 	$Option/Settler.hide()
 	$Option/Seafarer.show()
 	$Option/Seafarer/Scroll/VCon/Map/Btn.select(info.expansion_mode.selected_map)
-	$Option/Special/Scroll/VCon/WinVP/Edit.value = Data.SEAFARER_DATA[info.catan_size][info.expansion_mode.selected_map]["vic_point"]
 
 
 func _on_change_num(index):
@@ -241,32 +232,14 @@ remotesync func change_mode_state(index: int):
 	_generate_map()
 
 
-func _on_change_land(index: int):
-	rpc("change_land_state", index)
-
-
-remotesync func change_land_state(index: int):
-	_catan_setup_info.expansion_mode.is_random_land = bool(index)
-	_reset_catan_setup()
-
-
-func _on_change_sea_map(index: int):
-	rpc("change_sea_map", index)
-
-
-remotesync func change_sea_map(index: int):
-	_catan_setup_info.expansion_mode.selected_map = index
-	_reset_catan_setup()
-
-
-func _on_change_custom_map(index: int):
+func _on_change_map(index: int):
 	var maps = MapLoader.get_map_list()
-	_catan_setup_info.expansion_mode.selected_map = maps[index-1] if index != 0 else ""
-	rpc("change_custom_map", _catan_setup_info.expansion_mode.selected_map)
+	_catan_setup_info.expansion_mode.selected_map = maps[index]
+	rpc("change_map", _catan_setup_info.expansion_mode.selected_map)
 	_generate_map()
 
 
-remotesync func change_custom_map(map_name: String):
+remotesync func change_map(map_name: String):
 	_catan_setup_info.expansion_mode.selected_map = map_name
 	_reset_catan_setup()
 
@@ -337,11 +310,9 @@ func _on_conn_state_changed(state):
 
 func _generate_map():
 	if GameServer.is_server():
-		if _catan_setup_info.is_settler() and _catan_setup_info.expansion_mode.selected_map:
-			_map_info = MapLoader.get_map(_catan_setup_info.expansion_mode.selected_map)
-		else:
-			var generator := MapGenerator.new()
-			_map_info = generator.generate(_catan_setup_info)
+		var generator := MapGenerator.new()
+		_map_info = MapLoader.get_map(_catan_setup_info.expansion_mode.selected_map, _catan_setup_info.expansion_mode.mode_type)
+		generator.generate(_catan_setup_info, _map_info)
 		rpc("recv_map_info", Protocol.serialize(_map_info))
 
 
@@ -366,13 +337,5 @@ func _on_preview_map():
 	$CatanMap.show()
 
 
-func _on_vp_value_changed(value: float):
-	_catan_setup_info.win_vp = int(value)
-
-
 func _on_res_value_changed(value: float):
 	_catan_setup_info.initial_res = int(value)
-
-
-func _on_enable_diy_dev(index: int):
-	_catan_setup_info.custom_dev = bool(index)

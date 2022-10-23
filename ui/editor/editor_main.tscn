@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/editor/editor_main.gd" type="Script" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://ui/editor/harbor_brush.tscn" type="PackedScene" id=8]
 [ext_resource path="res://ui/editor/save_popup.tscn" type="PackedScene" id=9]
 [ext_resource path="res://ui/editor/open_popup.tscn" type="PackedScene" id=10]
+[ext_resource path="res://ui/editor/data_config.tscn" type="PackedScene" id=11]
+[ext_resource path="res://ui/editor/pool_config.tscn" type="PackedScene" id=12]
 [ext_resource path="res://shaders/button_highlight.gdshader" type="Shader" id=14]
 
 [sub_resource type="Shader" id=1]
@@ -58,6 +60,11 @@ shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
 
 [sub_resource type="ShaderMaterial" id=10]
+shader = ExtResource( 14 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
+[sub_resource type="ShaderMaterial" id=33]
 shader = ExtResource( 14 )
 shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
@@ -117,6 +124,11 @@ shader = ExtResource( 14 )
 shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
 
+[sub_resource type="ShaderMaterial" id=34]
+shader = ExtResource( 14 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
 [sub_resource type="ShaderMaterial" id=24]
 shader = ExtResource( 14 )
 shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
@@ -148,6 +160,11 @@ shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
 
 [sub_resource type="ShaderMaterial" id=30]
+shader = ExtResource( 14 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
+[sub_resource type="ShaderMaterial" id=32]
 shader = ExtResource( 14 )
 shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
@@ -266,7 +283,7 @@ valign = 1
 [node name="Con" type="GridContainer" parent="Tiles"]
 margin_top = 36.0
 margin_right = 124.0
-margin_bottom = 252.0
+margin_bottom = 307.0
 mouse_filter = 0
 columns = 2
 __meta__ = {
@@ -359,8 +376,8 @@ margin_bottom = 216.0
 hint_tooltip = "沙漠"
 tile_type = 1
 
-[node name="Erase" parent="Tiles/Con" instance=ExtResource( 7 )]
-material = SubResource( 11 )
+[node name="Random" parent="Tiles/Con" instance=ExtResource( 7 )]
+material = SubResource( 33 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -369,13 +386,25 @@ margin_left = 64.0
 margin_top = 165.0
 margin_right = 124.0
 margin_bottom = 216.0
+hint_tooltip = "随机地块"
+tile_type = 9
+
+[node name="Erase" parent="Tiles/Con" instance=ExtResource( 7 )]
+material = SubResource( 11 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 220.0
+margin_right = 60.0
+margin_bottom = 271.0
 hint_tooltip = "清除地块"
 tile_type = 0
 
 [node name="Point" type="VBoxContainer" parent="."]
-margin_top = 424.0
+margin_top = 460.0
 margin_right = 124.0
-margin_bottom = 676.0
+margin_bottom = 876.0
 __meta__ = {
 "_edit_group_": true
 }
@@ -511,14 +540,27 @@ margin_right = 124.0
 margin_bottom = 316.0
 point_type = 12
 
-[node name="Erase" parent="Point/Con" instance=ExtResource( 6 )]
-material = SubResource( 24 )
+[node name="Random" parent="Point/Con" instance=ExtResource( 6 )]
+material = SubResource( 34 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 320.0
 margin_right = 60.0
+margin_bottom = 380.0
+hint_tooltip = "随机点数"
+point_type = 13
+
+[node name="Erase" parent="Point/Con" instance=ExtResource( 6 )]
+material = SubResource( 24 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 320.0
+margin_right = 124.0
 margin_bottom = 380.0
 hint_tooltip = "清除点数"
 
@@ -616,8 +658,8 @@ margin_right = 124.0
 margin_bottom = 161.0
 harbor_type = 5
 
-[node name="Erase" parent="Harbor/Con" instance=ExtResource( 8 )]
-material = SubResource( 31 )
+[node name="Random" parent="Harbor/Con" instance=ExtResource( 8 )]
+material = SubResource( 32 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -625,14 +667,27 @@ anchor_bottom = 0.0
 margin_top = 165.0
 margin_right = 60.0
 margin_bottom = 216.0
+hint_tooltip = "随机港口"
+harbor_type = 7
+
+[node name="Erase" parent="Harbor/Con" instance=ExtResource( 8 )]
+material = SubResource( 31 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 165.0
+margin_right = 124.0
+margin_bottom = 216.0
 hint_tooltip = "清除港口"
 
 [node name="Info" type="VBoxContainer" parent="."]
 anchor_left = 0.829167
 anchor_top = 0.135185
 anchor_right = 0.989583
-anchor_bottom = 0.285185
-margin_bottom = -42.0
+anchor_bottom = 0.364815
+margin_bottom = -128.0
 custom_constants/separation = 15
 __meta__ = {
 "_edit_group_": true,
@@ -640,7 +695,7 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="Info"]
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 32.0
 text = "信息"
 align = 1
@@ -648,7 +703,7 @@ valign = 1
 
 [node name="File" type="HBoxContainer" parent="Info"]
 margin_top = 47.0
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 89.0
 
 [node name="Label" type="Label" parent="Info/File"]
@@ -662,7 +717,7 @@ valign = 1
 
 [node name="LineEdit" type="LineEdit" parent="Info/File"]
 margin_left = 107.0
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 42.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
@@ -671,7 +726,7 @@ caret_blink = true
 
 [node name="Expansion" type="HBoxContainer" parent="Info"]
 margin_top = 104.0
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 142.0
 
 [node name="Label" type="Label" parent="Info/Expansion"]
@@ -685,20 +740,99 @@ valign = 1
 
 [node name="OptionButton" type="OptionButton" parent="Info/Expansion"]
 margin_left = 107.0
-margin_right = 308.0
+margin_right = 307.0
 margin_bottom = 38.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
+
+[node name="Data" type="HBoxContainer" parent="Info"]
+margin_top = 157.0
+margin_right = 307.0
+margin_bottom = 195.0
+
+[node name="Label" type="Label" parent="Info/Data"]
+margin_top = 3.0
+margin_right = 103.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+text = "地图数据:"
+align = 1
+valign = 1
+
+[node name="OptionButton" type="Button" parent="Info/Data"]
+margin_left = 107.0
+margin_right = 307.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "编辑"
+
+[node name="Pool" type="HBoxContainer" parent="Info"]
+margin_top = 210.0
+margin_right = 307.0
+margin_bottom = 248.0
+
+[node name="Label" type="Label" parent="Info/Pool"]
+margin_top = 3.0
+margin_right = 103.0
+margin_bottom = 35.0
+size_flags_horizontal = 3
+text = "随机数据:"
+align = 1
+valign = 1
+
+[node name="OptionButton" type="Button" parent="Info/Pool"]
+margin_left = 107.0
+margin_right = 307.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "编辑"
+
+[node name="VP" type="HBoxContainer" parent="Info"]
+margin_top = 263.0
+margin_right = 307.0
+margin_bottom = 305.0
+
+[node name="Label" type="Label" parent="Info/VP"]
+margin_top = 5.0
+margin_right = 103.0
+margin_bottom = 37.0
+size_flags_horizontal = 3
+text = "胜利点数:"
+align = 1
+valign = 1
+
+[node name="Edit" type="SpinBox" parent="Info/VP"]
+margin_left = 107.0
+margin_right = 307.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+value = 2.0
 
 [node name="OpenPopup" parent="." instance=ExtResource( 10 )]
 visible = false
 
 [node name="SavePopup" parent="." instance=ExtResource( 9 )]
+popup_exclusive = true
+
+[node name="DataConfig" parent="." instance=ExtResource( 11 )]
 visible = false
+popup_exclusive = true
+
+[node name="PoolConfig" parent="." instance=ExtResource( 12 )]
+visible = false
+popup_exclusive = true
 
 [connection signal="mouse_moved" from="DragArea" to="." method="_on_mouse_moved"]
 [connection signal="button_down" from="Quit" to="." method="_on_quit_editor"]
 [connection signal="button_down" from="Save" to="." method="_on_save_map"]
 [connection signal="button_down" from="Open" to="." method="_on_open_map"]
+[connection signal="button_down" from="Info/Data/OptionButton" to="." method="_on_edit_data"]
+[connection signal="button_down" from="Info/Pool/OptionButton" to="." method="_on_edit_pool"]
+[connection signal="value_changed" from="Info/VP/Edit" to="." method="_on_edit_vp"]
 [connection signal="map_selected" from="OpenPopup" to="." method="_on_map_selected"]
 [connection signal="map_saved" from="SavePopup" to="." method="_on_map_saved"]
+[connection signal="config_done" from="DataConfig" to="." method="_on_data_edit_done"]
+[connection signal="config_done" from="PoolConfig" to="." method="_on_pool_edit_done"]

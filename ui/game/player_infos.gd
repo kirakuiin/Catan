@@ -22,7 +22,7 @@ func _init_player_list():
     orders.sort()
     for order in orders:
         var item = PlayerInfo.instance()
-        item.init(order, order_info.order_to_name[order], _get_client().setup_info)
+        item.init(order, order_info.order_to_name[order], _get_client().map_info)
         $VCon/PlayerList.add_child(item)
 
 func _init_signal():

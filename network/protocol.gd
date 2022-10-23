@@ -17,6 +17,7 @@ static func get_cls(cls_name) -> ProtocolData:
         "PlayerOrderInfo": PlayerOrderInfo,
         "TileInfo": TileInfo,
         "MapInfo": MapInfo,
+        "MapBlueprintInfo": MapBlueprintInfo,
         "HarborInfo": HarborInfo,
         "PlayerCardInfo": PlayerCardInfo,
         "PlayerBuildingInfo": PlayerBuildingInfo,
@@ -178,8 +179,6 @@ class CatanSetupInfo:
     var expansion_mode: ProtocolData
 
     var initial_res: int
-    var win_vp: int
-    var custom_dev: bool
 
     func _init(size=Data.CatanSize.SMALL, fog=false, order=false, resource=false):
         cls_name = "CatanSetupInfo"
@@ -190,8 +189,6 @@ class CatanSetupInfo:
         expansion_mode = SettlerModeInfo.new()
 
         initial_res = 0
-        win_vp = 10
-        custom_dev = false
 
     func is_settler() -> bool:
         return expansion_mode.mode_type == Data.ExpansionMode.SETTLER
@@ -217,12 +214,10 @@ class SettlerModeInfo:
     extends ProtocolData
 
     const mode_type: int = Data.ExpansionMode.SETTLER
-    var is_random_land: bool
     var selected_map: String
 
-    func _init(rand_land: bool=false, selected: String=""):
+    func _init(selected: String=""):
         cls_name = "SettlerModeInfo"
-        is_random_land = rand_land
         selected_map = selected
 
 
@@ -231,9 +226,9 @@ class SeafarerModeInfo:
     extends ProtocolData
 
     const mode_type: int = Data.ExpansionMode.SEAFARER
-    var selected_map: int
+    var selected_map: String
 
-    func _init(select: int=0):
+    func _init(select: String=""):
         cls_name = "SeafarerModeInfo"
         selected_map = select
 
@@ -304,22 +299,144 @@ class HarborInfo:
 class MapInfo:
     extends ProtocolData
 
-    var grid_map: Dictionary
-    var harbor_list: Array
+    var tile_map setget ,get_real_tile_dict
+    var harbor_list setget ,get_real_harbor_list
 
-    func _init(map: Dictionary={}, harbor: Array=[]):
+    var origin_tiles setget ,get_origin_tile_dict
+    var origin_harbors setget ,get_origin_harbor_list
+
+    var origin_blueprint: MapBlueprintInfo
+    var real_blueprint: MapBlueprintInfo
+
+    var map_config: Dictionary
+
+    var victory_point: int
+    var building_data: Dictionary
+    var card_data: Dictionary
+    var resource_data: Dictionary
+
+    var tile_pool: Dictionary
+    var point_pool: Dictionary
+    var harbor_pool: Dictionary
+
+    var tile_average: bool
+    var point_average: bool
+
+    func _init():
         cls_name = "MapInfo"
-        grid_map = map
-        harbor_list = harbor
+        origin_blueprint = MapBlueprintInfo.new()
+        real_blueprint = MapBlueprintInfo.new()
+        map_config = {}
+
+        victory_point = Data.get_vp()
+        resource_data = Data.get_resource_data()
+        card_data = Data.get_card_data()
+        building_data = Data.get_building_data()
+        point_pool = Data.get_point_pool()
+        tile_pool = Data.get_tile_pool()
+        harbor_pool = Data.get_harbor_pool()
+        tile_average = false
+        point_average = false
+
+    func get_real_tile_dict():
+        return real_blueprint.tile_dict
+
+    func get_real_harbor_list():
+        return real_blueprint.harbor_list
+
+    func get_origin_tile_dict():
+        return origin_blueprint.tile_dict
+
+    func get_origin_harbor_list():
+        return origin_blueprint.harbor_list
 
     func add_tile(tile: TileInfo):
-        grid_map[tile.cube_pos] = tile
+        self.origin_tiles[tile.cube_pos] = tile
+
+    func add_harbor(harbor: HarborInfo):
+        self.origin_harbors.append(harbor)
 
     func get_all_harbor_near_corner() -> Array:
         var result = []
-        for harbor in harbor_list:
+        for harbor in self.harbor_list:
             result.append_array(harbor.get_harbor_corner())
         return result
+
+    func has_empty_point() -> bool:
+        for tile in self.origin_tiles.values():
+            if not Data.is_valid_point(tile.point_type) and not Data.is_no_point_tile(tile.tile_type):
+                return true
+        return false
+
+    func has_wrong_harbor() -> bool:
+        for harbor in self.origin_harbors:
+            if not harbor.near_pos in self.origin_tiles or self.origin_tiles[harbor.near_pos].tile_type == Data.TileType.OCEAN:
+                return true
+        return false
+        
+    func has_uncertain() -> bool:
+        if get_uncertain_tile_num() > StdLib.sum(tile_pool.values()):
+            return true
+        if get_uncertain_point_num() > StdLib.sum(point_pool.values()):
+            return true
+        if get_uncertain_harbor_num() > StdLib.sum(harbor_pool.values()):
+            return true 
+        return false
+
+    func get_uncertain_tile_num() -> int:
+        return len(get_uncertain_tiles())
+
+    func get_uncertain_tiles() -> Dictionary:
+        var map = {}
+        for tile_info in self.origin_tiles.values():
+            if tile_info.tile_type == Data.TileType.RANDOM:
+                map[tile_info.cube_pos] = tile_info
+        return map
+
+    func get_uncertain_point_num() -> int:
+        return len(get_uncertain_points())
+
+    func get_uncertain_points() -> Dictionary:
+        var map = {}
+        for tile_info in self.origin_tiles.values():
+            if tile_info.point_type == Data.PointType.RANDOM:
+                map[tile_info.cube_pos] = tile_info
+        return map
+
+    func get_uncertain_harbor_num() -> int:
+        return len(get_uncertain_harbors())
+
+    func get_uncertain_harbors() -> Array:
+        var result = []
+        for harbor_info in self.origin_harbors:
+            if harbor_info.harbor_type == Data.HarborType.RANDOM:
+                result.append(harbor_info)
+        return result
+
+    func clear_generate_tile():
+        self.tile_map.clear()
+
+    func clear_generate_point():
+        var points = get_uncertain_points()
+        for pos in points:
+            self.tile_map[pos].point_type = points[pos].point_type
+
+
+# 地图骨架
+class MapBlueprintInfo:
+    extends ProtocolData
+
+    var tile_dict: Dictionary
+    var harbor_list: Array
+
+    func _init(info: Dictionary={}, list: Array=[]):
+        cls_name = "MapBlueprintInfo"
+        tile_dict = info
+        harbor_list = list
+
+    func clear():
+        tile_dict = {}
+        harbor_list = []
 
 
 # 玩家卡牌信息
@@ -429,10 +546,10 @@ class BankInfo:
     var avail_card: int
     var res_info: Dictionary
 
-    func _init(catan_size: int=Data.CatanSize.SMALL):
+    func _init(res_infos: Dictionary={}, card_num: int=0):
         cls_name = "BankInfo"
-        res_info = Data.SETTLER_DATA[catan_size].resource.each_num.duplicate(true)
-        avail_card = Data.SETTLER_DATA[catan_size].card.total_num
+        res_info = res_infos.duplicate(true)
+        avail_card = card_num
 
 
 # 交易信息
@@ -500,5 +617,3 @@ class NotificationInfo:
         cls_name = "NotificationInfo"
         notify_type = type
         notify_params = params
-
-

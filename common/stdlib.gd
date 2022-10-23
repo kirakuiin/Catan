@@ -193,6 +193,7 @@ class SparseMatrix:
     var nodes: Set
     var _graph: Dictionary
     var _not_exist
+    var root
 
     func _init(not_exist=null):
         nodes = Set.new()
@@ -226,6 +227,49 @@ class SparseMatrix:
 
 
 # 常用函数
+
+
+# 获取不连通集合
+static func get_union_list(matrix: SparseMatrix) -> Array:
+    var can_choose = matrix.nodes.duplicate()
+    var unions = []
+    while not can_choose.is_empty():
+        var union = get_union(matrix, can_choose.values()[0])
+        can_choose.diff_inplace(union)
+        unions.append(union)
+    var cluster = []
+    for union in unions:
+        cluster.append(build_union_matrix(matrix, union))
+    return cluster
+
+
+# 从一点获取联通的集合
+static func get_union(matrix: SparseMatrix, point):
+    var union = Set.new()
+    var visited = Set.new()
+    var queue = Queue.new()
+    queue.enqueue(point)
+    union.add(point)
+    while not queue.is_empty():
+        var begin = queue.dequeue()
+        visited.add(begin)
+        for end in matrix.get_adjacency_nodes(begin):
+            union.add(end)
+            if not visited.contains(end):
+                queue.enqueue(end)
+    return union
+
+
+# 根据集合构建联通矩阵
+static func build_union_matrix(matrix: SparseMatrix, union: Set) -> SparseMatrix:
+    var result = SparseMatrix.new()
+    for node in union.values():
+        for end in matrix.get_adjacency_nodes(node):
+            if union.contains(end):
+                result.add_edge(node, end, 1)
+                result.add_edge(end, node, 1)
+    return result
+
 
 # 合并数值字典
 static func num_dict_merge(dict_a: Dictionary, dict_b: Dictionary, is_add: bool=true):

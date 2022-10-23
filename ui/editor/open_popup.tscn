@@ -64,6 +64,7 @@ size_flags_vertical = 3
 auto_height = true
 same_column_width = true
 
+[connection signal="about_to_show" from="." to="." method="_on_show"]
 [connection signal="button_down" from="Confirm" to="." method="_on_confirm"]
 [connection signal="button_down" from="Delete" to="." method="_on_delete"]
 [connection signal="button_down" from="Cancel" to="." method="_on_cancel"]

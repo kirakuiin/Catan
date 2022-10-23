@@ -10,6 +10,7 @@ const ORIGIN: Vector3 = Vector3(0, 0, 0)
 onready var _tiles := {}
 onready var _group := ButtonGroup.new()
 
+var _map_info: Protocol.MapInfo = Protocol.MapInfo.new()
 var _draw_type: int = DrawType.DrawTile
 var _brush_val: int = Data.TileType.NULL
 var _layout: Hexlib.HexLayout
@@ -47,6 +48,7 @@ func _init_btn():
     for btn in $Harbor/Con.get_children():
         btn.group = _group
         btn.set_callback(funcref(self, "_on_harbor_changed"))
+    $Info/VP/Edit.value = _map_info.victory_point
 
 
 func _init_info():
@@ -57,8 +59,10 @@ func _init_info():
 
 func _unhandled_input(event):
     if event is InputEventMouseButton and event.is_pressed():
+        var rect_pos = $CanvasBG.make_canvas_position_local(event.position)
         var pos = $CanvasBG/OriginPoint.make_canvas_position_local(event.position)
-        if event.button_index == BUTTON_MASK_LEFT:
+        var rect = Rect2(Vector2(0, 0), $CanvasBG.rect_size)
+        if event.button_index == BUTTON_MASK_LEFT and rect.has_point(rect_pos):
             var cube = Hexlib.pixel_to_hex(_layout, pos).to_vector3()
             match _draw_type:
                 DrawType.DrawTile:
@@ -145,19 +149,35 @@ func _on_map_saved(map_name: String):
 
 func _save_map():
     var file_name = $Info/File/LineEdit.text
-    var map_info = _generate_map_info()
-    MapLoader.save_map(file_name, map_info)
+    _generate_map_info()
+    if _check_map_valid():
+        SceneMgr.show_prompt("保存成功")
+        MapLoader.save_map(file_name, _map_info)
 
 
-func _generate_map_info() -> Protocol.MapInfo:
-    var map_info = Protocol.MapInfo.new()
+func _generate_map_info():
+    _map_info.origin_blueprint.clear()
     for tile in _tiles.values():
         var tile_info = tile.get_tile_info()
         var harbor_info = tile.get_harbor_info()
-        map_info.add_tile(tile_info)
-        if harbor_info.harbor_type != Data.HarborType.NULL and harbor_info.near_pos in _tiles:
-            map_info.harbor_list.append(harbor_info)
-    return map_info
+        _map_info.add_tile(tile_info)
+        if Data.is_valid_harbor(harbor_info.harbor_type):
+            _map_info.add_harbor(harbor_info)
+
+
+func _check_map_valid() -> bool:
+    if _map_info.has_uncertain():
+        SceneMgr.show_prompt("随机数据配置有误")
+        return false
+    elif _map_info.has_empty_point():
+        SceneMgr.show_prompt("存在未分配点数的地块")
+        return false
+    elif _map_info.has_wrong_harbor():
+        SceneMgr.show_prompt("存在方向不正确的海港")
+        return false
+    else:
+        return true
+
 
 
 func _on_open_map():
@@ -165,18 +185,24 @@ func _on_open_map():
 
 
 func _on_map_selected(map_name: String):
-    $Info/File/LineEdit.text = map_name
-    _map_info_to_editor(MapLoader.get_map(map_name))
+    var map_info = MapLoader.get_map(map_name)
+    if map_info:
+        $Info/File/LineEdit.text = map_name
+        _map_info_to_editor(map_info)
+        $Info/VP/Edit.value = _map_info.victory_point
+    else:
+        SceneMgr.show_prompt("打开失败")
 
 
 func _map_info_to_editor(map_info: Protocol.MapInfo):
     _clear()
-    for tile_info in map_info.grid_map.values():
+    _map_info = map_info
+    for tile_info in _map_info.origin_tiles.values():
         var tile = Tile.instance()
         tile.set_tile_info(tile_info)
         $CanvasBG/OriginPoint/Tile.add_child(tile)
         _tiles[tile_info.cube_pos] = tile
-    for harbor_info in map_info.harbor_list:
+    for harbor_info in _map_info.origin_harbors:
         _tiles[harbor_info.cube_pos].set_harbor_type(harbor_info.harbor_type, harbor_info.get_harbor_angle())
 
 
@@ -185,3 +211,25 @@ func _clear():
         tile.queue_free()
     _tiles = {}
 
+
+func _on_edit_data():
+    $DataConfig.set_map_info(_map_info)
+    $DataConfig.popup_centered()
+
+
+func _on_data_edit_done(map_info: Protocol.MapInfo):
+    _map_info = map_info
+
+
+func _on_edit_pool():
+    _generate_map_info()
+    $PoolConfig.set_map_info(_map_info)
+    $PoolConfig.popup_centered()
+
+
+func _on_pool_edit_done(map_info: Protocol.MapInfo):
+    _map_info = map_info
+
+
+func _on_edit_vp(value: int):
+    _map_info.victory_point = value

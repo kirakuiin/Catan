@@ -5,13 +5,13 @@ extends Reference
 
 var _buildings: Dictionary
 var _cards: Dictionary
-var _size: int
+var _map: Protocol.MapInfo
 
 
-func _init(buildings: Dictionary, cards: Dictionary, catan_size: int):
+func _init(buildings: Dictionary, cards: Dictionary, map: Protocol.MapInfo):
     _buildings = buildings
     _cards = cards
-    _size = catan_size
+    _map = map
 
 
 # 是否可以进行建筑
@@ -45,7 +45,7 @@ func can_place_settlement() -> bool:
     return _is_greater_than_required(_cards[_get_name()].res_cards, _get_required(Data.OpType.SETTLEMENT))
 
 func _get_building_limit(type: int) -> int:
-    return Data.SETTLER_DATA[_size].building.each_num[type]
+    return _map.building_data[type]
 
 func _get_required(type: int) -> Dictionary:
     return Data.OP_DATA[type]

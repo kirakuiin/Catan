@@ -1,0 +1,287 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://ui/editor/config_item/point.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ui/editor/config_item/harbor.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ui/editor/config_item/tile.tscn" type="PackedScene" id=7]
+[ext_resource path="res://ui/editor/pool_config.gd" type="Script" id=16]
+
+[node name="PoolConfig" type="PopupDialog"]
+visible = true
+margin_right = 1032.0
+margin_bottom = 512.0
+script = ExtResource( 16 )
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -150.0
+margin_right = 150.0
+margin_bottom = 66.0
+theme_type_variation = "BigLabel"
+text = "随机化数据配置"
+align = 1
+valign = 1
+
+[node name="HBox" type="HBoxContainer" parent="."]
+margin_top = 72.0
+margin_right = 1024.0
+margin_bottom = 448.0
+
+[node name="Tile" type="VBoxContainer" parent="HBox"]
+margin_right = 338.0
+margin_bottom = 376.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="RichTextLabel" parent="HBox/Tile"]
+margin_right = 338.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 35 )
+theme_type_variation = "MiddleRichLabel"
+bbcode_enabled = true
+bbcode_text = "地块"
+text = "地块"
+scroll_active = false
+
+[node name="TileAverage" type="CheckBox" parent="HBox/Tile"]
+margin_top = 39.0
+margin_right = 338.0
+margin_bottom = 79.0
+hint_tooltip = "相同地块尽可能分散"
+text = "地块均匀化"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Sub" type="GridContainer" parent="HBox/Tile"]
+margin_top = 83.0
+margin_right = 338.0
+margin_bottom = 217.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Desert" parent="HBox/Tile/Sub" instance=ExtResource( 7 )]
+type = 1
+
+[node name="Hill" parent="HBox/Tile/Sub" instance=ExtResource( 7 )]
+margin_left = 153.0
+margin_right = 302.0
+type = 3
+
+[node name="Forest" parent="HBox/Tile/Sub" instance=ExtResource( 7 )]
+margin_top = 46.0
+margin_bottom = 88.0
+type = 6
+
+[node name="Mountain" parent="HBox/Tile/Sub" instance=ExtResource( 7 )]
+margin_left = 153.0
+margin_top = 46.0
+margin_right = 302.0
+margin_bottom = 88.0
+type = 4
+
+[node name="Field" parent="HBox/Tile/Sub" instance=ExtResource( 7 )]
+margin_top = 92.0
+margin_bottom = 134.0
+type = 2
+
+[node name="Pasture" parent="HBox/Tile/Sub" instance=ExtResource( 7 )]
+margin_left = 153.0
+margin_top = 92.0
+margin_right = 302.0
+margin_bottom = 134.0
+type = 5
+
+[node name="Point" type="VBoxContainer" parent="HBox"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 376.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="RichTextLabel" parent="HBox/Point"]
+margin_right = 339.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 35 )
+theme_type_variation = "MiddleRichLabel"
+bbcode_enabled = true
+bbcode_text = "点数"
+text = "点数"
+scroll_active = false
+
+[node name="PointAverage" type="CheckBox" parent="HBox/Point"]
+margin_top = 39.0
+margin_right = 339.0
+margin_bottom = 79.0
+hint_tooltip = "6， 8|2, 12尽可能分散"
+text = "点数均匀化"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Sub" type="GridContainer" parent="HBox/Point"]
+margin_top = 83.0
+margin_right = 339.0
+margin_bottom = 309.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Two" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+type = 2
+
+[node name="Three" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_left = 153.0
+margin_right = 302.0
+type = 3
+
+[node name="Four" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_top = 46.0
+margin_bottom = 88.0
+type = 4
+
+[node name="Five" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_left = 153.0
+margin_top = 46.0
+margin_right = 302.0
+margin_bottom = 88.0
+type = 5
+
+[node name="Six" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_top = 92.0
+margin_bottom = 134.0
+type = 6
+
+[node name="Eight" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_left = 153.0
+margin_top = 92.0
+margin_right = 302.0
+margin_bottom = 134.0
+type = 8
+
+[node name="Nine" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_top = 138.0
+margin_bottom = 180.0
+type = 9
+
+[node name="Ten" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_left = 153.0
+margin_top = 138.0
+margin_right = 302.0
+margin_bottom = 180.0
+type = 10
+
+[node name="Eleven" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_top = 184.0
+margin_bottom = 226.0
+type = 11
+
+[node name="Twelve" parent="HBox/Point/Sub" instance=ExtResource( 1 )]
+margin_left = 153.0
+margin_top = 184.0
+margin_right = 302.0
+margin_bottom = 226.0
+type = 12
+
+[node name="Harbor" type="VBoxContainer" parent="HBox"]
+margin_left = 685.0
+margin_right = 1024.0
+margin_bottom = 376.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="RichTextLabel" parent="HBox/Harbor"]
+margin_right = 339.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 35 )
+theme_type_variation = "MiddleRichLabel"
+bbcode_enabled = true
+bbcode_text = "海港"
+text = "海港"
+
+[node name="Sub" type="GridContainer" parent="HBox/Harbor"]
+margin_top = 39.0
+margin_right = 339.0
+margin_bottom = 173.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Generic" parent="HBox/Harbor/Sub" instance=ExtResource( 2 )]
+type = 6
+
+[node name="Wool" parent="HBox/Harbor/Sub" instance=ExtResource( 2 )]
+margin_left = 153.0
+margin_right = 302.0
+type = 4
+
+[node name="Grain" parent="HBox/Harbor/Sub" instance=ExtResource( 2 )]
+margin_top = 46.0
+margin_bottom = 88.0
+type = 5
+
+[node name="Ore" parent="HBox/Harbor/Sub" instance=ExtResource( 2 )]
+margin_left = 153.0
+margin_top = 46.0
+margin_right = 302.0
+margin_bottom = 88.0
+type = 3
+
+[node name="Brick" parent="HBox/Harbor/Sub" instance=ExtResource( 2 )]
+margin_top = 92.0
+margin_bottom = 134.0
+type = 2
+
+[node name="Lumber" parent="HBox/Harbor/Sub" instance=ExtResource( 2 )]
+margin_left = 153.0
+margin_top = 92.0
+margin_right = 302.0
+margin_bottom = 134.0
+type = 1
+
+[node name="Cancel" type="Button" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -48.0
+margin_right = 136.0
+margin_bottom = -10.0
+text = "取消"
+
+[node name="Confirm" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -136.0
+margin_top = -48.0
+margin_right = -8.0
+margin_bottom = -10.0
+text = "确定"
+
+[connection signal="toggled" from="HBox/Tile/TileAverage" to="." method="_on_tile_ave"]
+[connection signal="value_changed" from="HBox/Tile/Sub/Desert" to="." method="_on_tile_changed"]
+[connection signal="value_changed" from="HBox/Tile/Sub/Hill" to="." method="_on_tile_changed"]
+[connection signal="value_changed" from="HBox/Tile/Sub/Forest" to="." method="_on_tile_changed"]
+[connection signal="value_changed" from="HBox/Tile/Sub/Mountain" to="." method="_on_tile_changed"]
+[connection signal="value_changed" from="HBox/Tile/Sub/Field" to="." method="_on_tile_changed"]
+[connection signal="value_changed" from="HBox/Tile/Sub/Pasture" to="." method="_on_tile_changed"]
+[connection signal="toggled" from="HBox/Point/PointAverage" to="." method="_on_point_ave"]
+[connection signal="value_changed" from="HBox/Point/Sub/Two" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Three" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Four" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Five" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Six" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Eight" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Nine" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Ten" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Eleven" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Point/Sub/Twelve" to="." method="_on_point_changed"]
+[connection signal="value_changed" from="HBox/Harbor/Sub/Generic" to="." method="_on_harbor_changed"]
+[connection signal="value_changed" from="HBox/Harbor/Sub/Wool" to="." method="_on_harbor_changed"]
+[connection signal="value_changed" from="HBox/Harbor/Sub/Grain" to="." method="_on_harbor_changed"]
+[connection signal="value_changed" from="HBox/Harbor/Sub/Ore" to="." method="_on_harbor_changed"]
+[connection signal="value_changed" from="HBox/Harbor/Sub/Brick" to="." method="_on_harbor_changed"]
+[connection signal="value_changed" from="HBox/Harbor/Sub/Lumber" to="." method="_on_harbor_changed"]
+[connection signal="button_down" from="Cancel" to="." method="_on_cancel"]
+[connection signal="button_down" from="Confirm" to="." method="_on_confirm"]

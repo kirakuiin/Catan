@@ -62,13 +62,13 @@ func _init_player_info():
     player_cards = {}
     player_personals = {}
     assist_info = Protocol.AssistInfo.new()
-    bank_info = Protocol.BankInfo.new(setup_info.catan_size)
+    bank_info = Protocol.BankInfo.new(map_info.resource_data, StdLib.sum(map_info.card_data.values()))
     stat_info = Protocol.StatInfo.new(OS.get_unix_time())
 
 
 func _init_robber():
     var canditate_pos = []
-    for tile in map_info.grid_map.values():
+    for tile in map_info.tile_map.values():
         if tile.tile_type == Data.TileType.DESERT:
             canditate_pos.append(tile.cube_pos)
     if not canditate_pos:
@@ -90,7 +90,7 @@ func _init_player_state():
 
 func _init_mgr():
     _res_mgr = ResMgr.new(map_info, player_buildings, player_cards, setup_info, bank_info)
-    _card_mgr = CardMgr.new(player_cards, player_personals, setup_info.catan_size, bank_info)
+    _card_mgr = CardMgr.new(player_cards, player_personals, map_info, bank_info)
     _vp_mgr = VPMgr.new(setup_info, player_cards, player_buildings, player_personals, assist_info)
 
 
@@ -148,7 +148,7 @@ func roll_dice():
 # 设置胜者
 func set_stat_info():
     for player in player_personals:
-        if player_personals[player].vic_point >= setup_info.win_vp:
+        if player_personals[player].vic_point >= map_info.victory_point:
             stat_info.winner_name = player
             break
     stat_info.turn_num = assist_info.turn_num

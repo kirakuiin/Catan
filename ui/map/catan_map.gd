@@ -64,7 +64,7 @@ func _clear_all_tile():
 
 
 func _draw_base():
-	for tile_info in _map.grid_map.values():
+	for tile_info in _map.tile_map.values():
 		var tile = Tile.instance()
 		tile.set_tile_info(tile_info)
 		$Tile.add_child(tile)
@@ -79,7 +79,7 @@ func _draw_harbor():
 func _generate_point():
 	for point in _get_client().build_mgr.get_point_info().values():
 		_create_corner_point(point)
-	for tile in _map.grid_map.values():
+	for tile in _map.tile_map.values():
 		if tile.tile_type != Data.TileType.OCEAN:
 			_create_tile_point(tile.cube_pos)
 	
@@ -209,7 +209,7 @@ func _show_move_robber_hint():
 
 func _get_all_can_rob_tile() -> Array:
 	var result = []
-	for tile in _map.grid_map.values():
+	for tile in _map.tile_map.values():
 		if tile.tile_type != Data.TileType.OCEAN and tile.cube_pos != _robber_pos:
 			result.append(tile.cube_pos)
 	return result

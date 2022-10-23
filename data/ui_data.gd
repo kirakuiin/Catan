@@ -72,6 +72,7 @@ const TILE_DATA = {
     Data.TileType.FOREST: "res://assets/tiles/forest.png",
     Data.TileType.GOLD: "res://assets/tiles/gold.png",
     Data.TileType.NULL: "res://assets/tiles/empty.png",
+    Data.TileType.RANDOM: "res://assets/tiles/tile_random.png"
 }
 
 
@@ -88,6 +89,7 @@ const POINT_DATA = {
     Data.PointType.TEN: "res://assets/tiles/number10.png",
     Data.PointType.ELEVEN: "res://assets/tiles/number11.png",
     Data.PointType.TWELVE: "res://assets/tiles/number12.png",
+    Data.PointType.RANDOM: "res://assets/tiles/point_random.png",
 }
 
 
@@ -169,5 +171,6 @@ const HARBOR_DATA = {
     Data.HarborType.WOOL: "res://assets/tiles/wool_harbor.png",
     Data.HarborType.GRAIN: "res://assets/tiles/grain_harbor.png",
     Data.HarborType.GENERIC: "res://assets/tiles/generic_harbor.png",
-    Data.HarborType.NULL: "res://assets/tiles/null_harbor.png"
+    Data.HarborType.NULL: "res://assets/tiles/null_harbor.png",
+    Data.HarborType.RANDOM: "res://assets/tiles/random_harbor.png"
 }

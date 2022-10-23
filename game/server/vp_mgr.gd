@@ -106,16 +106,7 @@ func _calc_continue_road(player_name: String):
 
 func _get_all_cluster(player_name: String) -> Array:
     var matrix = _build_road_matrix(player_name)
-    var can_choose = matrix.nodes.duplicate()
-    var unions = []
-    while not can_choose.is_empty():
-        var union = _get_union(matrix, can_choose.values()[0])
-        can_choose.diff_inplace(union)
-        unions.append(union)
-    var cluster = []
-    for union in unions:
-        cluster.append(_build_union_matrix(matrix, union))
-    return cluster
+    return StdLib.get_union_list(matrix)
 
 func _build_road_matrix(player_name: String) -> StdLib.SparseMatrix:
     var matrix = StdLib.SparseMatrix.new(-INF)
@@ -129,30 +120,6 @@ func _get_all_other_point(player_name: String) -> StdLib.Set:
     for player in _buildings:
         if player != player_name:
             result.union_inplace(_buildings[player].get_settlement_and_city())
-    return result
-
-func _get_union(matrix: StdLib.SparseMatrix, point: Vector3) -> StdLib.Set:
-    var union = StdLib.Set.new()
-    var visited = StdLib.Set.new()
-    var queue = StdLib.Queue.new()
-    queue.enqueue(point)
-    union.add(point)
-    while not queue.is_empty():
-        var begin = queue.dequeue()
-        visited.add(begin)
-        for end in matrix.get_adjacency_nodes(begin):
-            union.add(end)
-            if not visited.contains(end):
-                queue.enqueue(end)
-    return union
-
-func _build_union_matrix(matrix: StdLib.SparseMatrix, union: StdLib.Set) -> StdLib.SparseMatrix:
-    var result = StdLib.SparseMatrix.new()
-    for node in union.values():
-        for end in matrix.get_adjacency_nodes(node):
-            if union.contains(end):
-                result.add_edge(node, end, 1)
-                result.add_edge(end, node, 1)
     return result
 
 func _find_longest_road(matrix: StdLib.SparseMatrix, all_other: StdLib.Set) -> int:

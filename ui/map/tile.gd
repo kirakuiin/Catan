@@ -45,6 +45,9 @@ func set_harbor_type(type: int, angle: float):
 		if type == Data.HarborType.GENERIC:
 			$Point/Harbor/RatioLabel31.show()
 			$Point/Harbor/RatioLabel21.hide()
+		elif type == Data.HarborType.RANDOM:
+			$Point/Harbor/RatioLabel21.hide()
+			$Point/Harbor/RatioLabel31.hide()
 		else:
 			$Point/Harbor/RatioLabel21.show()
 			$Point/Harbor/RatioLabel31.hide()
@@ -64,7 +67,7 @@ func set_point_visible(is_visible: bool):
 
 
 func _init_texture():
-	if _tile_info.tile_type != Data.TileType.NULL:
+	if Data.is_valid_tile(_tile_info.tile_type):
 		$TileTexture.texture = ResourceLoader.load(UI_Data.TILE_DATA[_tile_info.tile_type])
 	else:
 		$TileTexture.texture = null

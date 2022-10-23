@@ -17,7 +17,17 @@ enum CatanSize {BIG=6, SMALL=4}
 
 
 # 地块映射
-enum TileType{NULL, DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD}
+enum TileType{NULL, DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD, RANDOM}
+
+
+# 是否为有效地块
+static func is_valid_tile(tile_type: int) -> bool:
+    return not tile_type in [TileType.NULL]
+
+
+# 是否为无点地块
+static func is_no_point_tile(tile_type: int) -> bool:
+    return tile_type in [TileType.OCEAN, TileType.DESERT]
 
 
 # 成就映射
@@ -25,11 +35,20 @@ enum AchievementType{ARMY, ROAD}
 
 
 # 点数映射
-enum PointType{ZERO=0, TWO=2, THREE=3, FOUR=4, FIVE=5, SIX=6, SEVEN=7, EIGHT=8, NINE=9, TEN=10, ELEVEN=11, TWELVE=12}
+enum PointType{ZERO=0, TWO=2, THREE=3, FOUR=4, FIVE=5, SIX=6, SEVEN=7, EIGHT=8, NINE=9, TEN=10, ELEVEN=11, TWELVE=12, RANDOM=13}
 
 
-const SMALL_POINT = [PointType.TWO, PointType.TWELVE]
-const BIG_POINT = [PointType.SIX, PointType.EIGHT]
+# 是否为有效点数
+static func is_valid_point(point_type: int) -> bool:
+    return not point_type in [PointType.ZERO]
+
+# 是否为大点
+static func is_big_point(point_type: int) -> bool:
+    return point_type in [PointType.SIX, PointType.EIGHT]
+
+# 是否为小点
+static func is_small_point(point_type: int) -> bool:
+    return point_type in [PointType.TWO, PointType.TWELVE]
 
 
 # 资源映射
@@ -85,7 +104,12 @@ enum EnemyType{ROBBER, PIRATE}
 
 
 # 港口映射
-enum HarborType{NULL, LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC}
+enum HarborType{NULL, LUMBER, BRICK, ORE, WOOL, GRAIN, GENERIC, RANDOM}
+
+# 是否为有效港口
+static func is_valid_harbor(harbor_type: int) -> bool:
+    return not harbor_type in [HarborType.NULL]
+
 
 const RES_TO_HARBOR = {
     ResourceType.LUMBER: HarborType.LUMBER,
@@ -107,270 +131,86 @@ const HARBOR_UNIT = {
 
 # 标准数据
 const SETTLER_DATA = {
-    CatanSize.SMALL: {
-        "vic_point": 10,
-        "resource": {
-            "total_num": 95,
-            "type_num": 5,
-            "each_num": {
-                ResourceType.BRICK: 19,
-                ResourceType.LUMBER: 19,
-                ResourceType.ORE: 19,
-                ResourceType.WOOL: 19,
-                ResourceType.GRAIN: 19,
-            },
-        },
-        "point": {
-            "total_num": 18,
-            "type_num": 10,
-            "each_num": {
-                PointType.TWO: 1,
-                PointType.THREE: 2,
-                PointType.FOUR: 2,
-                PointType.FIVE: 2,
-                PointType.SIX: 2,
-                PointType.EIGHT: 2,
-                PointType.NINE: 2,
-                PointType.TEN: 2,
-                PointType.ELEVEN: 2,
-                PointType.TWELVE: 1,
-            },
-        },
-        "card": {
-            "total_num": 25,
-            "type_num": 5,
-            "each_num": {
-                CardType.MONOPOLY: 2,
-                CardType.ROAD: 2,
-                CardType.PLENTY: 2,
-                CardType.VP: 5,
-                CardType.KNIGHT: 14,
-            },
-        },
-        "building": {
-            "total_num": 24,
-            "type_num": 3,
-            "each_num": {
-                BuildingType.SETTLEMENT: 5,
-                BuildingType.CITY: 4,
-                BuildingType.ROAD: 15,
-            },
-        },
-        "tile": {
-            "total_num": 19,
-            "type_num": 6,
-            "each_num": {
-                TileType.DESERT: 1,
-                TileType.HILL: 3,
-                TileType.MOUNTAIN: 3,
-                TileType.PASTURE: 4,
-                TileType.FIELD: 4,
-                TileType.FOREST: 4,
-            },
-        },
-        "harbor": {
-            "total_num": 9,
-            "type_num": 6,
-            "each_num": {
-                HarborType.LUMBER: 1,
-                HarborType.BRICK: 1,
-                HarborType.ORE: 1,
-                HarborType.WOOL: 1,
-                HarborType.GRAIN: 1,
-                HarborType.GENERIC: 4,
-            },
-        },
+    "vic_point": 10,
+    "resource": {
+        ResourceType.BRICK: 19,
+        ResourceType.LUMBER: 19,
+        ResourceType.ORE: 19,
+        ResourceType.WOOL: 19,
+        ResourceType.GRAIN: 19,
     },
-    CatanSize.BIG: {
-        "vic_point": 10,
-        "resource": {
-            "total_num": 120,
-            "type_num": 5,
-            "each_num": {
-                ResourceType.BRICK: 24,
-                ResourceType.LUMBER: 24,
-                ResourceType.ORE: 24,
-                ResourceType.WOOL: 24,
-                ResourceType.GRAIN: 24,
-            },
-        },
-        "point": {
-            "total_num": 28,
-            "type_num": 10,
-            "each_num": {
-                PointType.TWO: 2,
-                PointType.THREE: 3,
-                PointType.FOUR: 3,
-                PointType.FIVE: 3,
-                PointType.SIX: 3,
-                PointType.EIGHT: 3,
-                PointType.NINE: 3,
-                PointType.TEN: 3,
-                PointType.ELEVEN: 3,
-                PointType.TWELVE: 2,
-            },
-        },
-        "card": {
-            "total_num": 34,
-            "type_num": 5,
-            "each_num": {
-                CardType.MONOPOLY: 3,
-                CardType.ROAD: 3,
-                CardType.PLENTY: 3,
-                CardType.VP: 5,
-                CardType.KNIGHT: 20,
-            },
-        },
-        "building": {
-            "total_num": 24,
-            "type_num": 3,
-            "each_num": {
-                BuildingType.SETTLEMENT: 5,
-                BuildingType.CITY: 4,
-                BuildingType.ROAD: 15,
-            },
-        },
-        "tile": {
-            "total_num": 30,
-            "type_num": 6,
-            "each_num": {
-                TileType.DESERT: 2,
-                TileType.HILL: 5,
-                TileType.MOUNTAIN: 5,
-                TileType.PASTURE: 6,
-                TileType.FIELD: 6,
-                TileType.FOREST: 6,
-            },
-        },
-        "harbor": {
-            "total_num": 11,
-            "type_num": 6,
-            "each_num": {
-                HarborType.LUMBER: 1,
-                HarborType.BRICK: 1,
-                HarborType.ORE: 1,
-                HarborType.WOOL: 2,
-                HarborType.GRAIN: 1,
-                HarborType.GENERIC: 5,
-            },
-        },
+    "point": {
+        PointType.TWO: 1,
+        PointType.THREE: 2,
+        PointType.FOUR: 2,
+        PointType.FIVE: 2,
+        PointType.SIX: 2,
+        PointType.EIGHT: 2,
+        PointType.NINE: 2,
+        PointType.TEN: 2,
+        PointType.ELEVEN: 2,
+        PointType.TWELVE: 1,
+    },
+    "card": {
+        CardType.MONOPOLY: 2,
+        CardType.ROAD: 2,
+        CardType.PLENTY: 2,
+        CardType.VP: 5,
+        CardType.KNIGHT: 14,
+    },
+    "building": {
+        BuildingType.SETTLEMENT: 5,
+        BuildingType.CITY: 4,
+        BuildingType.ROAD: 15,
+    },
+    "tile": {
+        TileType.DESERT: 1,
+        TileType.HILL: 3,
+        TileType.MOUNTAIN: 3,
+        TileType.PASTURE: 4,
+        TileType.FIELD: 4,
+        TileType.FOREST: 4,
+    },
+    "harbor": {
+        HarborType.LUMBER: 1,
+        HarborType.BRICK: 1,
+        HarborType.ORE: 1,
+        HarborType.WOOL: 1,
+        HarborType.GRAIN: 1,
+        HarborType.GENERIC: 4,
     },
 }
+
+
+static func get_resource_data():
+    return SETTLER_DATA.resource.duplicate()
+
+
+static func get_card_data():
+    return SETTLER_DATA.card.duplicate()
+
+
+static func get_building_data():
+    return SETTLER_DATA.building.duplicate()
+
+
+static func get_tile_pool():
+    return SETTLER_DATA.tile.duplicate()
+
+
+static func get_point_pool():
+    return SETTLER_DATA.point.duplicate()
+
+
+static func get_harbor_pool():
+    return SETTLER_DATA.harbor.duplicate()
+
+
+static func get_vp():
+    return SETTLER_DATA.vic_point
+
 
 # ============================ 航海家数据 ==============================
 
 # 地图枚举
 enum SeafarerMap {NEW_SHORE, FOUR_ISLAND, FOG_ISLAND, THROUGH_DESERT, FOGGOTTEN_TRIBE}
-
-
-# 数量信息
-const SEAFARER_DATA = {
-    CatanSize.SMALL: {
-        SeafarerMap.NEW_SHORE: {
-            "vic_point": 13,
-            "resource": SETTLER_DATA[CatanSize.SMALL].resource,
-            "card":  SETTLER_DATA[CatanSize.SMALL].card,
-            "building": SETTLER_DATA[CatanSize.SMALL].building,
-            "main_island": {
-                "tile": SETTLER_DATA[CatanSize.SMALL].tile,
-                "harbor": SETTLER_DATA[CatanSize.SMALL].harbor,
-                "point": SETTLER_DATA[CatanSize.SMALL].point,
-            },
-            "other_islands": {
-                "tile": {
-                    "total_num": 7,
-                    "type_num": 6,
-                    "each_num": {
-                        TileType.HILL: 1,
-                        TileType.MOUNTAIN: 2,
-                        TileType.PASTURE: 1,
-                        TileType.FIELD: 1,
-                        TileType.FOREST: 1,
-                        TileType.GOLD: 2,
-                    },
-                },
-                "point": {
-                    "total_num": 8,
-                    "type_num": 8,
-                    "each_num": {
-                        PointType.TWO: 1,
-                        PointType.THREE: 1,
-                        PointType.FOUR: 1,
-                        PointType.FIVE: 1,
-                        PointType.EIGHT: 1,
-                        PointType.NINE: 1,
-                        PointType.TEN: 1,
-                        PointType.ELEVEN: 1,
-                    },
-                }
-            }
-        },
-        SeafarerMap.FOUR_ISLAND: {
-            "vic_point": 14,
-        },
-        SeafarerMap.FOG_ISLAND: {
-            "vic_point": 15,
-        },
-        SeafarerMap.THROUGH_DESERT: {
-            "vic_point": 16,
-        },
-        SeafarerMap.FOGGOTTEN_TRIBE: {
-            "vic_point": 18,
-        },
-    },
-    CatanSize.BIG: {
-        SeafarerMap.NEW_SHORE: {
-            "vic_point": 13,
-            "resource": SETTLER_DATA[CatanSize.BIG].resource,
-            "card":  SETTLER_DATA[CatanSize.BIG].card,
-            "building": SETTLER_DATA[CatanSize.BIG].building,
-            "main_island": {
-                "tile": SETTLER_DATA[CatanSize.BIG].tile,
-                "harbor": SETTLER_DATA[CatanSize.BIG].harbor,
-                "point": SETTLER_DATA[CatanSize.BIG].point,
-            },
-            "other_islands": {
-                "tile": {
-                    "total_num": 10,
-                    "type_num": 6,
-                    "each_num": {
-                        TileType.HILL: 2,
-                        TileType.MOUNTAIN: 2,
-                        TileType.PASTURE: 1,
-                        TileType.FIELD: 1,
-                        TileType.FOREST: 1,
-                        TileType.GOLD: 3,
-                    },
-                },
-                "point": {
-                    "total_num": 10,
-                    "type_num": 10,
-                    "each_num": {
-                        PointType.TWO: 1,
-                        PointType.THREE: 1,
-                        PointType.FOUR: 1,
-                        PointType.FIVE: 1,
-                        PointType.SIX: 1,
-                        PointType.EIGHT: 1,
-                        PointType.NINE: 1,
-                        PointType.TEN: 1,
-                        PointType.ELEVEN: 1,
-                        PointType.TWELVE: 1,
-                    },
-                }
-            }
-        },
-        SeafarerMap.FOUR_ISLAND: {
-            "vic_point": 14,
-        },
-        SeafarerMap.FOG_ISLAND: {
-            "vic_point": 15,
-        },
-        SeafarerMap.THROUGH_DESERT: {
-            "vic_point": 16,
-        },
-        SeafarerMap.FOGGOTTEN_TRIBE: {
-            "vic_point": 18,
-        },
-    },
-}

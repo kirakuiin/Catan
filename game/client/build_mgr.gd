@@ -20,7 +20,7 @@ func _init(map: Protocol.MapInfo, buildings: Dictionary, cards: Dictionary, cata
 
 func _init_point_info():
     _point_info = StdLib.Set.new()
-    for tile_info in _map.grid_map.values():
+    for tile_info in _map.tile_map.values():
         if tile_info.tile_type != Data.TileType.OCEAN:
             var hex = tile_info.to_hex()
             for corner in Hexlib.get_all_corner(hex):
@@ -73,7 +73,7 @@ func _get_road_tuple_from_corner(pos: Vector3) -> StdLib.Set:
 func _is_valid_land_corner(corner: Hexlib.Corner) -> bool:
     for hex in Hexlib.get_corner_adjacency_hex(corner):
         var cube_pos = hex.to_vector3()
-        if cube_pos in _map.grid_map and _map.grid_map[cube_pos].tile_type != Data.TileType.OCEAN:
+        if cube_pos in _map.tile_map and _map.tile_map[cube_pos].tile_type != Data.TileType.OCEAN:
             return true
     return false
 
@@ -86,7 +86,7 @@ func _is_valid_road(road_info: Protocol.RoadInfo) -> bool:
         set_b.add(hex.to_vector3())
     var set = set_a.intersect(set_b)
     for pos in set.values():
-        if pos in _map.grid_map and _map.grid_map[pos].tile_type != Data.TileType.OCEAN:
+        if pos in _map.tile_map and _map.tile_map[pos].tile_type != Data.TileType.OCEAN:
             return true
     return false
 

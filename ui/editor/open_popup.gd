@@ -35,6 +35,6 @@ func _on_delete():
 
 func _on_show():
     $ScrollContainer/ItemList.clear()
-    var name_list = MapLoader.get_map_list()
+    var name_list = MapLoader.get_custom()
     for name in name_list:
         $ScrollContainer/ItemList.call_deferred("add_item", name)

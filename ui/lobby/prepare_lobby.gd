@@ -17,7 +17,11 @@ func _init():
 	_host_info = Protocol.HostInfo.new(GameConfig.get_player_name(),
 			GameConfig.get_icon_id(), 1, Data.CatanSize.SMALL, Data.HostState.PREPARE)
 	_catan_setup_info = Protocol.CatanSetupInfo.new(Data.CatanSize.SMALL)
-	_catan_setup_info.expansion_mode.selected_map = MapLoader.get_map_list(_catan_setup_info.expansion_mode.mode_type)[0]
+	_catan_setup_info.expansion_mode.selected_map = _get_maps().front()
+
+
+func _get_maps() -> Array:
+	return MapLoader.get_map_list(_catan_setup_info.expansion_mode.mode_type)
 
 
 func _ready():
@@ -58,13 +62,26 @@ func _init_basic_option():
 
 func _init_mode_option():
 	if GameServer.is_server():
-		var maps = MapLoader.get_map_list()
+		print(_catan_setup_info.expansion_mode.mode_type)
+		var maps = MapLoader.get_builtin()
 		for index in len(maps):
-			$Option/Settler/Scroll/VCon/Map/Btn.add_item(maps[index], index)
+			_get_map_btn().add_item(maps[index])
+		_get_map_btn().add_separator()
+		maps = MapLoader.get_custom()
+		for index in len(maps):
+			_get_map_btn().add_item(maps[index])
 	else:
 		$Option/Settler/Scroll/VCon/Map/Btn.hide()
 		$Option/Settler/Scroll/VCon/Map/Name.show()
-		$Option/Settler/Scroll/VCon/Map/Name.text = MapLoader.get_map_list().front()
+		$Option/Settler/Scroll/VCon/Map/Name.text = _get_maps().front()
+
+
+func _get_map_btn():
+	match _catan_setup_info.expansion_mode.mode_type:
+		Data.ExpansionMode.SETTLER:
+			return $Option/Settler/Scroll/VCon/Map/Btn
+		Data.ExpansionMode.SEAFARER:
+			return $Option/Seafarer/Scroll/VCon/Map/Btn
 
 
 func _init_special_option():
@@ -234,10 +251,15 @@ remotesync func change_mode_state(index: int):
 
 
 func _on_change_map(index: int):
-	var maps = MapLoader.get_map_list()
-	_catan_setup_info.expansion_mode.selected_map = maps[index]
+	_catan_setup_info.expansion_mode.selected_map = _get_map_by_idx(index)
 	rpc("change_map", _catan_setup_info.expansion_mode.selected_map)
 	_generate_map()
+
+
+func _get_map_by_idx(index: int):
+	if index > len(MapLoader.get_builtin(_catan_setup_info.expansion_mode.mode_type)):
+		index -= 1
+	return _get_maps()[index]
 
 
 remotesync func change_map(map_name: String):

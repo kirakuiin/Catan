@@ -94,6 +94,10 @@ float bridge(float c, float d, float s, float w) {
     return c + stroke(d, s, w);
 }
 
+vec2 scale(vec2 st, vec2 scalar) {
+	return (st - 0.5)*scalar + 0.5;
+}
+
 float draw(vec2 st, vec2 tile_xy, vec2 count) {
 	int show_id = int(tile_xy.x + (tile_xy.y * count.x));
     float color = 0.0;
@@ -385,17 +389,44 @@ float draw(vec2 st, vec2 tile_xy, vec2 count) {
 			color = stroke(t1, 0.3, 0.1) + stroke(t2, 0.3, 0.1) + stroke(t3, 0.3, 0.1);
 			float bridges = mix(mix(t1, t2, step(0.5, st.y)), mix(t3, t2, step(0.5, st.y)), step(0.5, st.x));
 			color = bridge(color, bridges, 0.3, 0.1);
-			//color = bridges;
 			break;
 		}
 		case 42: { // cauldron
+			float n = 12.0;
+	        float a = TAU/n;
+	        for (float i = 0.0; i < n; i++) {
+	            vec2 xy = rotate(st, a * i);
+				xy.y -= 0.2;
+	            float vsc = vesica(xy, 0.3);
+	            color *= flip(stroke(vsc, 0.45, 0.1)*step(0.5, xy.y), 1.0);
+	            color += stroke(vsc, .45, .05);
+	        }
 			break;
 		}
 		case 43: { // the elders
+			float n = 3.0;
+	        float a = TAU/n;
+	        for (float i = 0.0; i < n*2.0; i++) {
+	            vec2 xy = rotate(st, a * i);
+				xy.y -= 0.1;
+	            float vsc = vesica(xy, 0.3);
+	            color = mix(
+                	color + stroke(vsc, 0.5, 0.1), mix(color, bridge(color, vsc, 0.5, 0.1), step(xy.x, .5) - step(xy.y, .4)),
+                	step(3.0, i)
+            	);
+	        }
 			break;
 		}
 		case 44: { // the core
-			break;
+			float sdf = star(st, 8, 0.063);
+			color = fill(sdf, 1.22);
+			float N = 8.0;
+			for(float i = 0.0; i < N; ++i) {
+				vec2 xy = rotate(st, PI/8.0 + i*TAU/N);
+				xy = scale(xy, vec2(1.0, 0.72));
+				xy.y -= 0.125;
+				color -= fill(rhomb(xy), 0.23);
+			}
 		}
 		case 45: { // inner truth
 			break;

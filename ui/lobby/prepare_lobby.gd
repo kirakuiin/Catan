@@ -62,7 +62,6 @@ func _init_basic_option():
 
 func _init_mode_option():
 	if GameServer.is_server():
-		print(_catan_setup_info.expansion_mode.mode_type)
 		var maps = MapLoader.get_builtin()
 		for index in len(maps):
 			_get_map_btn().add_item(maps[index])
@@ -85,6 +84,8 @@ func _get_map_btn():
 
 
 func _init_special_option():
+	for index in UI_Data.SWITCH_DATA:
+		$Option/Special/Scroll/VCon/SpecialBuild/Btn.add_item(UI_Data.SWITCH_DATA[index])
 	$Option/Special/Scroll.show()
 
 
@@ -349,7 +350,7 @@ remote func recv_map_info(data):
 func _download_map(map_info: Protocol.MapInfo):
 	var map_name = _catan_setup_info.expansion_mode.selected_map
 	var mode = _catan_setup_info.expansion_mode.mode_type
-	if _catan_setup_info.is_settler() and map_name and not MapLoader.has_map(map_name, mode):
+	if map_name and not MapLoader.has_map(map_name, mode):
 		MapLoader.save_map(map_name, map_info, mode)
 
 
@@ -362,3 +363,7 @@ func _on_preview_map():
 
 func _on_res_value_changed(value: float):
 	_catan_setup_info.initial_res = int(value)
+
+
+func _on_change_special_build(idx: int):
+	_catan_setup_info.special_bd = bool(idx)

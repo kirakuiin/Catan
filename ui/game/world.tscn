@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://ui/game/overlay.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ui/map/catan_map.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://ui/util/drag_area.gd" type="Script" id=4]
 [ext_resource path="res://ui/game/score/score_popup.tscn" type="PackedScene" id=5]
 [ext_resource path="res://ui/game/info/setting_popup.tscn" type="PackedScene" id=6]
+[ext_resource path="res://ui/game/info/rule_popup.tscn" type="PackedScene" id=7]
 
 [node name="World" type="Node2D"]
 script = ExtResource( 3 )
@@ -52,8 +53,12 @@ layer = 2
 [node name="ScorePopup" parent="Popup" instance=ExtResource( 5 )]
 visible = false
 
+[node name="RulePopup" parent="Popup" instance=ExtResource( 7 )]
+
 [connection signal="mouse_moved" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_mouse_moved"]
 [connection signal="wheel_down" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_wheel_down"]
 [connection signal="wheel_up" from="Map/ViewContainer/Viewport/DragArea" to="." method="_on_wheel_up"]
+[connection signal="show_rule" from="UIOverlay/Overlay" to="." method="_on_show_rule"]
 [connection signal="show_setting" from="UIOverlay/Overlay" to="." method="_on_show_setting"]
-[connection signal="popup_hide" from="Popup/SettingPopup" to="." method="_on_hide_setting"]
+[connection signal="popup_hide" from="Popup/SettingPopup" to="." method="_on_hide"]
+[connection signal="popup_hide" from="Popup/RulePopup" to="." method="_on_hide"]

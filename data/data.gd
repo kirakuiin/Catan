@@ -20,6 +20,10 @@ enum CatanSize {BIG=6, SMALL=4}
 enum TileType{NULL, DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD, RANDOM}
 
 
+# 规则映射
+enum RuleType{NULL, SEAFARER, SPECIAL_BUILD, FIXED_START, EXPLORE, COLONIZE}
+
+
 # 是否为有效地块
 static func is_valid_tile(tile_type: int) -> bool:
     return not tile_type in [TileType.NULL]

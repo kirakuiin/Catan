@@ -37,6 +37,7 @@ func init(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: 
 		_client.reconnect()
 	else:
 		_client.start()
+	_show_rule()
 
 
 func _init_server(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInfo, map: Protocol.MapInfo):
@@ -55,6 +56,12 @@ func _init_map(map: Protocol.MapInfo, setup: Protocol.CatanSetupInfo):
 
 func _init_overlay():
 	$UIOverlay/Overlay.init()
+
+
+func _show_rule():
+	$Popup/RulePopup.init_popup()
+	if $Popup/RulePopup.have_rule():
+		_on_show_rule()
 
 
 func _init_signal():
@@ -77,8 +84,14 @@ func _on_show_setting():
 	$Map/ViewContainer/Viewport.gui_disable_input = true
 
 
-func _on_hide_setting():
+func _on_hide():
 	$Map/ViewContainer/Viewport.gui_disable_input = false
+
+
+func _on_show_rule():
+	$Popup/RulePopup.popup_centered()
+	$Map/ViewContainer/Viewport.gui_disable_input = true
+
 
 
 func _on_mouse_moved(offset: Vector2):
@@ -99,4 +112,3 @@ func _on_wheel_down():
 	var camera = $Map/ViewContainer/Viewport/Camera
 	if camera.zoom.x <= ZOOM_MIN:
 		camera.zoom += ZOOM_UNIT
-

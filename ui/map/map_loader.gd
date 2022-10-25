@@ -4,10 +4,9 @@ extends Reference
 class_name MapLoader
 
 
-const StdBuiltin: Script = preload("res://maps/std.gd")
-
 const BUILTIN = {
-    Data.ExpansionMode.SETTLER: StdBuiltin.DATA,
+    Data.ExpansionMode.SETTLER: MapData.STD_DATA,
+    Data.ExpansionMode.SEAFARER: MapData.SEA_DATA
 }
 
 const SUFFIX = {

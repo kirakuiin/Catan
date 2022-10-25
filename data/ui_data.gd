@@ -34,6 +34,35 @@ const ORDER_DATA: Dictionary = {
 }
 
 
+# 规则映射
+const RULE_DATA: Dictionary = {
+    Data.RuleType.SPECIAL_BUILD: {
+        "title": "特殊建造阶段",
+        "color": Color.cyan,
+        "desc": "每个玩家的回合结束, 其他玩家按顺序依次进入特殊建造阶段, 在此阶段只能进行建造和购买发展卡, 所有其他玩家的特殊建造阶段结束后进入下一个玩家的回合.",
+    },
+    Data.RuleType.FIXED_START: {
+        "title": "固定起点",
+        "color": Color.purple,
+        "desc": "只能在特定的区域建立初始定居点"
+    },
+    Data.RuleType.SEAFARER: {
+        "title": "航海家",
+        "color": Color.aqua,
+        "desc": "在沿海区域修建定居点可以建造船路(建造于海洋方格上), 投掷7点时可以在移动强盗和移动海盗中选择一个. 被海盗占据的方格无法建造船路, 并且可以抢劫方格上有航路的玩家."
+    },
+    Data.RuleType.EXPLORE: {
+        "title": "探索",
+        "color": Color.orangered,
+        "desc": "每当揭示一个迷雾地块, 都将获得此地块上的一个资源(海洋和沙漠不会).",
+    },
+    Data.RuleType.COLONIZE: {
+        "title": "殖民",
+        "color": Color.lime,
+        "desc": "每当在一个新的岛屿上建立定居点, 额外获得一点胜点.",
+    }
+}
+
 # 航海家地图映射
 const SEAFARER_MAP_DATA = {
     Data.SeafarerMap.NEW_SHORE: "新海岸",

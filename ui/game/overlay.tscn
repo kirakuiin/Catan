@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://ui/game/overlay.gd" type="Script" id=1]
 [ext_resource path="res://ui/game/operation.tscn" type="PackedScene" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://ui/game/audio_player.tscn" type="PackedScene" id=9]
 [ext_resource path="res://assets/icons/gear.png" type="Texture" id=10]
 [ext_resource path="res://ui/game/setting/option.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/images/hint.png" type="Texture" id=12]
 
 [node name="Overlay" type="Control"]
 anchor_right = 1.0
@@ -86,4 +87,16 @@ texture_normal = ExtResource( 10 )
 expand = true
 stretch_mode = 5
 
+[node name="RuleBtn" type="TextureButton" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -80.0
+margin_top = 88.0
+margin_bottom = 168.0
+hint_tooltip = "设置"
+texture_normal = ExtResource( 12 )
+expand = true
+stretch_mode = 5
+
 [connection signal="button_down" from="SettingBtn" to="." method="_on_open_setting"]
+[connection signal="button_down" from="RuleBtn" to="." method="_on_open_rule"]

@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "MapData",
 "language": "GDScript",
-"path": "res://data/map_data.gd"
+"path": "res://data/map.gd"
 }, {
 "base": "Reference",
 "class": "MapLoader",

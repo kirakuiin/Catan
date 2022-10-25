@@ -342,7 +342,7 @@ rect_min_size = Vector2( 500, 200 )
 
 [node name="VCon" type="VBoxContainer" parent="Option/Special/Scroll"]
 margin_right = 500.0
-margin_bottom = 42.0
+margin_bottom = 100.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 __meta__ = {
@@ -379,6 +379,29 @@ anchor_left = 0.28852
 anchor_top = 0.0238095
 anchor_right = 0.675227
 anchor_bottom = 0.97619
+
+[node name="SpecialBuild" type="HBoxContainer" parent="Option/Special/Scroll/VCon"]
+margin_top = 62.0
+margin_right = 500.0
+margin_bottom = 100.0
+
+[node name="Label" type="Label" parent="Option/Special/Scroll/VCon/SpecialBuild"]
+margin_top = 3.0
+margin_right = 165.0
+margin_bottom = 35.0
+hint_tooltip = "是否启动特殊建造阶段"
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "特殊建造:"
+align = 1
+
+[node name="Btn" type="OptionButton" parent="Option/Special/Scroll/VCon/SpecialBuild"]
+margin_left = 169.0
+margin_right = 500.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+align = 1
 
 [node name="TitleLabel" type="Label" parent="."]
 anchor_right = 1.0
@@ -477,6 +500,7 @@ rect_pivot_offset = Vector2( 960, 540 )
 [connection signal="item_selected" from="Option/Settler/Scroll/VCon/Map/Btn" to="." method="_on_change_map"]
 [connection signal="item_selected" from="Option/Seafarer/Scroll/VCon/Map/Btn" to="." method="_on_change_map"]
 [connection signal="value_changed" from="Option/Special/Scroll/VCon/InitialRes/Edit" to="." method="_on_res_value_changed"]
+[connection signal="item_selected" from="Option/Special/Scroll/VCon/SpecialBuild/Btn" to="." method="_on_change_special_build"]
 [connection signal="button_down" from="ExitButton" to="." method="_on_exit_prepare"]
 [connection signal="button_down" from="StartBtn" to="." method="_on_start_game"]
 [connection signal="timeout" from="BroadcastTimer" to="." method="_on_broadcast"]

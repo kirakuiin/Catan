@@ -96,7 +96,7 @@ class PlayerTurnState:
         _machine.state_list.append(BuyDevCardState.new(self, _name))
         _machine.state_list.append(Card.PlayCardState.new(self, _name))
         _machine.state_list.append(TradeState.new(self, _name))
-        if PlayingNet.get_server().setup_info.is_five_or_six():
+        if PlayingNet.get_server().setup_info.special_bd:
             _machine.state_list.append(SpecialBuildingState.new(self, _name))
         _machine.initial_state = _machine.state_list[0]
 
@@ -280,7 +280,7 @@ class BuildAndTradeState:
 
     func _init_end_transition():
         var condition = Condition.PlayerStateCondition.new(_name, NetDefines.PlayerNetState.PASS)
-        if PlayingNet.get_server().setup_info.is_five_or_six():
+        if PlayingNet.get_server().setup_info.special_bd:
             var target = get_state_in_parent(SpecialBuildingState)
             add_transition(HSM.Transition.new(target, 0, condition))
         else:

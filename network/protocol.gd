@@ -179,6 +179,7 @@ class CatanSetupInfo:
     var expansion_mode: ProtocolData
 
     var initial_res: int
+    var special_bd: bool
 
     func _init(size=Data.CatanSize.SMALL, fog=false, order=false, resource=false):
         cls_name = "CatanSetupInfo"
@@ -189,6 +190,7 @@ class CatanSetupInfo:
         expansion_mode = SettlerModeInfo.new()
 
         initial_res = 0
+        special_bd = false
 
     func is_settler() -> bool:
         return expansion_mode.mode_type == Data.ExpansionMode.SETTLER
@@ -204,9 +206,6 @@ class CatanSetupInfo:
 
     func mode_idx() -> int:
         return expansion_mode.mode_type
-
-    func is_five_or_six():
-        return catan_size == Data.CatanSize.BIG
 
 
 # 标准版设置信息

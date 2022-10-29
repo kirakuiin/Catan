@@ -8,6 +8,11 @@ signal map_selected(map_name)
 
 var _map_name: String
 var _cur_index: int
+var _expansion_mode: int
+
+
+func set_mode(mode: int):
+    _expansion_mode = mode
 
 
 func _on_confirm():
@@ -35,6 +40,6 @@ func _on_delete():
 
 func _on_show():
     $ScrollContainer/ItemList.clear()
-    var name_list = MapLoader.get_custom()
+    var name_list = MapLoader.get_custom(_expansion_mode)
     for name in name_list:
         $ScrollContainer/ItemList.call_deferred("add_item", name)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/editor/editor_main.gd" type="Script" id=2]
@@ -50,6 +50,11 @@ shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
 
 [sub_resource type="ShaderMaterial" id=8]
+shader = ExtResource( 14 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
+[sub_resource type="ShaderMaterial" id=35]
 shader = ExtResource( 14 )
 shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
@@ -350,6 +355,20 @@ margin_top = 110.0
 margin_right = 60.0
 margin_bottom = 161.0
 hint_tooltip = "牧场"
+
+[node name="Gold" parent="Tiles/Con" instance=ExtResource( 7 )]
+visible = false
+material = SubResource( 35 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_top = 110.0
+margin_right = 124.0
+margin_bottom = 161.0
+hint_tooltip = "牧场"
+tile_type = 8
 
 [node name="Ocean" parent="Tiles/Con" instance=ExtResource( 7 )]
 material = SubResource( 9 )
@@ -682,6 +701,33 @@ margin_right = 124.0
 margin_bottom = 216.0
 hint_tooltip = "清除港口"
 
+[node name="Landform" type="VBoxContainer" parent="."]
+margin_left = 133.0
+margin_top = 460.0
+margin_right = 257.0
+margin_bottom = 712.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="Landform"]
+margin_right = 124.0
+margin_bottom = 32.0
+text = "地形"
+align = 1
+valign = 1
+
+[node name="Con" type="GridContainer" parent="Landform"]
+margin_top = 36.0
+margin_right = 124.0
+margin_bottom = 36.0
+mouse_filter = 0
+columns = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": true
+}
+
 [node name="Info" type="VBoxContainer" parent="."]
 anchor_left = 0.829167
 anchor_top = 0.135185
@@ -822,13 +868,13 @@ visible = false
 popup_exclusive = true
 
 [node name="PoolConfig" parent="." instance=ExtResource( 12 )]
-visible = false
 popup_exclusive = true
 
 [connection signal="mouse_moved" from="DragArea" to="." method="_on_mouse_moved"]
 [connection signal="button_down" from="Quit" to="." method="_on_quit_editor"]
 [connection signal="button_down" from="Save" to="." method="_on_save_map"]
 [connection signal="button_down" from="Open" to="." method="_on_open_map"]
+[connection signal="item_selected" from="Info/Expansion/OptionButton" to="." method="_on_change_mode"]
 [connection signal="button_down" from="Info/Data/OptionButton" to="." method="_on_edit_data"]
 [connection signal="button_down" from="Info/Pool/OptionButton" to="." method="_on_edit_pool"]
 [connection signal="value_changed" from="Info/VP/Edit" to="." method="_on_edit_vp"]

@@ -24,6 +24,10 @@ enum TileType{NULL, DESERT, FIELD, HILL, MOUNTAIN, PASTURE, FOREST, OCEAN, GOLD,
 enum RuleType{NULL, SEAFARER, SPECIAL_BUILD, FIXED_START, EXPLORE, COLONIZE}
 
 
+# 特殊地形映射
+enum LandformType{NULL, SETTLEMENT, CLOUD}
+
+
 # 是否为有效地块
 static func is_valid_tile(tile_type: int) -> bool:
     return not tile_type in [TileType.NULL]

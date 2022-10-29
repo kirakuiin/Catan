@@ -10,6 +10,7 @@ const ORIGIN: Vector3 = Vector3(0, 0, 0)
 onready var _tiles := {}
 onready var _group := ButtonGroup.new()
 
+var _expansion_mode: int = Data.ExpansionMode.SETTLER
 var _map_info: Protocol.MapInfo = Protocol.MapInfo.new()
 var _draw_type: int = DrawType.DrawTile
 var _brush_val: int = Data.TileType.NULL
@@ -53,8 +54,8 @@ func _init_btn():
 
 func _init_info():
     # TODO: 编辑航海家版地图
-    # TODO: 更加丰富的编辑选项
-    $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[0], 0)
+    for index in UI_Data.MODE_DATA:
+        $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[index])
 
 
 func _unhandled_input(event):
@@ -152,7 +153,7 @@ func _save_map():
     _generate_map_info()
     if _check_map_valid():
         SceneMgr.show_prompt("保存成功")
-        MapLoader.save_map(file_name, _map_info)
+        MapLoader.save_map(file_name, _map_info, _expansion_mode)
 
 
 func _generate_map_info():
@@ -181,21 +182,22 @@ func _check_map_valid() -> bool:
 
 
 func _on_open_map():
+    $OpenPopup.set_mode(_expansion_mode)
     $OpenPopup.popup_centered()
 
 
 func _on_map_selected(map_name: String):
-    var map_info = MapLoader.get_map(map_name)
+    var map_info = MapLoader.get_map(map_name, _expansion_mode)
     if map_info:
-        $Info/File/LineEdit.text = map_name
+        _clear()
         _map_info_to_editor(map_info)
+        $Info/File/LineEdit.text = map_name
         $Info/VP/Edit.value = _map_info.victory_point
     else:
         SceneMgr.show_prompt("打开失败")
 
 
 func _map_info_to_editor(map_info: Protocol.MapInfo):
-    _clear()
     _map_info = map_info
     for tile_info in _map_info.origin_tiles.values():
         var tile = Tile.instance()
@@ -210,6 +212,9 @@ func _clear():
     for tile in _tiles.values():
         tile.queue_free()
     _tiles = {}
+    _map_info = Protocol.MapInfo.new()
+    $Info/File/LineEdit.text = ""
+    $Info/VP/Edit.value = 10
 
 
 func _on_edit_data():
@@ -233,3 +238,16 @@ func _on_pool_edit_done(map_info: Protocol.MapInfo):
 
 func _on_edit_vp(value: int):
     _map_info.victory_point = value
+
+
+func _on_change_mode(index: int):
+    _expansion_mode = index
+    _change_ui_by_mode()
+    _clear()
+
+func _change_ui_by_mode():
+    match _expansion_mode:
+        Data.ExpansionMode.SETTLER:
+            $Tiles/Con/Gold.hide()
+        Data.ExpansionMode.SEAFARER:
+            $Tiles/Con/Gold.show()

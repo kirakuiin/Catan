@@ -98,6 +98,21 @@ vec2 scale(vec2 st, vec2 scalar) {
 	return (st - 0.5)*scalar + 0.5;
 }
 
+float spiral(vec2 st, float t) {
+    st -= 0.5;
+    float r = dot(st, st);
+    float a = atan(st.y, st.x);
+    return abs(sin(fract(log(r) * t + a * 0.159)));
+}
+
+float flower(vec2 st, int N) {
+    st = st * 2.0 - 1.0;
+    float r = length(st) * 2.0;
+    float a = atan(st.y, st.x);
+    float v = float(N) * 0.5;
+    return 1.0 - (abs(cos(a * v)) * 0.5 + 0.5) / r;
+}
+
 float draw(vec2 st, vec2 tile_xy, vec2 count) {
 	int show_id = int(tile_xy.x + (tile_xy.y * count.x));
     float color = 0.0;
@@ -427,17 +442,37 @@ float draw(vec2 st, vec2 tile_xy, vec2 count) {
 				xy.y -= 0.125;
 				color -= fill(rhomb(xy), 0.23);
 			}
-		}
-		case 45: { // inner truth
 			break;
 		}
+		case 45: { // inner truth
+			st -= 0.5;
+	        float r = length(st)*length(st);
+	        float a = atan(st.y, st.x) / PI;
+	        vec2 uv = vec2(a, r);
+	        vec2 grid = vec2(5.0, log(r) * 20.0);
+	        vec2 uv_i = floor(uv * grid);
+	        uv.x += .5 * mod(uv_i.y, 2.);
+	        vec2 uv_f = fract(uv * grid);
+	        float shape = rhomb(uv_f);
+	        color += fill(shape, 0.9) * step(0.75, 1.0 - r);
+	        break;
+		}
 		case 46: { // the world
+			color += fill(flower(st, 5), 0.2);
+			color = clamp(color-step(.95, star(rotate(st, 0.6), 5, .1)), 0, 1);
+			color += stroke(circle(st), 0.8, 0.05);
+			color -= stroke(circle(st), 0.1, 0.03);
 			break;
 		}
 		case 47: { // the fool
+			color = spiral(st, 0.1);
+			color = sstep(0.5, color);
 			break;
 		}
 		case 48: { // elements
+			color = fill(flower(rotate(st, PI/6.0), 3), 0.2);
+			color += stroke(circle(st), 0.8, 0.05);
+			color -= fill(tri(rotate(st, PI)), 0.1);
 			break;
 		}
 		case 49: { // enlightment

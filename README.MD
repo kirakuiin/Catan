@@ -3,6 +3,9 @@
 - [Catan](#catan)
   - [About](#about)
   - [Features](#features)
+  - [Shortcut](#shortcut)
+  - [Notice](#notice)
+  - [Screenshot](#screenshot)
 
 ## About
 
@@ -10,10 +13,29 @@
 
 ## Features
 
-* 支持4-6人的局域网联机
-* 支持丰富的游戏配置选项
-* 全自动化
-  * 点数计算
-  * 可用操作
-  * 回合转换
-  * 胜利结算
+* 支持最多6人的局域网联机
+* 支持断线重连
+* 全自动化, 玩家只需要做必要的决策
+* 内置地图编辑器, 可以自由定义卡坦地图
+  * 支持各种参数随机化配置, 比如点数, 地块类型, 海港
+  * 支持配置可用资源上限, 建筑上限, 卡牌类型
+
+## Shortcut
+* <font color="#00ffff">鼠标右键按住移动</font>: 移动地图
+* <font color="#00ffff">鼠标滚轮</font>: 调整地图缩放
+## Notice
+* 游戏采用玩家名作为唯一id, 一局游戏内的所有玩家<font color="#ff0000">**不能重名**</font>
+
+## Screenshot
+***
+主界面:
+![main](screenshot/main.jpg)
+***
+编辑器:
+![main](screenshot/editor.png)
+***
+准备界面:
+![main](screenshot/lobby.jpg)
+***
+游戏中:
+![main](screenshot/game.jpg)

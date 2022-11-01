@@ -54,8 +54,7 @@ func _init_btn():
 
 func _init_info():
     # TODO: 编辑航海家版地图
-    for index in UI_Data.MODE_DATA:
-        $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[index])
+    $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[0])
 
 
 func _unhandled_input(event):

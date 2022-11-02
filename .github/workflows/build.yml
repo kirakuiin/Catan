@@ -9,20 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [Windows Desktop]
+        platform: [win64]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           lfs: true
       - name: Build
         id: build
         uses: manleydev/build-godot-action@v1.4.1
         with:
-          name: example
+          name: Catan.exe
           preset: ${{ matrix.platform }}
           debugMode: "false"
-      - name: Upload Artifact
+      - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: Client - ${{ matrix.platform }}
+          name: Catan-${{ matrix.platform }}
           path: ${{ github.workspace }}/${{ steps.build.outputs.build }}

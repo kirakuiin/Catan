@@ -1,3 +1,6 @@
+# Release tag 构建脚本
+#   每当提交tag时触发构建
+
 name: Release
 
 on:

@@ -24,6 +24,11 @@ jobs:
           name: Catan.exe
           preset: ${{ matrix.platform }}
           debugMode: "false"
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -35,4 +40,14 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-          artifact: ${{ github.workspace }}/${{ steps.build.outputs.build }}/Catan.exe
+          body: ${{steps.build_changelog.outputs.changelog}}
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ${{ github.workspace }}/${{ steps.build.outputs.build }}/Catan.exe
+          asset_name: Catan.exe
+          asset_content_type: application/exe

@@ -5,7 +5,7 @@ module.exports = {
     { types: ["improvements", "enhancement"], label: "🔨 Improvements" },
     { types: ["perf"], label: "🏎️ Performance Improvements" },
     { types: ["build", "ci"], label: "🏗️ Build System" },
-    { types: ["refactor"], label: "🪚 Refactors" },
+    { types: ["refactor"], label: "💫 Refactors" },
     { types: ["doc", "docs"], label: "📚 Documentation Changes" },
     { types: ["test", "tests"], label: "🔍 Tests" },
     { types: ["style"], label: "💅 Code Style Changes" },

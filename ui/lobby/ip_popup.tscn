@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ui/lobby/ip_popup.gd" type="Script" id=1]
+
+[node name="IPPopup" type="PopupDialog"]
+visible = true
+margin_right = 448.0
+margin_bottom = 256.0
+popup_exclusive = true
+script = ExtResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+margin_bottom = 32.0
+text = "主机IP地址"
+align = 1
+
+[node name="LineEdit" type="LineEdit" parent="."]
+margin_left = 32.0
+margin_top = 88.0
+margin_right = 416.0
+margin_bottom = 130.0
+align = 1
+placeholder_text = "127.0.0.1"
+caret_blink = true
+
+[node name="Confirm" type="Button" parent="."]
+margin_left = 360.0
+margin_top = 208.0
+margin_right = 420.0
+margin_bottom = 246.0
+text = "连接"
+
+[node name="Cancel" type="Button" parent="."]
+margin_left = 32.0
+margin_top = 208.0
+margin_right = 92.0
+margin_bottom = 246.0
+text = "取消"
+
+[connection signal="button_down" from="Confirm" to="." method="_on_confirm"]
+[connection signal="button_down" from="Cancel" to="." method="_on_cancel"]

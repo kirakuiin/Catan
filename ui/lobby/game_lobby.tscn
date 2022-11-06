@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=1]
 [ext_resource path="res://assets/images/catan_background.jpeg" type="Texture" id=2]
 [ext_resource path="res://ui/lobby/game_lobby.gd" type="Script" id=3]
+[ext_resource path="res://ui/lobby/ip_popup.tscn" type="PackedScene" id=4]
 
 [node name="GameLobby" type="Control"]
 anchor_right = 1.0
@@ -22,8 +23,8 @@ stretch_mode = 1
 anchor_left = 0.025
 anchor_top = 0.0962963
 anchor_right = 0.09375
-anchor_bottom = 0.138889
-margin_bottom = -9.0
+anchor_bottom = 0.131481
+margin_bottom = -0.999878
 theme = ExtResource( 1 )
 text = "创建游戏"
 __meta__ = {
@@ -34,10 +35,21 @@ __meta__ = {
 anchor_left = 0.025
 anchor_top = 0.185185
 anchor_right = 0.09375
-anchor_bottom = 0.227778
-margin_bottom = -9.0
+anchor_bottom = 0.22037
+margin_bottom = -0.999557
 theme = ExtResource( 1 )
 text = "加入游戏"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="IPConnBtn" type="Button" parent="."]
+anchor_left = 0.025
+anchor_top = 0.274074
+anchor_right = 0.09375
+anchor_bottom = 0.309259
+theme = ExtResource( 1 )
+text = "IP直连"
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -84,30 +96,34 @@ anchor_right = 0.933333
 anchor_bottom = 0.0962963
 
 [node name="HostNameLabel" type="Label" parent="TitleContainer"]
+margin_top = 3.0
 margin_right = 507.0
-margin_bottom = 40.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "主机名"
 
 [node name="PlayerNum" type="Label" parent="TitleContainer"]
 margin_left = 511.0
+margin_top = 3.0
 margin_right = 765.0
-margin_bottom = 40.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
 text = "玩家数量"
 
 [node name="StateLabel" type="Label" parent="TitleContainer"]
 margin_left = 769.0
+margin_top = 3.0
 margin_right = 1023.0
-margin_bottom = 40.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
 text = "主机状态"
 
 [node name="IPLabel" type="Label" parent="TitleContainer"]
 margin_left = 1027.0
+margin_top = 3.0
 margin_right = 1535.0
-margin_bottom = 40.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 text = "IP地址"
@@ -122,8 +138,12 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
+[node name="IPPopup" parent="." instance=ExtResource( 4 )]
+visible = false
+
 [connection signal="button_down" from="CreateBtn" to="." method="_on_create_lobby"]
 [connection signal="button_down" from="JoinBtn" to="." method="_on_join_game"]
+[connection signal="button_down" from="IPConnBtn" to="." method="_on_open_ip_dlg"]
 [connection signal="button_down" from="BackBtn" to="." method="_on_back"]
 [connection signal="timeout" from="ListenTimer" to="." method="_on_refresh_host"]
 [connection signal="button_down" from="RefreshBtn" to="." method="_on_refresh"]

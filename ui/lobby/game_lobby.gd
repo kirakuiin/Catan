@@ -72,3 +72,7 @@ func _on_join_game():
 
 func _on_enter_prepare():
     SceneMgr.goto_scene(SceneMgr.PREPARE_SCENE)
+
+
+func _on_open_ip_dlg():
+    $IPPopup.popup_centered()

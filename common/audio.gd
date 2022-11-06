@@ -3,7 +3,6 @@ extends Node
 # 音频管理
 
 const BG_MUSIC: AudioStreamMP3 = preload("res://assets/audios/main_theme.mp3")
-const GAME_MUSIC: AudioStreamMP3 = preload("res://assets/audios/game_theme.mp3")
 
 
 onready var _audio_player: AudioStreamPlayer = AudioStreamPlayer.new()
@@ -40,9 +39,10 @@ func play_bg():
 
 
 # 播放游戏中背景
-func play_game_bg():
-    _logger.logi("开始播放游戏音乐")
-    _audio_player.stream = GAME_MUSIC
+func play_game_bg(bg_idx: int):
+    var bg_path = UI_Data.BG_MUSIC[UI_Data.BG_DATA[bg_idx]]
+    _logger.logi("开始播放游戏音乐 [%s]" % bg_path)
+    _audio_player.stream = load(bg_path)
     _audio_player.play()
 
 

@@ -367,12 +367,12 @@ class MapInfo:
         self.origin_tiles[tile.cube_pos] = tile
         if tile.has_landform(Data.LandformType.CLOUD):
             add_rules(Data.RuleType.EXPLORE)
-        elif tile.has_landform(Data.LandformType.SETTLEMENT):
+        if tile.has_landform(Data.LandformType.SETTLEMENT):
             add_rules(Data.RuleType.FIXED_START)
 
     func add_rules(rule_type: int):
         if not RULE in map_config:
-            map_config[RULE] = StdLib.Set.new()
+            map_config[RULE] = []
         if not rule_type in map_config[RULE]:
             map_config[RULE].append(rule_type)
 

@@ -15,9 +15,6 @@ var _client: Client
 var _server: Server
 
 
-func _ready():
-	Audio.play_game_bg()
-
 
 func _exit_tree():
 	Audio.play_bg()
@@ -52,6 +49,7 @@ func _init_client(order: Protocol.PlayerOrderInfo, setup: Protocol.CatanSetupInf
 
 func _init_map(map: Protocol.MapInfo, setup: Protocol.CatanSetupInfo):
 	$Map/ViewContainer/Viewport/CatanMap.init_with_mapinfo(map, setup.is_enable_fog)
+	Audio.play_game_bg(map.get_bg())
 
 
 func _init_overlay():

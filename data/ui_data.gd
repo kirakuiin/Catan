@@ -213,6 +213,12 @@ const LANDFORM_DATA = {
 
 
 # 背景音乐映射
+const BG_DATA = {
+    0: "CivilizationVI",
+    1: "P5",
+    2: "P5R",
+}
+
 const BG_MUSIC = {
     "CivilizationVI": "res://assets/audios/game_theme.mp3",
     "P5": "res://assets/audios/groovy.mp3",

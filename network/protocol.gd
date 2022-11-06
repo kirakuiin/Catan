@@ -310,6 +310,7 @@ class MapInfo:
     extends ProtocolData
 
     const RULE = "rules"
+    const BG = "bgm"
 
     var tile_map setget ,get_real_tile_dict
     var harbor_list setget ,get_real_harbor_list
@@ -377,6 +378,12 @@ class MapInfo:
 
     func get_rules() -> Array:
         return StdLib.dict_get(map_config, RULE, [])
+
+    func set_bg(bg_idx: int):
+        map_config[BG] = bg_idx
+
+    func get_bg():
+        return StdLib.dict_get(map_config, BG, 0)
 
     func add_harbor(harbor: HarborInfo):
         self.origin_harbors.append(harbor)

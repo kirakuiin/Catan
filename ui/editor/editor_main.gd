@@ -55,6 +55,8 @@ func _init_btn():
         btn.group = _group
         btn.set_callback(funcref(self, "_on_landform_changed"))
     $Info/VP/Edit.value = _map_info.victory_point
+    for index in UI_Data.BG_DATA:
+        $Info/BG/OptionButton.add_item(UI_Data.BG_DATA[index])
 
 
 func _init_info():
@@ -207,7 +209,6 @@ func _check_map_valid() -> bool:
         return true
 
 
-
 func _on_open_map():
     $OpenPopup.set_mode(_expansion_mode)
     $OpenPopup.popup_centered()
@@ -220,6 +221,7 @@ func _on_map_selected(map_name: String):
         _map_info_to_editor(map_info)
         $Info/File/LineEdit.text = map_name
         $Info/VP/Edit.value = _map_info.victory_point
+        $Info/BG/OptionButton.select(_map_info.get_bg())
     else:
         SceneMgr.show_prompt("打开失败")
 
@@ -279,3 +281,6 @@ func _change_ui_by_mode():
             $Tiles/Con/Gold.hide()
         Data.ExpansionMode.SEAFARER:
             $Tiles/Con/Gold.show()
+
+func _on_change_bg(index: int):
+    _map_info.set_bg(index)

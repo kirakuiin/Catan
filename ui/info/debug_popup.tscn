@@ -28,7 +28,7 @@ margin_bottom = 200.0
 rect_min_size = Vector2( 800, 400 )
 
 [node name="Grid" type="GridContainer" parent="Scroll"]
-margin_right = 450.0
+margin_right = 199.0
 margin_bottom = 40.0
 columns = 4
 
@@ -51,26 +51,5 @@ margin_right = 199.0
 margin_bottom = 40.0
 theme = ExtResource( 2 )
 
-[node name="EditInnerMap" type="HBoxContainer" parent="Scroll/Grid"]
-margin_left = 203.0
-margin_right = 450.0
-margin_bottom = 40.0
-custom_constants/separation = 20
-
-[node name="Label" type="Label" parent="Scroll/Grid/EditInnerMap"]
-margin_top = 4.0
-margin_right = 151.0
-margin_bottom = 36.0
-text = "编辑内部地图:"
-align = 1
-valign = 1
-
-[node name="Btn" type="CheckButton" parent="Scroll/Grid/EditInnerMap"]
-margin_left = 171.0
-margin_right = 247.0
-margin_bottom = 40.0
-theme = ExtResource( 2 )
-
 [connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
 [connection signal="toggled" from="Scroll/Grid/RandomName/Btn" to="." method="_on_random_name_toggled"]
-[connection signal="toggled" from="Scroll/Grid/EditInnerMap/Btn" to="." method="_on_random_name_toggled"]

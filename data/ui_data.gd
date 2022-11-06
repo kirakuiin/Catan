@@ -203,3 +203,10 @@ const HARBOR_DATA = {
     Data.HarborType.NULL: "res://assets/tiles/null_harbor.png",
     Data.HarborType.RANDOM: "res://assets/tiles/random_harbor.png"
 }
+
+
+# 地形图片映射
+const LANDFORM_DATA = {
+    Data.LandformType.CLOUD: "res://assets/images/cloud.png",
+    Data.LandformType.SETTLEMENT: "res://assets/images/start_flag.png"
+}

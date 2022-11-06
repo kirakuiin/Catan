@@ -2,10 +2,12 @@ extends Control
 
 # 编辑器页面
 
-enum DrawType {DrawTile, DrawPoint, DrawHarbor}
+enum DrawType {DrawTile, DrawPoint, DrawHarbor, DrawLandform}
 
 const Tile: PackedScene = preload("res://ui/map/tile.tscn")
 const ORIGIN: Vector3 = Vector3(0, 0, 0)
+const SCALE_MAX = 1.0
+const SCALE_MIN = 0.5 
 
 onready var _tiles := {}
 onready var _group := ButtonGroup.new()
@@ -49,6 +51,9 @@ func _init_btn():
     for btn in $Harbor/Con.get_children():
         btn.group = _group
         btn.set_callback(funcref(self, "_on_harbor_changed"))
+    for btn in $Landform/Con.get_children():
+        btn.group = _group
+        btn.set_callback(funcref(self, "_on_landform_changed"))
     $Info/VP/Edit.value = _map_info.victory_point
 
 
@@ -126,6 +131,11 @@ func _on_harbor_changed(harbor_type: int):
     _draw_type = DrawType.DrawHarbor
     _brush_val = harbor_type
 
+   
+func _on_landform_changed(landform_type: int):
+    _draw_type = DrawType.DrawLandform
+    _brush_val = landform_type
+
 
 func _on_quit_editor():
     SceneMgr.goto_scene(SceneMgr.MAIN_SCENE)
@@ -140,6 +150,16 @@ func _on_save_map():
 
 func _on_mouse_moved(relative: Vector2):
     $CanvasBG/OriginPoint.rect_position += relative
+
+
+func _on_wheel_down():
+    var new_scale = max(SCALE_MIN, $CanvasBG/OriginPoint.rect_scale.x - 0.1)
+    $CanvasBG/OriginPoint.rect_scale = Vector2(new_scale, new_scale)
+
+
+func _on_wheel_up():
+    var new_scale = min(SCALE_MAX, $CanvasBG/OriginPoint.rect_scale.x + 0.1)
+    $CanvasBG/OriginPoint.rect_scale = Vector2(new_scale, new_scale)
 
 
 func _on_map_saved(map_name: String):

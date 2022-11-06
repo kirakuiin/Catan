@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://shaders/button_highlight.gdshader" type="Shader" id=1]
+[ext_resource path="res://ui/editor/landform_brush.gd" type="Script" id=2]
+[ext_resource path="res://assets/images/cloud.png" type="Texture" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
+[node name="LandformBrush" type="TextureButton"]
+material = SubResource( 1 )
+anchor_left = 0.0416667
+anchor_top = 0.0296296
+anchor_right = 0.0729167
+anchor_bottom = 0.0851852
+rect_min_size = Vector2( 60, 60 )
+toggle_mode = true
+texture_normal = ExtResource( 3 )
+expand = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[connection signal="toggled" from="." to="." method="_on_button_toggled"]

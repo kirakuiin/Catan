@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://assets/theme/game_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/editor/editor_main.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://ui/editor/open_popup.tscn" type="PackedScene" id=10]
 [ext_resource path="res://ui/editor/data_config.tscn" type="PackedScene" id=11]
 [ext_resource path="res://ui/editor/pool_config.tscn" type="PackedScene" id=12]
+[ext_resource path="res://ui/editor/landform_brush.tscn" type="PackedScene" id=13]
 [ext_resource path="res://shaders/button_highlight.gdshader" type="Shader" id=14]
 
 [sub_resource type="Shader" id=1]
@@ -179,6 +180,16 @@ shader = ExtResource( 14 )
 shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
 shader_param/is_highlight = false
 
+[sub_resource type="ShaderMaterial" id=36]
+shader = ExtResource( 14 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
+[sub_resource type="ShaderMaterial" id=37]
+shader = ExtResource( 14 )
+shader_param/highlight_color = Color( 0.0431373, 0.713726, 0.894118, 1 )
+shader_param/is_highlight = false
+
 [node name="EditorMain" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -187,6 +198,7 @@ script = ExtResource( 2 )
 
 [node name="DragArea" type="Node2D" parent="."]
 script = ExtResource( 4 )
+is_enable_wheel = true
 
 [node name="BG" type="Panel" parent="."]
 anchor_right = 1.0
@@ -253,11 +265,12 @@ color = Color( 0.588235, 0.588235, 0, 1 )
 
 [node name="Grid" type="Node2D" parent="CanvasBG/OriginPoint"]
 show_behind_parent = true
-position = Vector2( 15, 15 )
+position = Vector2( 5, 5 )
 script = ExtResource( 5 )
 
 [node name="Tile" type="Node2D" parent="CanvasBG/OriginPoint"]
 show_behind_parent = true
+position = Vector2( 5, 5 )
 
 [node name="Title" type="Label" parent="."]
 anchor_left = 0.5
@@ -720,13 +733,36 @@ valign = 1
 [node name="Con" type="GridContainer" parent="Landform"]
 margin_top = 36.0
 margin_right = 124.0
-margin_bottom = 36.0
+margin_bottom = 96.0
 mouse_filter = 0
 columns = 2
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": true
 }
+
+[node name="Cloud" parent="Landform/Con" instance=ExtResource( 13 )]
+material = SubResource( 36 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 60.0
+margin_bottom = 60.0
+hint_tooltip = "云雾"
+landform_type = 2
+
+[node name="Settlement" parent="Landform/Con" instance=ExtResource( 13 )]
+material = SubResource( 37 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 60.0
+hint_tooltip = "初始点位"
+landform_type = 1
 
 [node name="Info" type="VBoxContainer" parent="."]
 anchor_left = 0.829167
@@ -871,6 +907,8 @@ popup_exclusive = true
 popup_exclusive = true
 
 [connection signal="mouse_moved" from="DragArea" to="." method="_on_mouse_moved"]
+[connection signal="wheel_down" from="DragArea" to="." method="_on_wheel_down"]
+[connection signal="wheel_up" from="DragArea" to="." method="_on_wheel_up"]
 [connection signal="button_down" from="Quit" to="." method="_on_quit_editor"]
 [connection signal="button_down" from="Save" to="." method="_on_save_map"]
 [connection signal="button_down" from="Open" to="." method="_on_open_map"]

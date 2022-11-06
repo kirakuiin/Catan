@@ -29,6 +29,23 @@ func get_tile_info() -> Protocol.TileInfo:
 	return _tile_info
 
 
+func set_landform(form_type: int):
+	var is_use = not _tile_info.has_landform(form_type)
+	_tile_info.set_landform(form_type, is_use)
+	match form_type:
+		Data.LandformType.CLOUD:
+			$Overlay/Con/CloudFlag.visible = is_use
+		Data.LandformType.SETTLEMENT:
+			$Overlay/Con/StartFlag.visible = is_use
+
+
+func init_editor_landform():
+	for type in UI_Data.LANDFORM_DATA:
+		if _tile_info.has_landform(type):
+			set_landform(type)
+			set_landform(type)
+
+
 func get_harbor_info() -> Protocol.HarborInfo:
 	return _harbor_info
 

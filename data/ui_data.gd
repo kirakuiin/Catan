@@ -210,3 +210,11 @@ const LANDFORM_DATA = {
     Data.LandformType.CLOUD: "res://assets/images/cloud.png",
     Data.LandformType.SETTLEMENT: "res://assets/images/start_flag.png"
 }
+
+
+# 背景音乐映射
+const BG_MUSIC = {
+    "CivilizationVI": "res://assets/audios/game_theme.mp3",
+    "P5": "res://assets/audios/groovy.mp3",
+    "P5R": "res://assets/audios/life_will_change.mp3",
+}

@@ -58,7 +58,6 @@ func _init_btn():
 
 
 func _init_info():
-    # TODO: 编辑航海家版地图
     $Info/Expansion/OptionButton.add_item(UI_Data.MODE_DATA[0])
 
 
@@ -76,6 +75,8 @@ func _unhandled_input(event):
                     _add_point(cube)
                 DrawType.DrawHarbor:
                     _add_harbor(cube)
+                DrawType.DrawLandform:
+                    _add_landform(cube)
 
 
 func _add_tile(pos: Vector3):
@@ -115,6 +116,13 @@ func _add_harbor(pos: Vector3):
             _tiles[pos].set_harbor_type(_brush_val, cur_angle)
         else:
             _tiles[pos].set_harbor_type(_brush_val, _layout.orientation.start_angle+30)
+
+
+func _add_landform(pos: Vector3):
+    if not pos in _tiles:
+        return
+    var tile = _tiles[pos]
+    tile.set_landform(_brush_val)
 
 
 func _on_tile_changed(tile_type: int):
@@ -221,6 +229,7 @@ func _map_info_to_editor(map_info: Protocol.MapInfo):
     for tile_info in _map_info.origin_tiles.values():
         var tile = Tile.instance()
         tile.set_tile_info(tile_info)
+        tile.init_editor_landform()
         $CanvasBG/OriginPoint/Tile.add_child(tile)
         _tiles[tile_info.cube_pos] = tile
     for harbor_info in _map_info.origin_harbors:

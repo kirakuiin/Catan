@@ -25,7 +25,7 @@ enum RuleType{NULL, SEAFARER, SPECIAL_BUILD, FIXED_START, EXPLORE, COLONIZE}
 
 
 # 特殊地形映射
-enum LandformType{NULL, SETTLEMENT, CLOUD}
+enum LandformType{NULL, SETTLEMENT=1, CLOUD=2} # 这里采用2的幂的形式来表示
 
 
 # 是否为有效地块

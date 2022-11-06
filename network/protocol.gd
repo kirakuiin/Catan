@@ -259,15 +259,26 @@ class TileInfo:
     var cube_pos: Vector3
     var tile_type: int
     var point_type: int
+    var tile_form: int
 
-    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.NULL, point=Data.PointType.ZERO):
+    func _init(pos: Vector3=Vector3(0, 0, 0), tile=Data.TileType.NULL, point=Data.PointType.ZERO, form=Data.LandformType.NULL):
         cls_name = "TileInfo"
         cube_pos = pos
         tile_type = tile
         point_type = point
+        tile_form = form
 
     func to_hex() -> Hexlib.Hex:
         return Hexlib.create_hex(cube_pos)
+
+    func set_landform(form_type: int, is_use: bool=true):
+        if is_use:
+            tile_form |= form_type
+        else:
+            tile_form &= ~form_type
+
+    func has_landform(form_type: int) -> bool:
+        return bool(tile_form & form_type)
 
 
 # 港口信息
@@ -297,6 +308,8 @@ class HarborInfo:
 # 地图信息
 class MapInfo:
     extends ProtocolData
+
+    const RULE = "rules"
 
     var tile_map setget ,get_real_tile_dict
     var harbor_list setget ,get_real_harbor_list
@@ -351,6 +364,19 @@ class MapInfo:
 
     func add_tile(tile: TileInfo):
         self.origin_tiles[tile.cube_pos] = tile
+        if tile.has_landform(Data.LandformType.CLOUD):
+            add_rules(Data.RuleType.EXPLORE)
+        elif tile.has_landform(Data.LandformType.SETTLEMENT):
+            add_rules(Data.RuleType.FIXED_START)
+
+    func add_rules(rule_type: int):
+        if not RULE in map_config:
+            map_config[RULE] = StdLib.Set.new()
+        if not rule_type in map_config[RULE]:
+            map_config[RULE].append(rule_type)
+
+    func get_rules() -> Array:
+        return StdLib.dict_get(map_config, RULE, [])
 
     func add_harbor(harbor: HarborInfo):
         self.origin_harbors.append(harbor)

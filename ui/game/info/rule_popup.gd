@@ -9,6 +9,8 @@ func init_popup():
         _add_item(Data.RuleType.SPECIAL_BUILD)
     if setup.is_seafarer():
         _add_item(Data.RuleType.SEAFARER)
+    for rule in _get_client().map_info.get_rules():
+        _add_item(rule)
 
 
 func have_rule() -> bool:

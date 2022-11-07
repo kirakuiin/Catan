@@ -21,6 +21,7 @@ var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
 var robber_pos: Vector3
 var stat_info: Protocol.StatInfo
+var revealed_info: Dictionary
 
 var player_net_state: Dictionary
 var player_op_state: Dictionary

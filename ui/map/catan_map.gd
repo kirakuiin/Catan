@@ -67,6 +67,8 @@ func _draw_base():
 	for tile_info in _map.tile_map.values():
 		var tile = Tile.instance()
 		tile.set_tile_info(tile_info)
+		if tile_info.has_landform(Data.LandformType.CLOUD):
+			tile.set_play_cloud(true)
 		$Tile.add_child(tile)
 		_tile_map[tile_info.cube_pos] = tile
 

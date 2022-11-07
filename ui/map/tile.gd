@@ -70,6 +70,12 @@ func set_harbor_type(type: int, angle: float):
 			$Point/Harbor/RatioLabel31.hide()
 
 
+func set_play_cloud(is_play: bool):
+	$Cloud/Particles2D.emitting = is_play
+	$TileTexture.visible = not is_play
+	$Point.visible = not is_play
+
+
 func _set_harbor_info(type: int, angle: float):
 	_harbor_info.harbor_type = type
 	_harbor_info.cube_pos = _tile_info.cube_pos
@@ -80,7 +86,8 @@ func _set_harbor_info(type: int, angle: float):
 
 
 func set_point_visible(is_visible: bool):
-	$Point.visible = is_visible
+	if not $Cloud/Particles2D.emitting:
+		$Point.visible = is_visible
 
 
 func _init_texture():
@@ -101,10 +108,10 @@ func _init_pos():
 
 
 func _init_particle():
-	$Particles2D.visibility_rect = Rect2(-rect_size/2, rect_size)
-	$Particles2D.position = rect_size/2
-	$Particles2D.process_material.emission_ring_radius = rect_size.x/2-10
-	$Particles2D.process_material.emission_ring_inner_radius = rect_size.x/2-20
+	$Point/Particles2D.position = $Point.rect_size/2
+	$Point/Particles2D.process_material.emission_ring_radius = $Point.rect_size.x/2-10
+	$Point/Particles2D.process_material.emission_ring_inner_radius = $Point.rect_size.x/2-20
+	$Cloud/Particles2D.position = $Cloud.rect_size/2
 
 
 func _on_dice_changed(info: Array):
@@ -117,6 +124,6 @@ func _on_dice_changed(info: Array):
 
 
 func _play_particle():
-	$Particles2D.emitting = true
+	$Point/Particles2D.emitting = true
 	yield(get_tree().create_timer(NetDefines.ROLL_TIME), "timeout")
-	$Particles2D.emitting = false
+	$Point/Particles2D.emitting = false

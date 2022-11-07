@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://ui/map/tile.gd" type="Script" id=1]
 [ext_resource path="res://assets/tiles/ocean.png" type="Texture" id=2]
@@ -8,12 +8,36 @@
 [ext_resource path="res://ui/map/tile_particle.tres" type="Material" id=6]
 [ext_resource path="res://assets/images/start_flag.png" type="Texture" id=7]
 [ext_resource path="res://assets/images/cloud.png" type="Texture" id=8]
+[ext_resource path="res://assets/images/fog.jpg" type="Texture" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 35
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
+
+[sub_resource type="CanvasItemMaterial" id=2]
+blend_mode = 1
+particles_animation = true
+particles_anim_h_frames = 4
+particles_anim_v_frames = 4
+particles_anim_loop = false
+
+[sub_resource type="ParticlesMaterial" id=3]
+emission_shape = 1
+emission_sphere_radius = 2.0
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+angular_velocity = 10.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 1.0
+angle_random = 1.0
+scale_random = 1.0
+color = Color( 1, 1, 1, 0.352941 )
+anim_offset = 1.0
+anim_offset_random = 1.0
 
 [node name="Tile" type="Control"]
 anchor_right = 0.104167
@@ -90,7 +114,7 @@ text = "3 : 1"
 align = 1
 valign = 1
 
-[node name="Particles2D" type="Particles2D" parent="."]
+[node name="Particles2D" type="Particles2D" parent="Point"]
 position = Vector2( 100, 100 )
 emitting = false
 amount = 30
@@ -103,10 +127,25 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="Particles2D" type="Particles2D" parent="Cloud"]
+material = SubResource( 2 )
+position = Vector2( 100, 100 )
+scale = Vector2( 4, 4 )
+emitting = false
+amount = 3
+lifetime = 7200.0
+explosiveness = 1.0
+process_material = SubResource( 3 )
+texture = ExtResource( 9 )
+
 [node name="Overlay" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
 
 [node name="Con" type="GridContainer" parent="Overlay"]
 anchor_left = 0.279999

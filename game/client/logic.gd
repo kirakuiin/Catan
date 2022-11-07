@@ -32,6 +32,7 @@ var setup_info: Protocol.CatanSetupInfo
 
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
+var revealed_info: Dictionary
 var player_buildings: Dictionary
 var player_cards: Dictionary
 var player_personals: Dictionary

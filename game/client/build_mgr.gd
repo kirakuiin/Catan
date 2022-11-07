@@ -34,6 +34,11 @@ func get_point_info() -> StdLib.Set:
 
 # 获得布置阶段所有的可放置点位
 func get_setup_available_point() -> Array:
+    var result = StdLib.Set.new(_get_origin_avaliable_point())
+    var landform = _get_landform_point()
+    return result.intersect(landform).values()
+
+func _get_origin_avaliable_point() -> Array:
     var result = []
     var all_used_point = _get_all_used_point()
     var not_used_point = _point_info.diff(all_used_point)
@@ -51,6 +56,14 @@ func _get_all_used_point() -> StdLib.Set:
     for building in _buildings.values():
         all_used_point.union_inplace(building.get_settlement_and_city())
     return all_used_point
+
+func _get_landform_point() -> StdLib.Set:
+    var result := StdLib.Set.new()
+    for tile_info in _map.tile_map.values():
+        if tile_info.has_landform(Data.LandformType.SETTLEMENT) and not tile_info.has_landform(Data.LandformType.CLOUD):
+            for corner in Hexlib.get_all_corner(Hexlib.create_hex(tile_info.cube_pos)):
+                result.add(corner.to_vector3())
+    return result
 
 
 # 获得布置阶段所有的可放置道路
@@ -91,7 +104,6 @@ func _is_valid_road(road_info: Protocol.RoadInfo) -> bool:
     return false
 
 
-
 # 获得回合阶段所有的可放置道路
 func get_turn_available_road() -> Array:
     var possible_roads = _get_player_possible_road(_get_name())
@@ -126,10 +138,10 @@ func _is_fly_road(tuple: Array) -> bool:
     return other_building_corner.contains(self_corner)
 
 
-# 获得布置阶段所有的可放置点位
+# 获得回合阶段所有的可放置点位
 func get_turn_available_point() -> Array:
     var player_corner = _buildings[_get_name()].get_all_road_point()
-    var avail_point = StdLib.Set.new(get_setup_available_point())
+    var avail_point = StdLib.Set.new(_get_origin_avaliable_point())
     avail_point.intersect_inplace(player_corner)
     return avail_point.values()
 

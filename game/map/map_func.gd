@@ -38,7 +38,7 @@ class TileFiller:
         return false
 
     func _set_tile_type(pos: Vector3, tile_type: int):
-        _map.tile_map[pos] = Protocol.TileInfo.new(pos, tile_type)
+        _map.tile_map[pos] = Protocol.TileInfo.new(pos, tile_type, Data.PointType.ZERO, _map.origin_tiles[pos].tile_form)
         _count[tile_type] -= 1
 
     func _check_tile(pos: Vector3, tile_type: int) -> bool:

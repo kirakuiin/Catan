@@ -55,6 +55,15 @@ func buy(player_name: String, type: int) -> Dictionary:
     return res_info
 
 
+# 揭示地块
+func reveal(player_name: String, pos: Vector3) -> Dictionary:
+    var type = _map.tile_map[pos].tile_type
+    if Data.is_res_tile(type):
+        var res_type = Data.TILE_RES[type]
+        return dispatch_player_res(player_name, {res_type: 1})
+    return {}
+
+
 # 交易
 func trade(trade_info: Protocol.TradeInfo):
     if trade_info.to_player == Protocol.TradeInfo.BANK:

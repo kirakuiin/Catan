@@ -21,7 +21,7 @@ var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
 var robber_pos: Vector3
 var stat_info: Protocol.StatInfo
-var revealed_info: Dictionary
+var revealed_info: StdLib.Set
 
 var player_net_state: Dictionary
 var player_op_state: Dictionary
@@ -62,6 +62,7 @@ func _init_player_info():
     player_buildings = {}
     player_cards = {}
     player_personals = {}
+    revealed_info = StdLib.Set.new()
     assist_info = Protocol.AssistInfo.new()
     bank_info = Protocol.BankInfo.new(map_info.resource_data, StdLib.sum(map_info.card_data.values()))
     stat_info = Protocol.StatInfo.new(OS.get_unix_time())
@@ -243,6 +244,20 @@ func building_op(player_name: String, build_type: int):
         broadcast_bank_info()
         change_card_info(player_name)
 
+
+# 更新揭示
+func update_revealed(player_name: String, pos: Vector3):
+    for cube_pos in Hexlib.get_corner_adjacency_hex(Hexlib.create_corner(pos)):
+        var tile_pos = cube_pos.to_vector3()
+        if tile_pos in map_info.tile_map and not revealed_info.contains(tile_pos):
+            if map_info.tile_map[tile_pos].has_landform(Data.LandformType.CLOUD):
+                revealed_info.add(tile_pos)
+                change_revealed_info(tile_pos)
+                var res_info = _res_mgr.reveal(player_name, tile_pos)
+                if res_info:
+                    broadcast_notification(Notification.get_res(player_name, res_info))
+                    change_card_info(player_name)
+
 # C2S
 
 
@@ -318,16 +333,19 @@ func add_settlement(player_name: String, pos: Vector3):
     broadcast_notification(Notification.place_settlement(player_name))
     update_breaked_road(player_name, pos)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
+    update_revealed(player_name, pos)
 
 
 # 增加指定玩家的道路
-func add_road(player_name: String, road: Protocol.RoadInfo, is_need_res):
+func add_road(player_name: String, road: Protocol.RoadInfo, is_need_res: bool):
     player_buildings[player_name].road_info.append(road)
     if is_need_res:
         building_op(player_name, Data.OpType.ROAD)
     change_building_info(player_name)
     update_road_archievement(player_name)
     broadcast_notification(Notification.place_road(player_name))
+    update_revealed(player_name, road.begin_node)
+    update_revealed(player_name, road.end_node)
     change_player_net_state(player_name, NetDefines.PlayerNetState.DONE)
 
 
@@ -429,6 +447,7 @@ func send_reconnect_info(player_name: String):
     PlayingNet.rpc_id(peer_id, "change_robber_pos", robber_pos)
     PlayingNet.rpc_id(peer_id, "change_dice", dice.get_last_roll())
     PlayingNet.rpc_id(peer_id, "send_reconnect_data_done")
+    PlayingNet.rpc_id(peer_id, "init_revealed_info", revealed_info.values())
     _logger.logd("发送重连数据到玩家[%s]完毕!" % [player_name])
 
 
@@ -516,6 +535,13 @@ func broadcast_dice_info(info: Array):
     PlayingNet.rpc("change_dice", info)
 
 
+# 广播揭示信息
+func broadcast_revealed_info():
+    _logger.logd("广播揭示信息 [%s]" % revealed_info)
+    PlayingNet.rpc("init_revealed_info", revealed_info.values())
+
+
+
 # 展示结算面板
 func broadcast_show_score_panel():
     set_stat_info()
@@ -547,6 +573,12 @@ func change_card_info(player_name: String):
 func change_personal_info(player_name: String):
     _logger.logd("更新玩家[%s]个人信息改变[%s]" % [player_name, player_personals[player_name]])
     PlayingNet.rpc("change_personal_info", player_name, Protocol.serialize(player_personals[player_name]))
+
+
+# 更新揭示位置
+func change_revealed_info(pos: Vector3):
+    _logger.logd("揭示位置: [%s]" % pos)
+    PlayingNet.rpc("change_revealed_info", pos)
 
 
 # 移动强盗

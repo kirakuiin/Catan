@@ -152,6 +152,11 @@ remotesync func init_personal_info(data):
     get_client().init_personal_info(Protocol.deserialize(data))
 
 
+# 通知客户端初始化揭示信息
+remotesync func init_revealed_info(data: Array):
+    get_client().init_revealed_info(data)
+
+
 # 通知客户端修改指定玩家建筑信息
 remotesync func change_building_info(player_name: String, data):
     get_client().change_building_info(player_name, Protocol.deserialize(data))
@@ -165,6 +170,11 @@ remotesync func change_card_info(player_name: String, data):
 # 通知客户端个人信息
 remotesync func change_personal_info(player_name: String, data):
     get_client().change_personal_info(player_name, Protocol.deserialize(data))
+
+
+# 通知客户端揭示信息
+remotesync func change_revealed_info(pos: Vector3):
+    get_client().change_revealed_info(pos)
 
 
 # 通知客户端更新骰子

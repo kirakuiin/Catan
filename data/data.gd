@@ -38,6 +38,11 @@ static func is_no_point_tile(tile_type: int) -> bool:
     return tile_type in [TileType.OCEAN, TileType.DESERT]
 
 
+# 是否为资源地块
+static func is_res_tile(tile_type: int) -> bool:
+    return not is_no_point_tile(tile_type)
+
+
 # 成就映射
 enum AchievementType{ARMY, ROAD}
 

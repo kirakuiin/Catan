@@ -9,6 +9,7 @@ signal bank_info_changed(bank_info)  # 银行信息改变
 signal building_info_changed(player_name, building_info)  # 建筑信息改变
 signal card_info_changed(player_name, card_info)  # 得分信息改变
 signal personal_info_changed(player_name, personal_info)  # 个人信息改变
+signal revealed_info_changed(pos)  # 揭示信息改变
 signal client_state_changed(state, params)  # 客户端状态改变
 signal notification_received(message)  # 服务器通知
 signal dice_changed(info)  # 骰子变化
@@ -32,7 +33,7 @@ var setup_info: Protocol.CatanSetupInfo
 
 var assist_info: Protocol.AssistInfo
 var bank_info: Protocol.BankInfo
-var revealed_info: Dictionary
+var revealed_info: StdLib.Set
 var player_buildings: Dictionary
 var player_cards: Dictionary
 var player_personals: Dictionary
@@ -62,6 +63,7 @@ func _init_local_info():
     player_buildings = {}
     player_cards = {}
     player_personals = {}
+    revealed_info = StdLib.Set.new()
     build_mgr = BuildMgr.new(map_info, player_buildings, player_cards, setup_info.catan_size)
     op_mgr = OpMgr.new(player_buildings, player_cards, map_info)
     setting_mgr = SettingMgr.new()
@@ -302,6 +304,13 @@ func init_personal_info(personal_infos: Dictionary):
         change_personal_info(name, personal_infos[name])
 
 
+# 初始化揭示信息
+func init_revealed_info(info: Array):
+    _logger.logd("揭示信息初始化[%s]" % [info])
+    for pos in info:
+        change_revealed_info(pos)
+
+
 # 修改指定玩家的建筑信息
 func change_building_info(player_name: String, building_info: Protocol.PlayerBuildingInfo):
     _logger.logd("玩家[%s]的建筑信息改变[%s]" % [player_name, building_info])
@@ -321,6 +330,13 @@ func change_personal_info(player_name: String, personal_info: Protocol.PlayerPer
     _logger.logd("玩家[%s]个人信息改变[%s]" % [player_name, personal_info])
     player_personals[player_name] = personal_info
     emit_signal("personal_info_changed", player_name, personal_info)
+
+
+# 修改揭示信息
+func change_revealed_info(pos: Vector3):
+    _logger.logd("揭示信息改变[%s]" % [pos])
+    revealed_info.add(pos)
+    emit_signal("revealed_info_changed", pos)
 
 
 # 修改强盗位置

@@ -32,6 +32,11 @@ static func broadcast_personals() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_personal_info"), [])
 
 
+# 广播揭示信息
+static func broadcast_revealed() -> HSM.Action:
+    return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_revealed_info"), [])
+
+
 # 广播强盗信息
 static func broadcast_robber() -> HSM.Action:
     return HSM.Action.new(funcref(PlayingNet.get_server(), "broadcast_robber_pos"), [])

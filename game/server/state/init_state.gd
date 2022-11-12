@@ -19,6 +19,7 @@ class InitState:
         _exit_actions.append(Action.broadcast_bank())
         _exit_actions.append(Action.broadcast_cards())
         _exit_actions.append(Action.broadcast_personals())
+        _exit_actions.append(Action.broadcast_revealed())
         _exit_actions.append(Action.broadcast_robber())
         var condition = Condition.AllReadyCondition.new()
         var state = get_state_in_parent(Setup.SetupState)

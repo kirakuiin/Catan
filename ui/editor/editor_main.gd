@@ -180,6 +180,7 @@ func _on_map_saved(map_name: String):
 func _save_map():
     var file_name = $Info/File/LineEdit.text
     _generate_map_info()
+    _map_info.correct_rules()
     if _check_map_valid():
         SceneMgr.show_prompt("保存成功")
         MapLoader.save_map(file_name, _map_info, _expansion_mode)
@@ -193,7 +194,6 @@ func _generate_map_info():
         _map_info.add_tile(tile_info)
         if Data.is_valid_harbor(harbor_info.harbor_type):
             _map_info.add_harbor(harbor_info)
-    _map_info.correct_rules()
 
 
 func _check_map_valid() -> bool:

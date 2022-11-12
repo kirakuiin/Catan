@@ -72,6 +72,7 @@ func set_harbor_type(type: int, angle: float):
 
 func set_play_cloud(is_play: bool):
 	$Cloud/Particles2D.emitting = is_play
+	$Cloud/Particles2D.visible = is_play
 	$TileTexture.visible = not is_play
 	$Point.visible = not is_play
 

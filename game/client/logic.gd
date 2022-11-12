@@ -131,6 +131,15 @@ func show_hint(hint: String, is_always_show: bool=false):
     emit_signal("player_hint_showed", hint, is_always_show)
 
 
+# 判断地块是否是可见地块
+func is_visible_tile(pos) -> bool:
+    var tile = map_info.tile_map[pos]
+    if tile.has_landform(Data.LandformType.CLOUD):
+        if not revealed_info.contains(pos):
+            return false
+    return true
+           
+
 # C2S
 
 # 请求放置定居点

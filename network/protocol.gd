@@ -365,10 +365,6 @@ class MapInfo:
 
     func add_tile(tile: TileInfo):
         self.origin_tiles[tile.cube_pos] = tile
-        if tile.has_landform(Data.LandformType.CLOUD):
-            add_rules(Data.RuleType.EXPLORE)
-        if tile.has_landform(Data.LandformType.SETTLEMENT):
-            add_rules(Data.RuleType.FIXED_START)
 
     func add_rules(rule_type: int):
         if not RULE in map_config:
@@ -457,6 +453,23 @@ class MapInfo:
         for tile in tile_map.values():
             if tile.tile_type == Data.TileType.DESERT:
                 tile.point_type = Data.PointType.ZERO
+
+    func correct_rules():
+        var non_ocean = 0
+        var cloud_num = 0
+        var settlemen_num = 0
+        for tile in origin_tiles.values():
+            if tile.tile_type != Data.TileType.OCEAN:
+                non_ocean += 1
+            if tile.has_landform(Data.LandformType.CLOUD):
+                cloud_num += 1
+            if tile.has_landform(Data.LandformType.SETTLEMENT):
+                settlemen_num += 1
+        map_config.erase(RULE)
+        if settlemen_num > 0 and settlemen_num != non_ocean:
+            add_rules(Data.RuleType.FIXED_START)
+        if cloud_num > 0:
+            add_rules(Data.RuleType.EXPLORE)
 
 
 # 地图骨架

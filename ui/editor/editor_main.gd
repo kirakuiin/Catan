@@ -193,6 +193,7 @@ func _generate_map_info():
         _map_info.add_tile(tile_info)
         if Data.is_valid_harbor(harbor_info.harbor_type):
             _map_info.add_harbor(harbor_info)
+    _map_info.correct_rules()
 
 
 func _check_map_valid() -> bool:

@@ -60,7 +60,7 @@ func _get_all_used_point() -> StdLib.Set:
 func _get_landform_point() -> StdLib.Set:
     var result := StdLib.Set.new()
     for tile_info in _map.tile_map.values():
-        if tile_info.has_landform(Data.LandformType.SETTLEMENT) and not tile_info.has_landform(Data.LandformType.CLOUD):
+        if tile_info.has_landform(Data.LandformType.SETTLEMENT) and _get_client().is_visible_tile(tile_info.cube_pos):
             for corner in Hexlib.get_all_corner(Hexlib.create_hex(tile_info.cube_pos)):
                 result.add(corner.to_vector3())
     return result
@@ -183,3 +183,7 @@ func get_tile_player_building(pos: Vector3) -> Dictionary:
 
 func _get_name() -> String:
     return PlayerInfoMgr.get_self_info().player_name
+
+
+func _get_client():
+    return PlayingNet.get_client()

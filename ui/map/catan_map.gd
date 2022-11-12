@@ -119,6 +119,7 @@ func _init_signal():
 	_get_client().connect("robber_pos_changed", self, "_on_robber_pos_changed")
 	_get_client().connect("assist_info_changed", self, "_on_assist_info_changed")
 	_get_client().connect("reconnect_overed", self, "_on_reconnect_overed")
+	_get_client().connect("revealed_info_changed", self, "_on_revealed_info_changed")
 	for _tile in _tile_map.values():
 		_tile.init_signal()
 
@@ -212,7 +213,7 @@ func _show_move_robber_hint():
 func _get_all_can_rob_tile() -> Array:
 	var result = []
 	for tile in _map.tile_map.values():
-		if tile.tile_type != Data.TileType.OCEAN and tile.cube_pos != _robber_pos:
+		if tile.tile_type != Data.TileType.OCEAN and tile.cube_pos != _robber_pos and _get_client().is_visible_tile(tile.cube_pos):
 			result.append(tile.cube_pos)
 	return result
 
@@ -287,3 +288,7 @@ func _on_assist_info_changed(assist_info: Protocol.AssistInfo):
 func _on_reconnect_overed():
 	if _get_client().assist_info.turn_num > 0:
 		set_all_point_visible(true)
+
+
+func _on_revealed_info_changed(pos: Vector3):
+	_tile_map[pos].set_play_cloud(false)

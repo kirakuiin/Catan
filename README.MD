@@ -5,6 +5,7 @@
   - [Features](#features)
   - [Shortcut](#shortcut)
   - [Notice](#notice)
+  - [Implementation](#implementation)
   - [Screenshot](#screenshot)
 
 ## About
@@ -23,8 +24,14 @@
 ## Shortcut
 * <font color="#00ffff">鼠标右键按住移动</font>: 移动地图
 * <font color="#00ffff">鼠标滚轮</font>: 调整地图缩放
+
 ## Notice
 * 游戏采用玩家名作为唯一id, 一局游戏内的所有玩家<font color="#ff0000">**不能重名**</font>
+
+## Implementation
+
+核心逻辑:
+![image](https://github.com/user-attachments/assets/53a2959a-fb53-42e2-b6fe-ad3b952c8742)
 
 ## Screenshot
 ***
